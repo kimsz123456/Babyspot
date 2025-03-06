@@ -51,9 +51,54 @@
 </details>
 
 <details><summary>2025.03.05 (화)</summary>
+
+### 추천 프론트엔드 스택
+
+- 대규모 실시간 데이터 처리가 필요하므로, CSR 기반으로 구성하는 것이 유리함
+- Next.js를 사용하더라도 ISR (Incremental Static Regeneration)과 CSR 조합 추천
+- 상태 관리와 데이터 스트리밍을 최적화하여 성능 향상
+
+| 역할                               | 추천 기술                                   |
+| ---------------------------------- | ------------------------------------------- |
+| 프레임워크                         | Next.js (ISR + CSR) or Vite + React         |
+| 차트 라이브러리                    | Recharts, Apache ECharts, D3.js, Highcharts |
+| 상태 관리                          | Recoil, SWR, React Query                    |
+| 데이터 스트리밍                    | WebSocket, SSE (Server-Sent Events)         |
+| 가상화 렌더링 (대량 데이터 최적화) | react-virtualized, react-window             |
+| CSS/UI 라이브러리                  | Tailwind CSS, Material-UI, Ant Design       |
+
+=> 향후 ssr이나 ssg로 발전할 가능성이 있다면 nextjs를 쓰는 것이 좋아보이나, 우리는 따로 api 백앤드가 있기 때문에 굳이 그러지 않고, vite + react를 써도 될 것 같다.
+
+어쨌든 실시간 데이터 처리에는 CSR 기반이 성능적으로 유리하기 때문.
+
+차트를 많이 사용할 것이기 때문에 자체 구현을 고려해보거나, 차트를 사용해야 할 것 같다.
+
+데이터 스트리밍은 단방향 양방향이 확인되고 생각하면 되겠다.
+
+대량 데이터가 필요할 수 있으므로, react-virtrualized 생각해야겠다.
+
+상태관리가 react query를 고려해볼만 한 것 같다.
+
 </details>
 
 <details><summary>2025.03.06 (수)</summary>
+
+https://storybook.js.org/
+
+## 스토리북이란?
+
+UI 개발을 돕는 도구다. 프론트앤드 측에서 컴포넌트를 제작하는 데에 이를 실제 어떻게 동작하는지 확인하고, 테스트 하며, 문서화해주는 아주 강력한 도구다.
+
+리액트, vue 등 많은 프레임워크를 지원하고 있으며, 해당 프레임워크로 컴포넌트를 제작하고, .stories.ts를 만들어 스토리북 관련 설정을 작성하면 위에 보이는 스토리북 툴에 접속하여 해당 컴포넌트의 동작, 테스트, 문서화를 할 수 있게 된다.
+
+## 프로젝트 적용법
+
+1. vite를 통해 react 프로젝트를 생성한다.
+2. 해당 프로젝트 root 폴더에서 `npx sb init`을 실행한다.
+3. `yarn storybook` 을 통해 스토리북을 실행한다.
+
+⇒ 열심히 써보죠. 파이팅!
+
 </details>
 
 <details><summary>2025.03.07 (목)</summary>
