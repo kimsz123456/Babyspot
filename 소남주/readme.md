@@ -17,6 +17,9 @@
 - CSS 중첩(nesting)이 가능하다.
 - ThemeProvider 제공을 통해, 전역 스타일 관리를 편하게 해준다.
 
+  <br/>
+  <br/>
+
 # 🗓️ 2025.03.05.WED
 
 ## 자바스크립트에서 긴 작업을 분할하는 방법
@@ -176,3 +179,32 @@
     });
   }
   ```
+
+  <br/>
+  <br/>
+
+# 🗓️ 2025.03.06.THU
+
+## React19에서의 forwardRef
+
+- 개인적으로 React를 이용하여 프로젝트를 진행할 때, `forwardRef`를 이용하여 input 컴포넌트를 만들었는데, 이제는 `forwardRef`를 React에서 권장하지 않는다는 소식을 듣게 되었다.
+
+- React19에서는 표준 프로퍼티로 `ref`를 직접 전달할 수 있다고 한다.
+
+  ```jsx
+  const MyButton = ({ ref, ...props }) => {
+    return (
+      <button ref={ref} {...props}>
+        {props.children}
+      </button>
+    );
+  };
+
+  // 사용 예시
+  const App = () => {
+    const buttonRef = React.useRef();
+    return <MyButton ref={buttonRef}>Click Me</MyButton>;
+  };
+  ```
+
+- 사실 `forwardRef`를 사용하는 방식은 처음 이 코드를 보는 사람이 이해하기에는 다소 복잡한 구조라는 생각을 가지고 있었는데, `ref`를 직접 prop으로 넘길 수 있게 되면서 훨씬 직관적으로 바뀐 것 같다는 생각이 들었다.
