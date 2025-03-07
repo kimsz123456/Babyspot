@@ -1,6 +1,6 @@
 ## 상한규 오늘 학습한 일
 
-<details><summary>2025.03.04 (월)</summary>
+<details><summary>2025.03.03 (월)</summary>
 
 # Atomic Design
 
@@ -50,7 +50,9 @@
 
 </details>
 
-<details><summary>2025.03.05 (화)</summary>
+<br/>
+
+<details><summary>2025.03.04 (화)</summary>
 
 ### 추천 프론트엔드 스택
 
@@ -81,7 +83,9 @@
 
 </details>
 
-<details><summary>2025.03.06 (수)</summary>
+<br/>
+
+<details><summary>2025.03.05 (수)</summary>
 
 https://storybook.js.org/
 
@@ -101,8 +105,123 @@ UI 개발을 돕는 도구다. 프론트앤드 측에서 컴포넌트를 제작�
 
 </details>
 
-<details><summary>2025.03.07 (목)</summary>
+<br/>
+
+<details><summary>2025.03.06 (목)</summary>
+
+# React에서 SSE(Server-Sent Events) 처리 및 디버깅 과정
+
+## SSE를 적용해보다
+
+프로젝트에서 알림을 구독하여 실시간 반영하는 기술을 도입해보았다. 이 때 조금의 난항을 겪어 이를 써보고자 한다.
+
+## SSE란
+
+서버 센트 이벤트라고 해서 프론트앤드에서 서버를 구독하는 형식이다. 알림 등과 같이 서버가 주기적으로 확인하고 알려주어야하는 이벤트의 경우 프론트앤드가 서버를 구독하고, 서버가 특정 이벤트가 발생했음을 알려주는 기술이다.
+
+## SSE를 React에서 감지하는 방법
+
+React에서 SSE(Server-Sent Events)를 감지하려면 EventSource 또는 fetch API를 사용해야 한다. 반면, Axios는 사용할 수 없다.
+
+### 왜 Axios로 SSE를 사용할 수 없는가?
+
+1. Axios는 단일 요청-응답 기반의 라이브러리이기 때문이다.
+   - SSE는 한 번 연결하면 여러 개의 이벤트를 지속적으로 수신해야 하지만, Axios는 한 번의 요청 후 응답을 받으면 종료된다.
+2. Axios는 스트리밍 응답을 지원하지 않는다.
+   - SSE는 text/event-stream을 사용하여 데이터를 지속적으로 받아야 하지만, Axios는 이를 처리할 수 없다.
+
+### SSE를 React에서 감지하는 방법
+
+- EventSource 사용 (가장 간단한 방식)
+
+  ```jsx
+  const eventSource = new EventSource("https://example.com/notifications/subscribe")
+
+  eventSource.addEventListener("message", (event) => {
+    console.log("새로운 메시지 수신:", event.data)
+  })
+
+  eventSource.onerror = (err) => {
+    console.error("SSE 에러 발생:", err)
+  }
+  ```
+
+- fetch API 사용 (스트리밍 방식)
+
+  ```jsx
+  fetch("https://example.com/notifications/subscribe", {
+    headers: { Accept: "text/event-stream" },
+  }).then((response) => {
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+
+    reader.read().then(({ value, done }) => {
+      if (done) return
+      console.log("받은 SSE 데이터:", decoder.decode(value))
+    })
+  })
+  ```
+
+## 왜 EventSourcePolyfill을 사용하였는가
+
+React에서 기본 EventSource를 사용할 수도 있지만, EventSourcePolyfill을 사용하면 Authorization과 CORS 문제를 해결할 수 있다.
+
+### 기본 EventSource의 문제점
+
+1. Authorization 헤더를 지원하지 않는다.
+   - 기본 EventSource는 Authorization 헤더를 추가할 수 없기 때문에 JWT 인증을 사용하는 API에서 SSE를 받을 수 없다.
+2. CORS(Cross-Origin Resource Sharing) 문제 발생 가능
+   - 기본 EventSource는 withCredentials: true 옵션을 지원하지 않아서 쿠키나 인증 정보를 포함한 요청이 불가능하다.
+
+우리 프로젝트는 Authroization 토큰을 통해 api를 교환하고, CORS 설정도 되어있기 때문에 EventSourcePolyFill 라이브러리를 사용하였다.
+
+## 하지만 안됐다…. 무엇이 문제였던 것인가? (디버깅 과정)
+
+### 백엔드 문제라고 착각했던 이유
+
+초기에는 SSE 이벤트를 수신하지 못하는 원인이 백엔드 문제라고 생각했다. 하지만 실제로는 EventSource의 onmessage 함수에서 이벤트를 감지하지 못했기 때문이었다.
+
+### 디버깅을 통해 알게 된 것
+
+1. EventSource의 onmessage는 event: 필드가 없는 기본 메시지만 처리한다.
+   - 만약 서버가 event: 알림처럼 특정 이벤트 이름을 지정해서 보낸다면, onmessage가 아니라 addEventListener('이벤트이름', ...)을 사용해야 한다.
+2. 백엔드에서 event: ‘알림: ‘과 같은 형식으로 데이터를 보내고 있었다.
+
+   - 예제:
+
+     ```
+     event: 알림:
+     data: {"notificationId": 3857, "type": "독서록", "content": "선생님이 칭찬 도장을 주셨다."}
+
+     ```
+
+   - 이 경우, onmessage에서는 감지되지 않고, 올바른 이벤트 이름을 사용한 addEventListener에서만 감지되었다.
+     ![image.png](attachment:8ccb2d90-6ffe-47ad-8a9e-4216592cdd81:image.png)
+
+### 해결 방법
+
+```jsx
+// 기존: 작동하지 않음
+
+eventSource.onmessage = (event) => {
+  console.log("onmessage 실행됨:", event.data)
+}
+
+// 수정 후: 정상 동작
+
+eventSource.addEventListener("알림: ", (event) => {
+  console.log("새로운 알림 수신:", event.data)
+})
+```
+
+### 결론
+
+백엔드 문제라고 착각했지만, 실제 문제는 이벤트 이름이 있는 경우 onmessage가 아니라 addEventListener('이벤트이름', ...)을 사용해야 한다는 것이었다.
+SSE 이벤트의 구조를 면밀히 살펴보는 것이 중요하다.
+
 </details>
 
-<details><summary>2025.03.08 (금)</summary>
+<br/>
+
+<details><summary>2025.03.07 (금)</summary>
 </details>
