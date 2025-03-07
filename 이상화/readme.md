@@ -33,8 +33,9 @@ Spring Security는 Spring 기반 애플리케이션의 인증, 인가 및 보안
 
  Spring Security를 사용하는 이유는 Spring의 생태계에서 보안에 필요한 기능들을 제공하기 때문에, 개발자 입장에서 일일이 보안 관련 로직을 작성하지 않아도 된다는 장점
 
-인증(Authentication) : 해당 사용자가 본인이 맞는지 확인한다다
-인가(Authorization) : 인증된 사용자가 요청한 자원에 접근 가능한지를 결정한다
+인증(Authentication) : 해당 사용자가 본인이 맞는지 확인한다.
+인가(Authorization) : 인증된 사용자가 요청한 자원에 접근 가능한지를 결정한다.
+
 
 ## 2025.03.06 TIL
 - **redis란 무엇일까?**
