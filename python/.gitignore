@@ -1,0 +1,12 @@
+### PyCharm ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+# Environment configuration
+.env
+
+# Python
+__pycache__/
+venv/
