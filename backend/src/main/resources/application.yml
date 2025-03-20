@@ -5,11 +5,28 @@ jwt:
   temp-token-expiration: ${TEMP_TOKEN_EXPIRATION}
 
 spring:
+  profiles:
+    group:
+      babyspot-1:
+        - common
+        - port_8080
+      babyspot-2:
+        - common
+        - port_8081
+
+# 공통 설정
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+
   datasource:
     url: ${POSTGRES_URL}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -38,8 +55,30 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health, info
+    endpoint:
+      health:
+        show-details: always
+
+# babyspot-1 프로필 (포트 8080)
+---
+spring:
+  config:
+    activate:
+      on-profile: port_8080
 server:
   port: 8080
-  servlet:
-    session:
-      tracking-modes: cookie
+
+# babyspot-2 프로필 (포트 8081)
+---
+spring:
+  config:
+    activate:
+      on-profile: port_8081
+server:
+  port: 8081
