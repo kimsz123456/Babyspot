@@ -16,8 +16,8 @@ public class UtilController {
 
 	private final Environment env;
 
-	@GetMapping("/profile")
+	@GetMapping("/status")
 	public String getProfile() {
-		return Arrays.stream(env.getActiveProfiles()).findFirst().orElse("");
+		return "check";
 	}
 }
