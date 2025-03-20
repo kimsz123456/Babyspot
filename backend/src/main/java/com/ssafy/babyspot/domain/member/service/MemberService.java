@@ -36,6 +36,11 @@ public class MemberService {
 	}
 
 	@Transactional
+	public Optional<Member> findById(int memberId) {
+		return memberRepository.findById(memberId);
+	}
+
+	@Transactional
 	public Member createMember(String providerId, SignUpRequest signUpRequest) {
 		Optional<Member> existingMember = findByProviderId(providerId);
 		if (existingMember.isPresent()) {
