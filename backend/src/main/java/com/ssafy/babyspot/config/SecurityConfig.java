@@ -17,6 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.ssafy.babyspot.api.oauth.filter.JwtAuthenticationFilter;
 import com.ssafy.babyspot.api.oauth.handler.CustomAuthenticationSuccessHandler;
+import com.ssafy.babyspot.api.oauth.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	private final TokenService tokenService;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,7 +36,8 @@ public class SecurityConfig {
 			.formLogin(AbstractHttpConfigurer::disable)
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/", "/auth/**", "/oauth2/**", "/swagger-ui/**", "/v3/api-docs/**")
+				.requestMatchers("/", "/auth/**", "/oauth2/**", "/swagger-ui/**", "/v3/api-docs/**",
+					"/api/members/signup")
 				.permitAll()
 				.anyRequest()
 				.authenticated()
@@ -44,7 +47,7 @@ public class SecurityConfig {
 				.successHandler(customAuthenticationSuccessHandler)
 			)
 
-			.addFilterBefore(new JwtAuthenticationFilter(), OAuth2LoginAuthenticationFilter.class);
+			.addFilterBefore(new JwtAuthenticationFilter(tokenService), OAuth2LoginAuthenticationFilter.class);
 		return http.build();
 	}
 
