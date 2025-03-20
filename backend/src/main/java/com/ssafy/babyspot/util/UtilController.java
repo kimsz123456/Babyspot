@@ -11,13 +11,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/utils")
+@RequestMapping("/api/utils")
 public class UtilController {
- 
-    private final Environment env;
- 
-    @GetMapping("/profile")
-    public String getProfile() {
-        return Arrays.stream(env.getActiveProfiles()).findFirst().orElse("");
-    }
+
+	private final Environment env;
+
+	@GetMapping("/profile")
+	public String getProfile() {
+		return Arrays.stream(env.getActiveProfiles()).findFirst().orElse("");
+	}
 }
