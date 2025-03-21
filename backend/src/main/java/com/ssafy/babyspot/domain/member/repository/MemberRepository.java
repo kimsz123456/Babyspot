@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.ssafy.babyspot.domain.member.Member;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Integer> {
 	Optional<Member> findByProviderId(String providerId);
 }

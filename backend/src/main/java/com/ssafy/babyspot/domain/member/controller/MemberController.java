@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.babyspot.api.oauth.service.TokenService;
 import com.ssafy.babyspot.api.oauth.utils.CookieUtil;
+import com.ssafy.babyspot.domain.member.Member;
+import com.ssafy.babyspot.domain.member.dto.MemberResponse;
 import com.ssafy.babyspot.domain.member.dto.SignUpRequest;
 import com.ssafy.babyspot.domain.member.dto.SignUpResponse;
 import com.ssafy.babyspot.domain.member.dto.SignUpToken;
 import com.ssafy.babyspot.domain.member.service.MemberService;
+import com.ssafy.babyspot.exception.CustomException;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +36,21 @@ public class MemberController {
 	public MemberController(MemberService memberService, TokenService tokenService) {
 		this.memberService = memberService;
 		this.tokenService = tokenService;
+	}
+
+	@GetMapping("/me")
+	public ResponseEntity<MemberResponse> getCurrentMember(Authentication authentication) {
+		if (authentication == null || !authentication.isAuthenticated()) {
+			throw new CustomException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+		}
+
+		String memberId = authentication.getName();
+		Member member = memberService.findById(Integer.parseInt(memberId))
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "회원 정보를 찾을 수 없습니다."));
+
+		MemberResponse memberResponse = new MemberResponse(member.getId(), member.getNickname(), member.getProfileImg(),
+			member.getProviderId());
+		return ResponseEntity.ok(memberResponse);
 	}
 
 	@PostMapping("/signup")
