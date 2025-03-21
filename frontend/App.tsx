@@ -2,24 +2,24 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import SplashScreen from './pages/onboarding/SplashScreen';
-import SignInScreen from './pages/onboarding/SignInScreen';
-import SignUpScreen from './pages/onboarding/SignUpScreen';
+import SplashScreen from './src/pages/Onboarding/SplashScreen';
+import SignInScreen from './src/pages/Onboarding/SignInScreen';
+import SignUpScreen from './src/pages/Onboarding/SignUpScreen';
 
-import MapScreen from './pages/map/MapScreen';
-import SearchScreen from './pages/map/SearchScreen';
-import StoreDetailScreen from './pages/map/StoreDetailScreen';
-import EnterStoreRecommendationInformationScreen from './pages/map/EnterStoreRecommendationInformationScreen';
-import KeywordReviewScreen from './pages/map/KeywordReviewScreen';
-import WriteReviewScreen from './pages/map/WriteReviewScreen';
-import ReviewDetailScreen from './pages/map/ReviewDetailScreen';
+import MapScreen from './src/pages/Map/MapScreen';
+import SearchScreen from './src/pages/Map/SearchScreen';
+import StoreDetailScreen from './src/pages/Map/StoreDetailScreen';
+import EnterStoreRecommendationInformationScreen from './src/pages/Map/EnterStoreRecommendationInformationScreen';
+import KeywordReviewScreen from './src/pages/Map/KeywordReviewScreen';
+import WriteReviewScreen from './src/pages/Map/WriteReviewScreen';
+import ReviewDetailScreen from './src/pages/Map/ReviewDetailScreen';
 
-import RecommendScreen from './pages/recommend/RecommendScreen';
+import RecommendScreen from './src/pages/Recommend/RecommendScreen';
 
-import ProfileScreen from './pages/profile/ProfileScreen';
-import EditProfileScreen from './pages/profile/EditProfileScreen';
-import MyReviewListScreen from './pages/profile/MyReviewListScreen';
-import DeleteAccountScreen from './pages/profile/DeleteAccountScreen';
+import ProfileScreen from './src/pages/Profile/ProfileScreen';
+import EditProfileScreen from './src/pages/Profile/EditProfileScreen';
+import MyReviewListScreen from './src/pages/Profile/MyReviewListScreen';
+import DeleteAccountScreen from './src/pages/Profile/DeleteAccountScreen';
 
 const Stack = createStackNavigator();
 
