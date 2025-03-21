@@ -20,11 +20,11 @@ project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 output_dir = os.path.join(project_root, "data")
 
 # ✅ 파일 경로들
-input_csv = "restaurant_list.csv"
+input_csv = os.path.join(current_dir, "restaurant_list.csv")
 output_csv = os.path.join(output_dir, "restaurant_full_details4.csv")
 output_txt = os.path.join(output_dir, "restaurant_full_details4.txt")
 output_json = os.path.join(output_dir, "restaurant_full_details4.json")
-checkpoint_file = "checkpoint.txt"
+checkpoint_file = os.path.join(current_dir, "checkpoint.txt")
 
 # ✅ 이미 처리된 가게ID 목록 (중복 저장 방지)
 processed_store_ids = set()
