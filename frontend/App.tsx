@@ -9,7 +9,7 @@ import SignUpScreen from './src/pages/Onboarding/SignUpScreen';
 import MapScreen from './src/pages/Map/MapScreen';
 import SearchScreen from './src/pages/Map/SearchScreen';
 import StoreDetailScreen from './src/pages/Map/StoreDetailScreen';
-import EnterStoreRecommendationInformationScreen from './src/pages/Map/EnterStoreRecommendationInformationScreen';
+import EnterStoreRecommendationInformationScreen from './src/pages/Map/SelectRecommendationAgeScreen';
 import KeywordReviewScreen from './src/pages/Map/KeywordReviewScreen';
 import WriteReviewScreen from './src/pages/Map/WriteReviewScreen';
 import ReviewDetailScreen from './src/pages/Map/ReviewDetailScreen';
