@@ -1402,10 +1402,8 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mj-studio/react-native-naver-map@^2.2.0":
+"@mj-studio/react-native-naver-map@file:./libs/mj-studio-react-native-naver-map":
   version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@mj-studio/react-native-naver-map/-/react-native-naver-map-2.2.0.tgz#ef8dd4b4a70778bd9516d3df7e84ea1850a5c00b"
-  integrity sha512-5/AynHCyOGUbZXoh/jCiS5qk0Uwe50xAGPdjh1duf+3IkkoN+sBMHYGwpkGanELP6UnRMJ5kZO6q9FQ34BEMqg==
   dependencies:
     object-hash "^3.0.0"
 
