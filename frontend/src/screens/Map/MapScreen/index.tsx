@@ -1,46 +1,33 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 
-import {
-  NaverMapMarkerOverlay,
-  NaverMapView,
-  Region,
-} from '@mj-studio/react-native-naver-map';
+import {NaverMapMarkerOverlay} from '@mj-studio/react-native-naver-map';
 
-const jejuRegion: Region = {
-  latitude: 33.20530773,
-  longitude: 126.14656715029,
-  latitudeDelta: 0.38,
-  longitudeDelta: 0.8,
-};
+import * as S from './styles';
+
+// TODO: 이미지 상수 처리
+import RESTAURANT_MARKER from '../../../../assets/icons/restaurant-marker.png';
 
 const MapScreen = () => {
   return (
-    <View style={styles.container}>
-      <NaverMapView
-        style={styles.map}
-        initialRegion={jejuRegion}
-        isExtentBoundedInKorea={true}
-        onInitialized={() => console.log('지도 초기화 완료')}>
+    <S.ContainerView>
+      <S.NaverMap
+        initialCamera={{
+          latitude: 37.498040483,
+          longitude: 127.02758183,
+          zoom: 15,
+        }} // 강남역
+        isExtentBoundedInKorea={true}>
         <NaverMapMarkerOverlay
-          latitude={33.3565607356}
-          longitude={126.48599018}
-          width={50}
-          height={50}
+          latitude={37.501287}
+          longitude={127.03961}
+          width={30}
+          height={40}
+          image={RESTAURANT_MARKER}
           onTap={() => console.log('마커 탭됨')}
         />
-      </NaverMapView>
-    </View>
+      </S.NaverMap>
+    </S.ContainerView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
-});
 
 export default MapScreen;
