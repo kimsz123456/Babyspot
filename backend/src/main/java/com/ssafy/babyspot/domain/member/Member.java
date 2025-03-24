@@ -16,6 +16,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
@@ -27,12 +28,14 @@ public class Member {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@Setter
 	@Column(name = "profile_img", length = 255)
 	private String profileImg;
 
 	@Column(name = "providerid", length = 100, unique = true, nullable = false)
 	private String providerId;
 
+	@Setter
 	@Column(name = "nickname", length = 20, unique = true, nullable = false)
 	private String nickname;
 

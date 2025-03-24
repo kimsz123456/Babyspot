@@ -1,23 +1,33 @@
 package com.ssafy.babyspot.domain.member.controller;
 
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.babyspot.api.oauth.service.TokenService;
 import com.ssafy.babyspot.api.oauth.utils.CookieUtil;
+import com.ssafy.babyspot.api.s3.S3Component;
 import com.ssafy.babyspot.domain.member.Member;
 import com.ssafy.babyspot.domain.member.dto.MemberResponse;
 import com.ssafy.babyspot.domain.member.dto.SignUpRequest;
 import com.ssafy.babyspot.domain.member.dto.SignUpResponse;
 import com.ssafy.babyspot.domain.member.dto.SignUpToken;
+import com.ssafy.babyspot.domain.member.dto.UpdateProfileRequest;
+import com.ssafy.babyspot.domain.member.dto.UpdateProfileResponse;
+import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.domain.member.service.MemberService;
 import com.ssafy.babyspot.exception.CustomException;
 
@@ -30,12 +40,23 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/members")
 public class MemberController {
 
+	private final MemberRepository memberRepository;
+	@Value("${CLOUDFRONT_PROFILE_URL}")
+	private String CLOUDFRONT_PROFILE_URL;
+
+	@Value("${CLOUDFRONT_STORE_URL}")
+	private String CLOUDFRONT_STORE_URL;
+
 	private final MemberService memberService;
 	private final TokenService tokenService;
+	private final S3Component s3Component;
 
-	public MemberController(MemberService memberService, TokenService tokenService) {
+	public MemberController(MemberService memberService, TokenService tokenService, S3Component s3Component,
+		MemberRepository memberRepository) {
 		this.memberService = memberService;
 		this.tokenService = tokenService;
+		this.s3Component = s3Component;
+		this.memberRepository = memberRepository;
 	}
 
 	@GetMapping("/me")
@@ -45,12 +66,11 @@ public class MemberController {
 		}
 
 		String memberId = authentication.getName();
-		Member member = memberService.findById(Integer.parseInt(memberId))
-			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "회원 정보를 찾을 수 없습니다."));
+		Optional<Member> member = memberService.findById(Integer.parseInt(memberId));
 
-		MemberResponse memberResponse = new MemberResponse(member.getId(), member.getNickname(), member.getProfileImg(),
-			member.getProviderId());
-		return ResponseEntity.ok(memberResponse);
+		return member.map(value -> ResponseEntity.ok(MemberResponse.fromMember(value, CLOUDFRONT_PROFILE_URL)))
+			.orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+				.body(MemberResponse.withMessage("로그인된 사용자를 찾을 수 없습니다.")));
 	}
 
 	@PostMapping("/signup")
@@ -94,6 +114,32 @@ public class MemberController {
 				.body(new SignUpResponse("회원가입 실패", null, null));
 		}
 
+	}
+
+	@PostMapping("/signup/imgpresigned-url")
+	public ResponseEntity<Map<String, String>> generateImgPreSignedUrl(@RequestParam String profileName,
+		@RequestParam String nickname,
+		Authentication authentication) {
+		String memberId = authentication.getName();
+
+		Map<String, String> preSignedUrls = s3Component.generateProfilePreSignedUrl(memberId, nickname, profileName);
+		String profileKey = preSignedUrls.get("profileKey");
+
+		Member member = memberRepository.findById(Integer.parseInt(memberId))
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."));
+		member.setProfileImg(profileKey);
+		memberRepository.save(member);
+
+		return ResponseEntity.ok(preSignedUrls);
+	}
+
+	@PatchMapping("/update")
+	public ResponseEntity<UpdateProfileResponse> updateProfile(@RequestBody UpdateProfileRequest request,
+		Authentication authentication) {
+		String memberId = authentication.getName();
+		UpdateProfileResponse response = memberService.updateProfile(memberId, request);
+
+		return ResponseEntity.ok(response);
 	}
 
 	private String extractAndValidateTempToken(HttpServletRequest request) {

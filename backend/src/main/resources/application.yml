@@ -4,6 +4,20 @@ jwt:
   refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
   temp-token-expiration: ${TEMP_TOKEN_EXPIRATION}
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+    region:
+      static: ${AWS_REGION}
+    stack:
+      auto: false
+    s3:
+      profile-bucket: babyspot-profile
+      storeimg-bucket: babyspot-storeimg
+
+
 spring:
   datasource:
     url: ${POSTGRES_URL}
