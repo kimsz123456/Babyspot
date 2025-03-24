@@ -41,6 +41,7 @@ public class MemberAuthenticationService {
 				Cookie refreshCookie = CookieUtil.createRefreshCookie(jwtRefreshToken, false);
 				response.addCookie(refreshCookie);
 			}
+			logger.info("JWT access token: " + jwtAccessToken);
 			response.sendRedirect(baseUrl);
 		} else {
 			// 신규 회원 처리

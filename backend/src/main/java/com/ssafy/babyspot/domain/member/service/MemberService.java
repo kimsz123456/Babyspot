@@ -2,6 +2,7 @@ package com.ssafy.babyspot.domain.member.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.babyspot.api.oauth.service.TokenService;
+import com.ssafy.babyspot.api.s3.S3Component;
 import com.ssafy.babyspot.domain.member.Baby;
 import com.ssafy.babyspot.domain.member.Member;
 import com.ssafy.babyspot.domain.member.dto.SignUpRequest;
 import com.ssafy.babyspot.domain.member.dto.SignUpToken;
+import com.ssafy.babyspot.domain.member.dto.UpdateProfileRequest;
+import com.ssafy.babyspot.domain.member.dto.UpdateProfileResponse;
 import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.exception.CustomException;
 
@@ -23,11 +27,13 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final TokenService tokenService;
+	private final S3Component s3Component;
 
 	@Autowired
-	public MemberService(MemberRepository memberRepository, TokenService tokenService) {
+	public MemberService(MemberRepository memberRepository, TokenService tokenService, S3Component s3Component) {
 		this.memberRepository = memberRepository;
 		this.tokenService = tokenService;
+		this.s3Component = s3Component;
 	}
 
 	@Transactional
@@ -38,6 +44,11 @@ public class MemberService {
 	@Transactional
 	public Optional<Member> findById(int memberId) {
 		return memberRepository.findById(memberId);
+	}
+
+	@Transactional
+	public String findByProfileImgKey(String memberId) {
+		return memberRepository.findByProfileImg(Integer.valueOf(memberId)).orElse(null);
 	}
 
 	@Transactional
@@ -80,4 +91,33 @@ public class MemberService {
 		return new SignUpToken(newMember, jwtAccessToken, jwtRefreshToken);
 	}
 
+	@Transactional
+	public UpdateProfileResponse updateProfile(String memberId, UpdateProfileRequest request) {
+		Member member = memberRepository.findByProviderId(memberId)
+			.orElseThrow(() -> new CustomException((HttpStatus.NOT_FOUND), "회원을 찾을 수 없습니다."));
+
+		if (request.getNickname() != null && !request.getNickname().isEmpty()) {
+			member.setNickname(request.getNickname());
+		}
+
+		String profileKey = findByProfileImgKey(memberId);
+
+		String preSignedUrl = null;
+		if (request.getProfileImgUrl() != null && !request.getProfileImgUrl().isEmpty()) {
+			if (profileKey == null) {
+				Map<String, String> imgPreSignedUrl = s3Component.generateProfilePreSignedUrl(memberId,
+					request.getNickname(),
+					request.getProfileImgUrl());
+				profileKey = imgPreSignedUrl.get("profileKey");
+				preSignedUrl = imgPreSignedUrl.get("profileImgPreSignedUrl");
+
+				member.setProfileImg(profileKey);
+			} else {
+				preSignedUrl = s3Component.generatePreSignedUrlForProfileImageUpdate(profileKey);
+			}
+		}
+
+		memberRepository.save(member);
+		return new UpdateProfileResponse(member.getNickname(), preSignedUrl, profileKey);
+	}
 }
