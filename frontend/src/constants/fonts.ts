@@ -1,76 +1,77 @@
 import {StyleSheet} from 'react-native';
+import SCALE from './scale';
 
 export const FontStyles = StyleSheet.create({
   displayXlarge: {
     fontFamily: 'Pretendard-SemiBold',
-    fontSize: 72,
-    lineHeight: 74,
+    fontSize: SCALE(72),
+    lineHeight: SCALE(74),
     includeFontPadding: false,
   },
   displayLarge: {
     fontFamily: 'Pretendard-SemiBold',
-    fontSize: 64,
-    lineHeight: 70,
+    fontSize: SCALE(64),
+    lineHeight: SCALE(70),
     includeFontPadding: false,
   },
   displayMedium: {
     fontFamily: 'Pretendard-SemiBold',
-    fontSize: 48,
-    lineHeight: 54,
+    fontSize: SCALE(48),
+    lineHeight: SCALE(54),
     includeFontPadding: false,
   },
   displaySmall: {
     fontFamily: 'Pretendard-SemiBold',
-    fontSize: 40,
-    lineHeight: 44,
+    fontSize: SCALE(40),
+    lineHeight: SCALE(44),
     includeFontPadding: false,
   },
-  HeadingXlarge: {
+  headingXlarge: {
     fontFamily: 'Pretendard-SemiBold',
-    fontSize: 32,
-    lineHeight: 36,
+    fontSize: SCALE(32),
+    lineHeight: SCALE(36),
     includeFontPadding: false,
   },
-  HeadingLarge: {
+  headingLarge: {
     fontFamily: 'Pretendard-SemiBold',
-    fontSize: 26,
-    lineHeight: 30,
+    fontSize: SCALE(26),
+    lineHeight: SCALE(30),
     includeFontPadding: false,
   },
-  HeadingMedium: {
+  headingMedium: {
     fontFamily: 'Pretendard-SemiBold',
-    fontSize: 22,
-    lineHeight: 26,
+    fontSize: SCALE(22),
+    lineHeight: SCALE(26),
     includeFontPadding: false,
   },
-  HeadingSmall: {
+  headingSmall: {
     fontFamily: 'Pretendard-SemiBold',
-    fontSize: 18,
-    lineHeight: 24,
+    fontSize: SCALE(18),
+    lineHeight: SCALE(24),
     includeFontPadding: false,
   },
-  BodyMedium: {
+  bodyMedium: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: SCALE(16),
+    lineHeight: SCALE(24),
     includeFontPadding: false,
   },
-  BodySmall: {
+  bodySmall: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: SCALE(14),
+    lineHeight: SCALE(20),
     includeFontPadding: false,
   },
-  CaptionMedium: {
+  captionMedium: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: SCALE(12),
+    lineHeight: SCALE(16),
     includeFontPadding: false,
   },
-  CaptionSmall: {
+  captionSmall: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 10,
-    lineHeight: 12,
+    fontSize: SCALE(10),
+    lineHeight: SCALE(12),
     includeFontPadding: false,
   },
 });
