@@ -8,7 +8,7 @@ export const MapScreenContainer = styled(View)`
   position: relative;
 `;
 
-export const SearchAndRecommentContainer = styled(View)`
+export const SearchAndRecommendContainer = styled(View)`
   z-index: 10;
   position: absolute;
   top: 32px;
