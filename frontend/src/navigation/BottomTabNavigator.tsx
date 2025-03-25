@@ -44,6 +44,7 @@ const BottomTabNavigator = () => {
       <Tab.Navigator
         initialRouteName="Map"
         screenOptions={({route}) => ({
+          headerShown: route.name === 'Map' ? false : true,
           tabBarHideOnKeyboard: true,
           tabBarLabel: ({focused}) => {
             return (
