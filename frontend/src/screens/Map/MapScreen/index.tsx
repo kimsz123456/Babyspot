@@ -2,10 +2,9 @@ import React from 'react';
 
 import {NaverMapMarkerOverlay} from '@mj-studio/react-native-naver-map';
 
-import * as S from './styles';
+import {IC_RESTUARANT_MARKER} from '../../../constants/icons';
 
-// TODO: 이미지 상수 처리
-import RESTAURANT_MARKER from '../../../../assets/icons/restaurant-marker.png';
+import * as S from './styles';
 
 const MapScreen = () => {
   return (
@@ -22,8 +21,7 @@ const MapScreen = () => {
           longitude={127.03961}
           width={30}
           height={40}
-          image={RESTAURANT_MARKER}
-          onTap={() => console.log('마커 탭됨')}
+          image={IC_RESTUARANT_MARKER}
         />
       </S.NaverMap>
     </S.ContainerView>
