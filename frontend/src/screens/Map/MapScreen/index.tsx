@@ -4,13 +4,17 @@ import {NaverMapMarkerOverlay} from '@mj-studio/react-native-naver-map';
 
 import {IC_RESTUARANT_MARKER} from '../../../constants/icons';
 import PlaceSearchButton from '../components/PlaceSearchButton';
+import RecommendButton from './components/RecommendButton';
 
 import * as S from './styles';
 
 const MapScreen = () => {
   return (
     <S.MapScreenContainer>
-      <PlaceSearchButton />
+      <S.SearchAndRecommentContainer>
+        <PlaceSearchButton />
+        <RecommendButton />
+      </S.SearchAndRecommentContainer>
 
       <S.NaverMap
         initialCamera={{
