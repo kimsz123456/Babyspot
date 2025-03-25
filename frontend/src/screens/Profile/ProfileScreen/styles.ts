@@ -48,6 +48,25 @@ const ProfileEdit = styled(Image)`
   height: ${scale(32)};
 `;
 
+const ReviewContainer = styled(View)`
+  padding-top: ${scale(32)};
+  padding-left: ${scale(24)};
+  padding-right: ${scale(24)};
+`;
+const ReviewTitleContanier = styled(View)`
+  flex-direction: row;
+  align-items: center;
+`;
+const ReviewTitle = styled(Text)`
+  ${FontStyles.headingMedium};
+  color: ${GrayColors[800]};
+  flex: 1;
+`;
+const MoreReview = styled(Text)`
+  ${FontStyles.captionMedium};
+  color: ${GrayColors[700]};
+`;
+
 export {
   BackGround,
   ProfileContainer,
@@ -57,4 +76,8 @@ export {
   Name,
   AgeIcons,
   ProfileEdit,
+  ReviewContainer,
+  ReviewTitleContanier,
+  ReviewTitle,
+  MoreReview,
 };
