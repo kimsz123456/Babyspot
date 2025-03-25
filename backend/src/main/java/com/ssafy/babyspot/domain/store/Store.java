@@ -3,6 +3,10 @@ package com.ssafy.babyspot.domain.store;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.locationtech.jts.geom.Point;
+
 import com.ssafy.babyspot.domain.reveiw.Review;
 
 import jakarta.persistence.Column;
@@ -26,8 +30,9 @@ public class Store {
 
 	private String title;
 
-	@Column(columnDefinition = "geometry(Point,4326)")
-	private String location;
+	@JdbcTypeCode(SqlTypes.GEOMETRY)
+	@Column(columnDefinition = "geometry(Point,4326)", nullable = false)
+	private Point location;
 
 	private Boolean okZone;
 	private String category;
@@ -39,7 +44,7 @@ public class Store {
 	private int reviewCount;
 
 	private Boolean babyChair;
-	private Boolean babyBed;
+	private Boolean babyTableware;
 	private Boolean strollerAccess;
 	private Boolean diaperChangingStation;
 	private Boolean nursingRoom;

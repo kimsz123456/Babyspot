@@ -1,4 +1,6 @@
-package com.ssafy.babyspot.domain.store;
+package com.ssafy.babyspot.domain.reveiw;
+
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -7,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,16 +17,22 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "sotore_keyword")
-public class StoreKeyword {
+@Table(name = "review_image")
+public class ReviewImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "store_id", nullable = false)
-	private Store store;
+	@JoinColumn(name = "review_id", nullable = false)
+	private Review review;
 
-	private String keyword;
+	private String imageUrl;
+	private int orderIndex;
+	private LocalDateTime createdAt;
 
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = LocalDateTime.now();
+	}
 }

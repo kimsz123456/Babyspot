@@ -1,5 +1,11 @@
 package com.ssafy.babyspot.domain.store;
 
+import java.util.List;
+
+import com.ssafy.babyspot.converter.ListToJsonConverter;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,10 +18,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor
-@Table(name = "sotore_keyword")
-public class StoreKeyword {
+@Getter
+@Table(name = "sentiment_analysis")
+public class SentimentAnalysis {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -24,6 +31,11 @@ public class StoreKeyword {
 	@JoinColumn(name = "store_id", nullable = false)
 	private Store store;
 
-	private String keyword;
+	@Column(name = "positive", columnDefinition = "json")
+	@Convert(converter = ListToJsonConverter.class)
+	private List<String> positive;
 
+	@Column(name = "negative", columnDefinition = "json")
+	@Convert(converter = ListToJsonConverter.class)
+	private List<String> negative;
 }
