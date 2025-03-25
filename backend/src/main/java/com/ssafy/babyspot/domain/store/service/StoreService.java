@@ -81,7 +81,6 @@ public class StoreService {
 				StoreDefaultInfoDto storeDefaultInfoDto = new StoreDefaultInfoDto();
 				storeDefaultInfoDto.setId(store.getId());
 				storeDefaultInfoDto.setTitle(store.getTitle());
-				storeDefaultInfoDto.setCategory(store.getCategory());
 				storeDefaultInfoDto.setAddress(store.getAddress());
 				storeDefaultInfoDto.setContactNumber(store.getContactNumber());
 				storeDefaultInfoDto.setTransportationConvenience(store.getTransportationConvenience());
@@ -94,6 +93,8 @@ public class StoreService {
 				storeDefaultInfoDto.setDiaperChangingStation(store.getDiaperChangingStation());
 				storeDefaultInfoDto.setNursingRoom(store.getNursingRoom());
 				storeDefaultInfoDto.setKidsMenu(store.getKidsMenu());
+				storeDefaultInfoDto.setPlayZone(store.getPlayZone());
+				storeDefaultInfoDto.setGroupTable(store.getGroupTable());
 				return storeDefaultInfoDto;
 			})
 			.orElseThrow(() -> new RuntimeException("매장이 없습니다."));

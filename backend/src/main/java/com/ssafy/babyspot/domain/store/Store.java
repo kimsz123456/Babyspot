@@ -35,7 +35,6 @@ public class Store {
 	private Point location;
 
 	private Boolean okZone;
-	private String category;
 	private String address;
 	private String contactNumber;
 	private String transportationConvenience;
@@ -48,6 +47,8 @@ public class Store {
 	private Boolean strollerAccess;
 	private Boolean diaperChangingStation;
 	private Boolean nursingRoom;
+	private Boolean groupTable;
+	private Boolean playZone;
 
 	private String kidsMenu;
 
