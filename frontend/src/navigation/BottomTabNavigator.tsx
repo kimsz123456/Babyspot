@@ -14,6 +14,7 @@ import {GrayColors, PrimaryColors} from '../constants/colors';
 import {FontStyles} from '../constants/fonts';
 import styled from 'styled-components/native';
 import scale from '../utils/scale';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const BOTTOM_TAB_INFROMATION: {
   [key: string]: {
@@ -39,6 +40,8 @@ const Tab = createBottomTabNavigator({
 });
 
 const BottomTabNavigator = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -46,14 +49,9 @@ const BottomTabNavigator = () => {
         screenOptions={({route}) => ({
           headerShown: route.name === 'Map' ? false : true,
           tabBarHideOnKeyboard: true,
-          tabBarLabel: ({focused}) => {
-            return (
-              <View style={{flexDirection: 'row'}}>
-                <TabBarLabel $focused={focused}>
-                  {BOTTOM_TAB_INFROMATION[route.name].label}
-                </TabBarLabel>
-              </View>
-            );
+          tabBarStyle: {
+            height: scale(68) + insets.bottom,
+            paddingTop: scale(8),
           },
 
           tabBarIcon: ({focused}) => {
@@ -65,6 +63,16 @@ const BottomTabNavigator = () => {
                     : BOTTOM_TAB_INFROMATION[route.name].iconSource_inactive
                 }
               />
+            );
+          },
+
+          tabBarLabel: ({focused}) => {
+            return (
+              <View style={{flexDirection: 'row'}}>
+                <TabBarLabel $focused={focused}>
+                  {BOTTOM_TAB_INFROMATION[route.name].label}
+                </TabBarLabel>
+              </View>
             );
           },
         })}>
