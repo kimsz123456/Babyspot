@@ -3,6 +3,6 @@ import {Dimensions} from 'react-native';
 const {width} = Dimensions.get('window');
 const guidelineBaseWidth = 360;
 
-const SCALE = width / guidelineBaseWidth;
+const scale = (size: number) => (width / guidelineBaseWidth) * size;
 
-export default SCALE;
+export default scale;
