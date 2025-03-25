@@ -1779,6 +1779,14 @@
     invariant "^2.2.4"
     nullthrows "^1.1.1"
 
+"@react-navigation/bottom-tabs@^7.3.2":
+  version "7.3.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-7.3.2.tgz#052fe9fcd859426f5f3fd072cd372035b4ed76d5"
+  integrity sha512-gxFQrBTkb8Gf6WGrW2C61JCb5vLFxBLaocNCvNLxPcEMQWuRv+PYIL4NOqWBmmh0+TSMRp/0BI1b+BU6EQfxQQ==
+  dependencies:
+    "@react-navigation/elements" "^2.3.0"
+    color "^4.2.3"
+
 "@react-navigation/core@^7.6.0":
   version "7.6.0"
   resolved "https://registry.npmjs.org/@react-navigation/core/-/core-7.6.0.tgz"
@@ -1796,6 +1804,13 @@
   version "2.2.8"
   resolved "https://registry.npmjs.org/@react-navigation/elements/-/elements-2.2.8.tgz"
   integrity sha512-wJoeywG/hHIml4+ycFiQKofYczkLNbHw0s5i8tSXJYzhZ0B1P3s945Tuuf0OreZtnK5XX4K3p3VQ66RtBWA88w==
+  dependencies:
+    color "^4.2.3"
+
+"@react-navigation/elements@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-2.3.0.tgz#c74763038fe48049d8c3b0528a29d7bd90acc460"
+  integrity sha512-2VGB6rFejk1fGxU4PuqPKXPzuqD0nC6iCSjMRsyM5CetcwiEidHmv4nGIXvw7D9CvqoZxvcQWxL4X3uSodj0PA==
   dependencies:
     color "^4.2.3"
 
