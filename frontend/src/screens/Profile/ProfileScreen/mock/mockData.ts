@@ -1,4 +1,4 @@
-import ReviewType from '../components/MyReview/types';
+import {ReviewType} from '../components/MyReview/types';
 
 const mockReviews: ReviewType[] = [
   {

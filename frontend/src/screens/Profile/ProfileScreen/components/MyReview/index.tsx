@@ -1,13 +1,13 @@
 import React from 'react';
 import * as S from './styles';
 import {IC_YELLOW_STAR} from '../../../../../constants/icons';
-import ReviewType from './types';
+import {ReviewType} from './types';
 
 interface MyReviewProps {
   review: ReviewType;
 }
 
-const MyReview: React.FC<MyReviewProps> = ({review}) => {
+export const MyReview: React.FC<MyReviewProps> = ({review}) => {
   return (
     <S.ReviewContainer>
       <S.ReviewTitleContainer>
@@ -22,5 +22,3 @@ const MyReview: React.FC<MyReviewProps> = ({review}) => {
     </S.ReviewContainer>
   );
 };
-
-export default MyReview;

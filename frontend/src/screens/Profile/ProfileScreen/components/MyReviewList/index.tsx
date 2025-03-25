@@ -1,9 +1,9 @@
 import React from 'react';
-import MyReview from '../MyReview';
+import {MyReview} from '../MyReview';
 import * as S from './styles.ts';
 import mockReviews from '../../mock/mockData.ts';
 
-const MyReviewList = () => {
+export const MyReviewList = () => {
   return (
     <S.ReviewListContainer>
       {mockReviews.map(review => (
@@ -12,5 +12,3 @@ const MyReviewList = () => {
     </S.ReviewListContainer>
   );
 };
-
-export default MyReviewList;
