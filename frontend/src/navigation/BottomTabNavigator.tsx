@@ -75,8 +75,8 @@ const BottomTabNavigator = () => {
 };
 
 const IconImage = styled(Image)`
-  width: ${scale(24)};
-  height: ${scale(24)};
+  width: ${scale(24)}px;
+  height: ${scale(24)}px;
 `;
 
 const TabBarLabel = styled(Text)<{$focused: boolean}>`
