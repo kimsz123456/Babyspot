@@ -32,6 +32,8 @@ const IC_RESTAURANT_MARKER: ImageRequireSource = require('../../assets/icons/res
 
 const IC_BABY: ImageRequireSource = require('../../assets/icons/baby.png');
 
+const IC_RETRY: ImageRequireSource = require('../../assets/icons/retry.png');
+
 export {
   IC_AGE1,
   IC_AGE2,
@@ -58,4 +60,5 @@ export {
   IC_PROFILE_NAV_ACTIVE,
   IC_RESTAURANT_MARKER as IC_RESTAURANT_MARKER,
   IC_BABY,
+  IC_RETRY,
 };

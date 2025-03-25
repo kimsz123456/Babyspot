@@ -5,6 +5,8 @@ import {NaverMapMarkerOverlay} from '@mj-studio/react-native-naver-map';
 import PlaceSearchButton from '../components/PlaceSearchButton';
 import RecommendButton from './components/RecommendButton';
 import Chip from './components/Chip';
+import ResearchButton from './components/ResearchButton';
+
 import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
 
 import * as S from './styles';
@@ -38,6 +40,8 @@ const MapScreen = () => {
           image={IC_RESTAURANT_MARKER}
         />
       </S.NaverMap>
+
+      <ResearchButton />
     </S.MapScreenContainer>
   );
 };
