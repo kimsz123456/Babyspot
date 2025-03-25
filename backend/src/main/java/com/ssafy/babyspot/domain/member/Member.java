@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ssafy.babyspot.domain.reveiw.Review;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,6 +49,9 @@ public class Member {
 
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Baby> babies = new ArrayList<>();
+
+	@OneToMany(mappedBy = "member")
+	private List<Review> reviews = new ArrayList<>();
 
 	@Builder
 	public Member(String providerId, String nickname, String profileImg) {
