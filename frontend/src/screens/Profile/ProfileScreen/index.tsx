@@ -3,6 +3,7 @@ import * as S from './styles.ts';
 import {IMG_DEFAULT_PROFILE} from '../../../constants/images.ts';
 import {IC_AGE3, IC_PROFILE_EDIT} from '../../../constants/icons.ts';
 import MyReviewList from './components/MyReviewList/index.tsx';
+import {DividerContainer} from '../../../components/atoms/Divider/styles.ts';
 
 const ProfileScreen = () => {
   const name = '감귤하우스';
@@ -26,6 +27,7 @@ const ProfileScreen = () => {
         </S.ReviewTitleContanier>
         <MyReviewList />
       </S.ReviewContainer>
+      <DividerContainer />
     </S.BackGround>
   );
 };
