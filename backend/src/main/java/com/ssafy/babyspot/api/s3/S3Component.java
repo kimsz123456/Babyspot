@@ -19,45 +19,54 @@ public class S3Component {
 
 	private final S3Presigner presigner;
 
-	@Value("${cloud.aws.s3.profile-bucket}")
-	private String profileBucket;
-
-	@Value("${cloud.aws.s3.storeimg-bucket}")
-	private String storeImgBucket;
+	@Value("${cloud.aws.s3.babyspot-bucket}")
+	private String bucket;
 
 	public S3Component(S3Presigner presigner) {
 		this.presigner = presigner;
 	}
 
-	public Map<String, String> generateProfilePreSignedUrl(String memberId, String nickname,
-		String profileImgFilename) {
+	public Map<String, String> generateProfilePreSignedUrl(String memberId,
+		String profileImgFilename,
+		String contentType) {
 		Map<String, String> urls = new HashMap<>();
 
 		if (profileImgFilename != null && !profileImgFilename.isEmpty()) {
-			String profileKey = nickname + " " + "id= " + memberId + "/profile/" + profileImgFilename;
-			URL profileImgPreSignedUrl = presigner.presignPutObject(PutObjectPresignRequest.builder().
-				signatureDuration(Duration.ofMinutes(10))
-				.putObjectRequest(req -> req.bucket(profileBucket).key(profileKey).contentType("image/jpeg"))
-				.build()).url();
+			String profileKey = String.format("profile/%s/%s", memberId, profileImgFilename);
+
+			URL profileImgPreSignedUrl = presigner.presignPutObject(
+				PutObjectPresignRequest.builder()
+					.signatureDuration(Duration.ofMinutes(10))
+					.putObjectRequest(req -> req
+						.bucket(bucket)
+						.key(profileKey)
+						.contentType(contentType))
+					.build()
+			).url();
 
 			urls.put("profileImgPreSignedUrl", profileImgPreSignedUrl.toString());
 			urls.put("profileKey", profileKey);
 		}
+
 		return urls;
 	}
 
-	public String generatePreSignedUrlForProfileImageUpdate(String profileKey) {
-		if (profileKey != null && !profileKey.isEmpty()) {
-			throw new CustomException(HttpStatus.NOT_FOUND, "프로필 이미지 키가 필요합니다.");
+	public String generatePreSignedUrlForProfileImageUpdate(String profileKey, String contentType) {
+		if (profileKey == null || profileKey.isEmpty()) {
+			throw new CustomException(HttpStatus.BAD_REQUEST, "프로필 이미지 키가 필요합니다.");
 		}
 
-		URL profileImgPreSignedUrl = presigner.presignPutObject(PutObjectPresignRequest.builder()
-			.signatureDuration(Duration.ofMinutes(10))
-			.putObjectRequest(req -> req.bucket(profileBucket)
-				.key(profileKey)
-				.contentType("image/jpeg"))
-			.build()).url();
+		URL profileImgPreSignedUrl = presigner.presignPutObject(
+			PutObjectPresignRequest.builder()
+				.signatureDuration(Duration.ofMinutes(10))
+				.putObjectRequest(req -> req
+					.bucket(bucket)
+					.key(profileKey)
+					.contentType(contentType))
+				.build()
+		).url();
 
 		return profileImgPreSignedUrl.toString();
 	}
+
 }

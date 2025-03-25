@@ -41,11 +41,8 @@ import jakarta.validation.Valid;
 public class MemberController {
 
 	private final MemberRepository memberRepository;
-	@Value("${CLOUDFRONT_PROFILE_URL}")
-	private String CLOUDFRONT_PROFILE_URL;
-
-	@Value("${CLOUDFRONT_STORE_URL}")
-	private String CLOUDFRONT_STORE_URL;
+	@Value("${CLOUDFRONT_URL}")
+	private String CLOUDFRONT_URL;
 
 	private final MemberService memberService;
 	private final TokenService tokenService;
@@ -68,7 +65,7 @@ public class MemberController {
 		String memberId = authentication.getName();
 		Optional<Member> member = memberService.findById(Integer.parseInt(memberId));
 
-		return member.map(value -> ResponseEntity.ok(MemberResponse.fromMember(value, CLOUDFRONT_PROFILE_URL)))
+		return member.map(value -> ResponseEntity.ok(MemberResponse.fromMember(value, CLOUDFRONT_URL)))
 			.orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 				.body(MemberResponse.withMessage("로그인된 사용자를 찾을 수 없습니다.")));
 	}
@@ -118,11 +115,12 @@ public class MemberController {
 
 	@PostMapping("/signup/imgpresigned-url")
 	public ResponseEntity<Map<String, String>> generateImgPreSignedUrl(@RequestParam String profileName,
-		@RequestParam String nickname,
+		@RequestParam String contentType,
 		Authentication authentication) {
 		String memberId = authentication.getName();
 
-		Map<String, String> preSignedUrls = s3Component.generateProfilePreSignedUrl(memberId, nickname, profileName);
+		Map<String, String> preSignedUrls = s3Component.generateProfilePreSignedUrl(memberId, profileName,
+			contentType);
 		String profileKey = preSignedUrls.get("profileKey");
 
 		Member member = memberRepository.findById(Integer.parseInt(memberId))

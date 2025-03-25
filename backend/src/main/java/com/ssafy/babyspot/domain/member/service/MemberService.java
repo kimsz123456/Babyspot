@@ -93,7 +93,7 @@ public class MemberService {
 
 	@Transactional
 	public UpdateProfileResponse updateProfile(String memberId, UpdateProfileRequest request) {
-		Member member = memberRepository.findByProviderId(memberId)
+		Member member = memberRepository.findById(Integer.valueOf(memberId))
 			.orElseThrow(() -> new CustomException((HttpStatus.NOT_FOUND), "회원을 찾을 수 없습니다."));
 
 		if (request.getNickname() != null && !request.getNickname().isEmpty()) {
@@ -106,14 +106,15 @@ public class MemberService {
 		if (request.getProfileImgUrl() != null && !request.getProfileImgUrl().isEmpty()) {
 			if (profileKey == null) {
 				Map<String, String> imgPreSignedUrl = s3Component.generateProfilePreSignedUrl(memberId,
-					request.getNickname(),
-					request.getProfileImgUrl());
+					request.getProfileImgUrl(),
+					request.getContentType());
 				profileKey = imgPreSignedUrl.get("profileKey");
 				preSignedUrl = imgPreSignedUrl.get("profileImgPreSignedUrl");
 
 				member.setProfileImg(profileKey);
 			} else {
-				preSignedUrl = s3Component.generatePreSignedUrlForProfileImageUpdate(profileKey);
+				preSignedUrl = s3Component.generatePreSignedUrlForProfileImageUpdate(profileKey,
+					request.getContentType());
 			}
 		}
 

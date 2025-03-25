@@ -14,8 +14,7 @@ cloud:
     stack:
       auto: false
     s3:
-      profile-bucket: babyspot-profile
-      storeimg-bucket: babyspot-storeimg
+      babyspot-bucket: babyspot
 
 
 spring:
