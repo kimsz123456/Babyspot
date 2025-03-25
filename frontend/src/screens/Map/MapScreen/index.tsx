@@ -8,7 +8,7 @@ import * as S from './styles';
 
 const MapScreen = () => {
   return (
-    <S.ContainerView>
+    <S.MapScreenContainer>
       <S.NaverMap
         initialCamera={{
           latitude: 37.498040483,
@@ -25,7 +25,7 @@ const MapScreen = () => {
           image={IC_RESTUARANT_MARKER}
         />
       </S.NaverMap>
-    </S.ContainerView>
+    </S.MapScreenContainer>
   );
 };
 
