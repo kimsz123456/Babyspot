@@ -15,6 +15,7 @@ const MapScreen = () => {
           longitude: 127.02758183,
           zoom: 15,
         }} // 강남역
+        isIndoorEnabled={true}
         isExtentBoundedInKorea={true}>
         <NaverMapMarkerOverlay
           latitude={37.501287}
