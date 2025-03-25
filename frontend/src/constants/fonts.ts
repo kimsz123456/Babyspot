@@ -26,49 +26,49 @@ export const FontStyles = StyleSheet.create({
     lineHeight: SCALE(44),
     includeFontPadding: false,
   },
-  HeadingXlarge: {
+  headingXlarge: {
     fontFamily: 'Pretendard-SemiBold',
     fontSize: SCALE(32),
     lineHeight: SCALE(36),
     includeFontPadding: false,
   },
-  HeadingLarge: {
+  headingLarge: {
     fontFamily: 'Pretendard-SemiBold',
     fontSize: SCALE(26),
     lineHeight: SCALE(30),
     includeFontPadding: false,
   },
-  HeadingMedium: {
+  headingMedium: {
     fontFamily: 'Pretendard-SemiBold',
     fontSize: SCALE(22),
     lineHeight: SCALE(26),
     includeFontPadding: false,
   },
-  HeadingSmall: {
+  headingSmall: {
     fontFamily: 'Pretendard-SemiBold',
     fontSize: SCALE(18),
     lineHeight: SCALE(24),
     includeFontPadding: false,
   },
-  BodyMedium: {
+  bodyMedium: {
     fontFamily: 'Pretendard-Regular',
     fontSize: SCALE(16),
     lineHeight: SCALE(24),
     includeFontPadding: false,
   },
-  BodySmall: {
+  bodySmall: {
     fontFamily: 'Pretendard-Regular',
     fontSize: SCALE(14),
     lineHeight: SCALE(20),
     includeFontPadding: false,
   },
-  CaptionMedium: {
+  captionMedium: {
     fontFamily: 'Pretendard-Regular',
     fontSize: SCALE(12),
     lineHeight: SCALE(16),
     includeFontPadding: false,
   },
-  CaptionSmall: {
+  captionSmall: {
     fontFamily: 'Pretendard-Regular',
     fontSize: SCALE(10),
     lineHeight: SCALE(12),
