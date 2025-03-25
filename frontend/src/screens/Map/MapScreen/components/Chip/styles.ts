@@ -2,11 +2,13 @@ import {Pressable, Text} from 'react-native';
 
 import styled from 'styled-components/native';
 
+import scale from '../../../../../utils/scale';
+
 import {GrayColors} from '../../../../../constants/colors';
 import {FontStyles} from '../../../../../constants/fonts';
 
 export const Chip = styled(Pressable)`
-  padding: 8px;
+  padding: ${scale(8)}px;
   border-radius: 8px;
   border-width: 1px;
   border-color: ${GrayColors[200]};

@@ -2,6 +2,8 @@ import {Text, View} from 'react-native';
 
 import styled from 'styled-components/native';
 
+import scale from '../../../../utils/scale';
+
 import {FontStyles} from '../../../../constants/fonts';
 import {GrayColors} from '../../../../constants/colors';
 
@@ -10,7 +12,7 @@ export const PlaceSearchButton = styled(View)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 8px;
+  padding: ${scale(8)}px;
   border-width: 1px;
   border-style: solid;
   border-color: ${GrayColors[200]};
