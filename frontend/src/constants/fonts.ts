@@ -1,77 +1,65 @@
-import {StyleSheet} from 'react-native';
-import SCALE from './scale';
+import {css} from 'styled-components/native';
+import scale from '../utils/scale';
 
-export const FontStyles = StyleSheet.create({
-  displayXlarge: {
-    fontFamily: 'Pretendard-SemiBold',
-    fontSize: SCALE(72),
-    lineHeight: SCALE(74),
-    includeFontPadding: false,
-  },
-  displayLarge: {
-    fontFamily: 'Pretendard-SemiBold',
-    fontSize: SCALE(64),
-    lineHeight: SCALE(70),
-    includeFontPadding: false,
-  },
-  displayMedium: {
-    fontFamily: 'Pretendard-SemiBold',
-    fontSize: SCALE(48),
-    lineHeight: SCALE(54),
-    includeFontPadding: false,
-  },
-  displaySmall: {
-    fontFamily: 'Pretendard-SemiBold',
-    fontSize: SCALE(40),
-    lineHeight: SCALE(44),
-    includeFontPadding: false,
-  },
-  headingXlarge: {
-    fontFamily: 'Pretendard-SemiBold',
-    fontSize: SCALE(32),
-    lineHeight: SCALE(36),
-    includeFontPadding: false,
-  },
-  headingLarge: {
-    fontFamily: 'Pretendard-SemiBold',
-    fontSize: SCALE(26),
-    lineHeight: SCALE(30),
-    includeFontPadding: false,
-  },
-  headingMedium: {
-    fontFamily: 'Pretendard-SemiBold',
-    fontSize: SCALE(22),
-    lineHeight: SCALE(26),
-    includeFontPadding: false,
-  },
-  headingSmall: {
-    fontFamily: 'Pretendard-SemiBold',
-    fontSize: SCALE(18),
-    lineHeight: SCALE(24),
-    includeFontPadding: false,
-  },
-  bodyMedium: {
-    fontFamily: 'Pretendard-Regular',
-    fontSize: SCALE(16),
-    lineHeight: SCALE(24),
-    includeFontPadding: false,
-  },
-  bodySmall: {
-    fontFamily: 'Pretendard-Regular',
-    fontSize: SCALE(14),
-    lineHeight: SCALE(20),
-    includeFontPadding: false,
-  },
-  captionMedium: {
-    fontFamily: 'Pretendard-Regular',
-    fontSize: SCALE(12),
-    lineHeight: SCALE(16),
-    includeFontPadding: false,
-  },
-  captionSmall: {
-    fontFamily: 'Pretendard-Regular',
-    fontSize: SCALE(10),
-    lineHeight: SCALE(12),
-    includeFontPadding: false,
-  },
-});
+export const FontStyles = {
+  displayXlarge: css`
+    font-family: 'Pretendard-SemiBold';
+    font-size: ${scale(72)}px;
+    line-height: ${scale(74)}px;
+  `,
+  displayLarge: css`
+    font-family: 'Pretendard-SemiBold';
+    font-size: ${scale(64)}px;
+    line-height: ${scale(70)}px;
+  `,
+  displayMedium: css`
+    font-family: 'Pretendard-SemiBold';
+    font-size: ${scale(48)}px;
+    line-height: ${scale(54)}px;
+  `,
+  displaySmall: css`
+    font-family: 'Pretendard-SemiBold';
+    font-size: ${scale(40)}px;
+    line-height: ${scale(44)}px;
+  `,
+  headingXlarge: css`
+    font-family: 'Pretendard-SemiBold';
+    font-size: ${scale(32)}px;
+    line-height: ${scale(36)}px;
+  `,
+  headingLarge: css`
+    font-family: 'Pretendard-SemiBold';
+    font-size: ${scale(26)}px;
+    line-height: ${scale(30)}px;
+  `,
+  headingMedium: css`
+    font-family: 'Pretendard-SemiBold';
+    font-size: ${scale(22)}px;
+    line-height: ${scale(26)}px;
+  `,
+  headingSmall: css`
+    font-family: 'Pretendard-SemiBold';
+    font-size: ${scale(18)}px;
+    line-height: ${scale(24)}px;
+  `,
+  bodyMedium: css`
+    font-family: 'Pretendard-Regular';
+    font-size: ${scale(16)}px;
+    line-height: ${scale(24)}px;
+  `,
+  bodySmall: css`
+    font-family: 'Pretendard-Regular';
+    font-size: ${scale(14)}px;
+    line-height: ${scale(20)}px;
+  `,
+  captionMedium: css`
+    font-family: 'Pretendard-Regular';
+    font-size: ${scale(12)}px;
+    line-height: ${scale(16)}px;
+  `,
+  captionSmall: css`
+    font-family: 'Pretendard-Regular';
+    font-size: ${scale(10)}px;
+    line-height: ${scale(12)}px;
+  `,
+};
