@@ -13,6 +13,7 @@ export const RecommendButton = styled(TouchableOpacity)`
   border: 1px solid ${PrimaryColors[500]};
   border-radius: 8px;
   background-color: ${PrimaryColors[500]};
+  elevation: 1;
 `;
 
 export const BabyIcon = styled(Image)`

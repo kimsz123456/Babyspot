@@ -16,6 +16,7 @@ export const PlaceSearchButton = styled(View)`
   border-color: ${GrayColors[200]};
   border-radius: 5px;
   background-color: ${GrayColors[0]};
+  elevation: 1;
 `;
 
 export const Placeholder = styled(Text)`

@@ -8,15 +8,27 @@ export const MapScreenContainer = styled(View)`
   position: relative;
 `;
 
-export const SearchAndRecommendContainer = styled(View)`
+export const FloatingContainer = styled(View)`
   z-index: 10;
   position: absolute;
   top: 32px;
   left: 24px;
   right: 24px;
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+export const SearchAndRecommendContainer = styled(View)`
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
+  gap: 8px;
+`;
+
+export const ChipContainer = styled(View)`
+  display: flex;
+  flex-direction: row;
   gap: 8px;
 `;
 
