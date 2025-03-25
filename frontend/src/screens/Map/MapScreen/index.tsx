@@ -3,12 +3,15 @@ import React from 'react';
 import {NaverMapMarkerOverlay} from '@mj-studio/react-native-naver-map';
 
 import {IC_RESTUARANT_MARKER} from '../../../constants/icons';
+import PlaceSearchButton from '../components/PlaceSearchButton';
 
 import * as S from './styles';
 
 const MapScreen = () => {
   return (
     <S.MapScreenContainer>
+      <PlaceSearchButton />
+
       <S.NaverMap
         initialCamera={{
           latitude: 37.498040483,
