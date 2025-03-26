@@ -1,7 +1,6 @@
 import React from 'react';
 import {Image, ImageSourcePropType, Text, View} from 'react-native';
 
-import styled from 'styled-components/native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -10,7 +9,6 @@ import MapScreen from '../screens/Map/MapScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import SearchScreen from '../screens/Map/SearchScreen';
 
-import scale from '../utils/scale';
 import {
   IC_MAP_NAV,
   IC_MAP_NAV_ACTIVE,
@@ -19,6 +17,9 @@ import {
 } from '../constants/icons';
 import {GrayColors, PrimaryColors} from '../constants/colors';
 import {FontStyles} from '../constants/fonts';
+import styled from 'styled-components/native';
+import scale from '../utils/scale';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const BOTTOM_TAB_INFORMATION: {
   [key: string]: {
@@ -61,6 +62,8 @@ const MapStack = () => (
 );
 
 const BottomTabNavigator = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -68,14 +71,9 @@ const BottomTabNavigator = () => {
         screenOptions={({route}) => ({
           headerShown: route.name === 'Map' ? false : true,
           tabBarHideOnKeyboard: true,
-          tabBarLabel: ({focused}) => {
-            return (
-              <View style={{flexDirection: 'row'}}>
-                <TabBarLabel $focused={focused}>
-                  {BOTTOM_TAB_INFORMATION[route.name].label}
-                </TabBarLabel>
-              </View>
-            );
+          tabBarStyle: {
+            height: scale(68) + insets.bottom,
+            paddingTop: scale(8),
           },
 
           tabBarIcon: ({focused}) => {
@@ -87,6 +85,16 @@ const BottomTabNavigator = () => {
                     : BOTTOM_TAB_INFORMATION[route.name].iconSource_inactive
                 }
               />
+            );
+          },
+
+          tabBarLabel: ({focused}) => {
+            return (
+              <View style={{flexDirection: 'row'}}>
+                <TabBarLabel $focused={focused}>
+                  {BOTTOM_TAB_INFORMATION[route.name].label}
+                </TabBarLabel>
+              </View>
             );
           },
         })}>
