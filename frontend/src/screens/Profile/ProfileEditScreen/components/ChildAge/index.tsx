@@ -8,6 +8,7 @@ const ChildAge = () => {
   const ageCount = 1;
   return (
     <S.ChildAgeWrapper>
+      <S.ChildTitle>자녀 정보</S.ChildTitle>
       <S.ChildAgesContainer>
         <S.ChildAge>{age}</S.ChildAge>
         <S.AgeCountContainer>

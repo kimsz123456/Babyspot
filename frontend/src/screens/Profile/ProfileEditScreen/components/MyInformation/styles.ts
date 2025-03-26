@@ -41,11 +41,6 @@ const Email = styled(Text)`
 const ChildContainer = styled(View)`
   flex: 1;
 `;
-const ChildTitle = styled(Text)`
-  ${FontStyles.captionMedium};
-  color: ${GrayColors[800]};
-  padding-bottom: ${scale(8)}px;
-`;
 
 export {
   InformationContainer,
@@ -56,5 +51,4 @@ export {
   EmailTitle,
   Email,
   ChildContainer,
-  ChildTitle,
 };

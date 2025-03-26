@@ -7,6 +7,12 @@ import {FontStyles} from '../../../../../constants/fonts';
 const ChildAgeWrapper = styled(View)`
   flex: 1;
 `;
+const ChildTitle = styled(Text)`
+  ${FontStyles.captionMedium};
+  color: ${GrayColors[800]};
+  padding-top: ${scale(16)}px;
+  padding-bottom: ${scale(8)}px;
+`;
 const ChildAgesContainer = styled(View)`
   border-width: ${scale(1)}px;
   border-radius: 10px;
@@ -20,6 +26,7 @@ const ChildAge = styled(Text)`
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
 `;
+
 const AgeCountContainer = styled(View)`
   flex-direction: row;
   align-items: center;
@@ -34,8 +41,10 @@ const AgeCount = styled(Text)`
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
 `;
+
 export {
   ChildAgeWrapper,
+  ChildTitle,
   ChildAgesContainer,
   ChildAge,
   AgeCountContainer,

@@ -17,9 +17,6 @@ const MyInformation = () => {
         <S.Email>{email}</S.Email>
         <ThinDivider />
       </S.EmailContainer>
-      <S.ChildContainer>
-        <S.ChildTitle>자녀 정보</S.ChildTitle>
-      </S.ChildContainer>
     </S.InformationContainer>
   );
 };
