@@ -1,9 +1,7 @@
 import React from 'react';
-import {Text} from 'react-native';
 import * as S from './styles';
 import {IC_MINUS, IC_PLUS} from '../../../../../constants/icons';
-import AddButton from '../AddChildButton';
-import ProfileEditButton from '../../../ProfileScreen/components/Buttons';
+import AddButton from '../../../../../components/atoms/Button/AddChildButton';
 
 const ChildAge = () => {
   const age = '1999년생';

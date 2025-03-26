@@ -3,7 +3,7 @@ import * as S from './styles';
 import ProfileImage from './components/ProfileImage';
 import MyInformation from './components/MyInformation';
 import ChildAge from './components/ChildAge';
-import ProfileEditButton from '../../../components/atoms/Button';
+import ProfileEditButton from '../../../components/atoms/Button/ProfileEditButton';
 
 const ProfileEditScreen = () => {
   return (
