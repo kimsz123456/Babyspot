@@ -36,6 +36,9 @@ const IC_CLOSE: ImageRequireSource = require('../../assets/icons/close.png');
 
 const IC_RETRY: ImageRequireSource = require('../../assets/icons/retry.png');
 
+const IC_APP_LOGO: ImageRequireSource = require('../../assets/icons/app-logo.png');
+const IC_KAKAO_LOGO: ImageRequireSource = require('../../assets/icons/kakao-logo.png');
+
 export {
   IC_AGE1,
   IC_AGE2,
@@ -60,9 +63,11 @@ export {
   IC_MAP_NAV_ACTIVE,
   IC_PROFILE_NAV,
   IC_PROFILE_NAV_ACTIVE,
-  IC_RESTAURANT_MARKER as IC_RESTAURANT_MARKER,
+  IC_RESTAURANT_MARKER,
   IC_BABY,
   IC_SEARCH,
   IC_CLOSE,
   IC_RETRY,
+  IC_APP_LOGO,
+  IC_KAKAO_LOGO,
 };

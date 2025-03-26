@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">베이비스팟</string>
+    <string name="kakao_app_key">KAKAO_NATIVE_APP_KEY</string>
 </resources>
