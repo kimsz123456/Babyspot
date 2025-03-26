@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.babyspot.domain.store.dto.StoreDefaultInfoDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDetailDto;
-import com.ssafy.babyspot.domain.store.dto.StoreLocationDto;
 import com.ssafy.babyspot.domain.store.service.StoreService;
 
 @RestController
@@ -23,23 +22,18 @@ public class StoreController {
 		this.storeService = storeService;
 	}
 
-	@GetMapping("/locations")
-	public ResponseEntity<List<StoreLocationDto>> getStoreInRange(
+	@GetMapping("/rangeinfo")
+	public ResponseEntity<List<StoreDefaultInfoDto>> getStoreDefaultInfo(
 		@RequestParam Double topLeftLat,
 		@RequestParam Double topLeftLong,
 		@RequestParam Double bottomRightLat,
 		@RequestParam Double bottomRightLong) {
 
-		List<StoreLocationDto> storeLocations = storeService.getStoresInRange(topLeftLat, topLeftLong, bottomRightLat,
+		List<StoreDefaultInfoDto> storeDefaultInfo = storeService.getStoresInRange(topLeftLat, topLeftLong,
+			bottomRightLat,
 			bottomRightLong);
 
-		return ResponseEntity.ok(storeLocations);
-	}
-
-	@GetMapping("/defaultInfo")
-	public ResponseEntity<StoreDefaultInfoDto> getStoreDefaultInfo(@RequestParam int storeId) {
-		StoreDefaultInfoDto storeDefaultInfoDto = storeService.getStoreDefaultInfo(storeId);
-		return ResponseEntity.ok(storeDefaultInfoDto);
+		return ResponseEntity.ok(storeDefaultInfo);
 	}
 
 	@GetMapping("/detail")

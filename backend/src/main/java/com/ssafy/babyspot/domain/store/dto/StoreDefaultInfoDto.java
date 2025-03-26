@@ -4,7 +4,9 @@ import lombok.Data;
 
 @Data
 public class StoreDefaultInfoDto {
-	private int id;
+	private int StoreId;
+	private Double Latitude;
+	private Double Longitude;
 	private String title;
 	private String address;
 	private String contactNumber;

@@ -19,7 +19,6 @@ import com.ssafy.babyspot.domain.store.dto.SentimentAnalysisDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDefaultInfoDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDetailDto;
 import com.ssafy.babyspot.domain.store.dto.StoreImageDto;
-import com.ssafy.babyspot.domain.store.dto.StoreLocationDto;
 import com.ssafy.babyspot.domain.store.dto.StoreMenuDto;
 import com.ssafy.babyspot.domain.store.repository.KeywordReviewRepository;
 import com.ssafy.babyspot.domain.store.repository.SentimentAnalysisRepository;
@@ -53,7 +52,7 @@ public class StoreService {
 	}
 
 	@Transactional
-	public List<StoreLocationDto> getStoresInRange(Double topLeftLat, Double topLeftLong,
+	public List<StoreDefaultInfoDto> getStoresInRange(Double topLeftLat, Double topLeftLong,
 		Double bottomRightLat, Double bottomRightLong) {
 
 		// topLeft와 bottomRight 좌표를 받아 최소/최대 위도와 경도
@@ -65,39 +64,29 @@ public class StoreService {
 		List<Store> stores = storeRepository.findStoresInRange(minLong, minLat, maxLong, maxLat);
 
 		return stores.stream()
-			.map(store -> new StoreLocationDto(
-				store.getId(),
-				store.getTitle(),
-				store.getLocation().getY(),
-				store.getLocation().getX()
-			))
-			.collect(Collectors.toList());
-	}
-
-	@Transactional
-	public StoreDefaultInfoDto getStoreDefaultInfo(int storeId) {
-		return storeRepository.findById(storeId)
 			.map(store -> {
-				StoreDefaultInfoDto storeDefaultInfoDto = new StoreDefaultInfoDto();
-				storeDefaultInfoDto.setId(store.getId());
-				storeDefaultInfoDto.setTitle(store.getTitle());
-				storeDefaultInfoDto.setAddress(store.getAddress());
-				storeDefaultInfoDto.setContactNumber(store.getContactNumber());
-				storeDefaultInfoDto.setTransportationConvenience(store.getTransportationConvenience());
-				storeDefaultInfoDto.setBusinessHour(store.getBusinessHour());
-				storeDefaultInfoDto.setRating(store.getRating());
-				storeDefaultInfoDto.setReviewCount(store.getReviewCount());
-				storeDefaultInfoDto.setBabyChair(store.getBabyChair());
-				storeDefaultInfoDto.setBabyTableware(store.getBabyTableware());
-				storeDefaultInfoDto.setStrollerAccess(store.getStrollerAccess());
-				storeDefaultInfoDto.setDiaperChangingStation(store.getDiaperChangingStation());
-				storeDefaultInfoDto.setNursingRoom(store.getNursingRoom());
-				storeDefaultInfoDto.setKidsMenu(store.getKidsMenu());
-				storeDefaultInfoDto.setPlayZone(store.getPlayZone());
-				storeDefaultInfoDto.setGroupTable(store.getGroupTable());
-				return storeDefaultInfoDto;
+				StoreDefaultInfoDto dto = new StoreDefaultInfoDto();
+				dto.setStoreId(store.getId());
+				dto.setLatitude(store.getLocation().getY());
+				dto.setLongitude(store.getLocation().getX());
+				dto.setAddress(store.getAddress());
+				dto.setBabyChair(store.getBabyChair());
+				dto.setPlayZone(store.getPlayZone());
+				dto.setGroupTable(store.getGroupTable());
+				dto.setRating(store.getRating());
+				dto.setBabyTableware(store.getBabyTableware());
+				dto.setBusinessHour(store.getBusinessHour());
+				dto.setContactNumber(store.getContactNumber());
+				dto.setDiaperChangingStation(store.getDiaperChangingStation());
+				dto.setTitle(store.getTitle());
+				dto.setTransportationConvenience(store.getTransportationConvenience());
+				dto.setReviewCount(store.getReviewCount());
+				dto.setStrollerAccess(store.getStrollerAccess());
+				dto.setNursingRoom(store.getNursingRoom());
+				dto.setKidsMenu(store.getKidsMenu());
+				return dto;
 			})
-			.orElseThrow(() -> new RuntimeException("매장이 없습니다."));
+			.collect(Collectors.toList());
 	}
 
 	@Transactional
