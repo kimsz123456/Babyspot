@@ -1,8 +1,8 @@
 import {Image, Text, View} from 'react-native';
 import styled from 'styled-components/native';
-import {FontStyles} from '../../../../../constants/fonts';
-import {GrayColors} from '../../../../../constants/colors';
-import scale from '../../../../../utils/scale';
+import {FontStyles} from '../../../../constants/fonts';
+import {GrayColors} from '../../../../constants/colors';
+import scale from '../../../../utils/scale';
 
 const AddButtonWrapper = styled(View)`
   padding-top: ${scale(16)}px;

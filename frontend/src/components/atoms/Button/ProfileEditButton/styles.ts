@@ -1,8 +1,8 @@
 import {Text, View} from 'react-native';
 import styled from 'styled-components/native';
-import {GrayColors, PrimaryColors} from '../../../constants/colors';
-import {FontStyles} from '../../../constants/fonts';
-import scale from '../../../utils/scale';
+import {GrayColors, PrimaryColors} from '../../../../constants/colors';
+import {FontStyles} from '../../../../constants/fonts';
+import scale from '../../../../utils/scale';
 
 const MainButtonContainer = styled(View)`
   width: 100%;
