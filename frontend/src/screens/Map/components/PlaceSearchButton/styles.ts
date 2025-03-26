@@ -12,12 +12,13 @@ export const PlaceSearchButton = styled(Pressable)`
   flex-direction: row;
   gap: ${scale(4)}px;
   align-items: center;
-  padding: 8px;
+  padding: ${scale(8)}px;
   border-width: 1px;
   border-style: solid;
   border-color: ${GrayColors[200]};
   border-radius: 5px;
   background-color: ${GrayColors[0]};
+  elevation: 1;
 `;
 
 export const LeftArrowIcon = styled(Image)`
