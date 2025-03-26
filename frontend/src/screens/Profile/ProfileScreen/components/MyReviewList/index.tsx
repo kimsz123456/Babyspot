@@ -1,5 +1,5 @@
 import React from 'react';
-import {MyReview} from '../MyReview';
+import MyReview from '../MyReview';
 import * as S from './styles.ts';
 import mockReviews from '../../mock/mockData.ts';
 
