@@ -31,6 +31,8 @@ const IC_PROFILE_NAV_ACTIVE: ImageRequireSource = require('../../assets/icons/pr
 const IC_RESTUARANT_MARKER: ImageRequireSource = require('../../assets/icons/restaurant-marker.png');
 
 const IC_BABY: ImageRequireSource = require('../../assets/icons/baby.png');
+const IC_SEARCH: ImageRequireSource = require('../../assets/icons/search.png');
+const IC_CLOSE: ImageRequireSource = require('../../assets/icons/close.png');
 
 export {
   IC_AGE1,
@@ -58,4 +60,6 @@ export {
   IC_PROFILE_NAV_ACTIVE,
   IC_RESTUARANT_MARKER,
   IC_BABY,
+  IC_SEARCH,
+  IC_CLOSE,
 };
