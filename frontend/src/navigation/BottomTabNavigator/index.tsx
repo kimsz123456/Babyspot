@@ -15,7 +15,7 @@ const BottomTabNavigator = () => {
     <Tab.Navigator
       initialRouteName="Map"
       screenOptions={({route}) => ({
-        headerShown: route.name === 'Map' ? false : true,
+        headerShown: route.name === 'Map' || 'Profile' ? false : true,
         tabBarHideOnKeyboard: true,
         tabBarStyle: {
           height: scale(68) + insets.bottom,

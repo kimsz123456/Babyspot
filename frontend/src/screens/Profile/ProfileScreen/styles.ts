@@ -3,9 +3,9 @@ import {FontStyles} from '../../../constants/fonts';
 import {PrimaryColors} from '../../../constants/colors';
 import {GrayColors} from '../../../constants/colors';
 import scale from '../../../utils/scale';
-import {Image, Text, View} from 'react-native';
+import {ScrollView, Image, Text, View} from 'react-native';
 
-const BackGround = styled(View)`
+const BackGround = styled(ScrollView)`
   flex: 1;
   background-color: ${GrayColors[0]};
 `;
