@@ -1,6 +1,6 @@
 import React from 'react';
-import {DividerContainer} from './styles';
+import * as S from './styles';
 
 export const Divider = () => {
-  return <DividerContainer />;
+  return <S.DividerContainer />;
 };
