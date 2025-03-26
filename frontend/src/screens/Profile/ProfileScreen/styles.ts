@@ -11,9 +11,9 @@ const BackGround = styled(View)`
 `;
 
 const ProfileContainer = styled(View)`
-  padding-top: ${scale(32)};
-  padding-left: ${scale(24)};
-  padding-right: ${scale(24)};
+  padding-top: ${scale(32)}px;
+  padding-left: ${scale(24)}px;
+  padding-right: ${scale(24)}px;
   flex-direction: row;
   align-items: center;
 `;
@@ -25,42 +25,40 @@ const ProfileImage = styled(Image)`
   border-color: ${GrayColors[100]};
 `;
 const ProfileInfo = styled(View)`
-  margin-left: ${scale(16)};
+  padding-left: ${scale(16)}px;
   flex: 1;
 `;
 const NameContainer = styled(Text)`
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
   flex: 1;
-  top: 0;
 `;
 const Name = styled(Text)`
   font-weight: bold;
   color: ${PrimaryColors[500]};
 `;
 const AgeIcons = styled(Image)`
-  width: ${scale(24)};
-  height: ${scale(24)};
-  botton: 0;
+  width: ${scale(24)}px;
+  height: ${scale(24)}px;
 `;
 const ProfileEdit = styled(Image)`
-  width: ${scale(32)};
-  height: ${scale(32)};
+  width: ${scale(32)}px;
+  height: ${scale(32)}px;
 `;
 
 const ReviewContainer = styled(View)`
-  padding-top: ${scale(32)};
-  padding-left: ${scale(24)};
-  padding-right: ${scale(24)};
+  padding-top: ${scale(32)}px;
+  padding-left: ${scale(24)}px;
+  padding-right: ${scale(24)}px;
 `;
-const ReviewTitleContanier = styled(View)`
+const ReviewTitleContainer = styled(View)`
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 `;
 const ReviewTitle = styled(Text)`
   ${FontStyles.headingMedium};
   color: ${GrayColors[800]};
-  flex: 1;
 `;
 const MoreReview = styled(Text)`
   ${FontStyles.captionMedium};
@@ -77,7 +75,7 @@ export {
   AgeIcons,
   ProfileEdit,
   ReviewContainer,
-  ReviewTitleContanier,
+  ReviewTitleContainer,
   ReviewTitle,
   MoreReview,
 };
