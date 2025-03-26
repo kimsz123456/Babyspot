@@ -2,6 +2,7 @@ import React from 'react';
 
 import {NaverMapMarkerOverlay} from '@mj-studio/react-native-naver-map';
 
+import NearStoreListScreen from '../NearStoreListScreen';
 import PlaceSearchButton from '../components/PlaceSearchButton';
 import RecommendButton from './components/RecommendButton';
 import Chip from './components/Chip';
@@ -42,6 +43,8 @@ const MapScreen = () => {
       </S.NaverMap>
 
       <ResearchButton />
+
+      <NearStoreListScreen />
     </S.MapScreenContainer>
   );
 };

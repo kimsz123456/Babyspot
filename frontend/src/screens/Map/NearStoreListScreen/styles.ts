@@ -1,18 +1,29 @@
 import {Text, View} from 'react-native';
 
 import styled from 'styled-components/native';
+import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 
 import scale from '../../../utils/scale';
 import {GrayColors} from '../../../constants/colors';
 import {FontStyles} from '../../../constants/fonts';
 
-export const NearStoreListScreenContainer = styled(View)`
+export const BottomSheetContainer = styled(BottomSheet)`
+  z-index: 20;
+`;
+
+export const BottomSheetScrollContent = styled(BottomSheetScrollView)`
   flex: 1;
+  overflow-y: auto;
+`;
+
+export const NearStoreListScreenContainer = styled(View)`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: ${scale(8)}px;
   padding: ${scale(8)}px ${scale(24)}px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   border-top-width: 1px;
   border-top-color: ${GrayColors[200]};
   background-color: ${GrayColors[0]};
