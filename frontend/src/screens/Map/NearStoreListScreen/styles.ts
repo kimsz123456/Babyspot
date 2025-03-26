@@ -11,10 +11,9 @@ export const BottomSheetContainer = styled(BottomSheet)`
   z-index: 20;
 `;
 
-export const BottomSheetScrollContent = styled(BottomSheetScrollView)`
-  flex: 1;
-  overflow-y: auto;
-`;
+export const BottomSheetContent = styled(BottomSheetScrollView).attrs({
+  showsVerticalScrollIndicator: false,
+})``;
 
 export const NearStoreListScreenContainer = styled(View)`
   display: flex;

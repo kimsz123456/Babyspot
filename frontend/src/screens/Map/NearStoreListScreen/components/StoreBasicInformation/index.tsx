@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {RefObject, useState} from 'react';
 
 import {
   Dimensions,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
 } from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 
 import {StoreBasicInformationType} from './types';
 import {AGE_MARKERS, DAY} from '../../../../../constants/constants';
@@ -19,9 +19,13 @@ const CURRENT_DAY = new Date().getDay();
 
 interface StoreBasicInformationProps {
   store: StoreBasicInformationType;
+  imageCarouselRef: RefObject<ScrollView | null>;
 }
 
-const StoreBasicInformation = ({store}: StoreBasicInformationProps) => {
+const StoreBasicInformation = ({
+  store,
+  imageCarouselRef,
+}: StoreBasicInformationProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -35,6 +39,7 @@ const StoreBasicInformation = ({store}: StoreBasicInformationProps) => {
     <S.StoreBasicInformationContainer>
       <S.CarouselContainer>
         <ScrollView
+          ref={imageCarouselRef}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
