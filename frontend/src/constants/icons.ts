@@ -36,6 +36,8 @@ const IC_CLOSE: ImageRequireSource = require('../../assets/icons/close.png');
 
 const IC_RETRY: ImageRequireSource = require('../../assets/icons/retry.png');
 
+const IC_COMMENT: ImageRequireSource = require('../../assets/icons/comment.png');
+
 export {
   IC_AGE1,
   IC_AGE2,
@@ -65,4 +67,5 @@ export {
   IC_SEARCH,
   IC_CLOSE,
   IC_RETRY,
+  IC_COMMENT,
 };

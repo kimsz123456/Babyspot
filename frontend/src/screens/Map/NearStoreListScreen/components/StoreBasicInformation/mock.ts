@@ -1,0 +1,75 @@
+import {StoreBasicInformationType} from './types';
+
+const MOCK: StoreBasicInformationType[] = [
+  {
+    name: '감귤 하우스',
+    category: '한식',
+    imageUrls: [
+      'https://picsum.photos/600/400?random=1',
+      'https://picsum.photos/600/400?random=2',
+      'https://picsum.photos/600/400?random=3',
+      'https://picsum.photos/600/400?random=4',
+    ],
+    ages: [2, 3],
+    isOKZone: true,
+    rating: 4.5,
+    numberOfReviews: 3,
+    businessHours: {
+      일요일: '10:00 ~ 20:00',
+      월요일: '휴무',
+      화요일: '15:00 ~ 19:00',
+      수요일: '11:00 ~ 21:00',
+      목요일: '11:00 ~ 21:00',
+      금요일: '11:00 ~ 22:00',
+      토요일: '10:00 ~ 22:00',
+    },
+  },
+  {
+    name: '청년다방',
+    category: '분식',
+    imageUrls: [
+      'https://picsum.photos/600/400?random=1',
+      'https://picsum.photos/600/400?random=2',
+      'https://picsum.photos/600/400?random=3',
+      'https://picsum.photos/600/400?random=4',
+    ],
+    ages: [3],
+    isOKZone: false,
+    rating: 4.2,
+    numberOfReviews: 12,
+    businessHours: {
+      일요일: '09:00 ~ 21:00',
+      월요일: '10:00 ~ 22:00',
+      화요일: '10:00 ~ 22:00',
+      수요일: '10:00 ~ 22:00',
+      목요일: '10:00 ~ 22:00',
+      금요일: '10:00 ~ 23:00',
+      토요일: '09:00 ~ 23:00',
+    },
+  },
+  {
+    name: '미소야',
+    category: '일식',
+    imageUrls: [
+      'https://picsum.photos/600/400?random=1',
+      'https://picsum.photos/600/400?random=2',
+      'https://picsum.photos/600/400?random=3',
+      'https://picsum.photos/600/400?random=4',
+    ],
+    ages: [3, 5, 6],
+    isOKZone: true,
+    rating: 4.8,
+    numberOfReviews: 45,
+    businessHours: {
+      일요일: '11:00 ~ 21:00',
+      월요일: '11:30 ~ 21:30',
+      화요일: '11:30 ~ 21:30',
+      수요일: '11:30 ~ 21:30',
+      목요일: '11:30 ~ 21:30',
+      금요일: '11:30 ~ 22:00',
+      토요일: '11:00 ~ 22:00',
+    },
+  },
+];
+
+export default MOCK;
