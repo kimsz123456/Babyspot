@@ -10,13 +10,13 @@ import {
 import scale from '../../../../../utils/scale';
 
 const SettingContainer = styled(View)`
-  padding: ${scale(24)}px ${scale(24)}px ${scale(32)}px;
+  padding: ${scale(24)}px ${scale(24)}px;
 `;
 const SettingTitle = styled(Text)`
   ${FontStyles.headingMedium};
   color: ${GrayColors[800]};
 `;
-const SettingItams = styled(View)`
+const SettingItems = styled(View)`
   padding-top: ${scale(24)}px;
   gap: ${scale(16)}px;
 `;
@@ -42,7 +42,7 @@ const GPSState = styled(Text)`
 `;
 const GPSQuestion = styled(Image)`
   width: ${scale(24)}px;
-  height: ${scale(24)}px;
+  height: ${scale(24)};
 `;
 
 const PrivacyTermsContainer = styled(View)`
@@ -104,7 +104,7 @@ const DeleteAccount = styled(Text)`
 export {
   SettingContainer,
   SettingTitle,
-  SettingItams,
+  SettingItems,
   GPSContainer,
   GPSTitle,
   GPSStateContainer,

@@ -7,7 +7,7 @@ const Setting = () => {
   return (
     <S.SettingContainer>
       <S.SettingTitle>설정</S.SettingTitle>
-      <S.SettingItams>
+      <S.SettingItems>
         <S.GPSContainer>
           <S.GPSTitle>GPS 설정</S.GPSTitle>
           <S.GPSStateContainer>
@@ -34,7 +34,7 @@ const Setting = () => {
         <S.DeleteAccountContainer>
           <S.DeleteAccount>회원탈퇴</S.DeleteAccount>
         </S.DeleteAccountContainer>
-      </S.SettingItams>
+      </S.SettingItems>
     </S.SettingContainer>
   );
 };
