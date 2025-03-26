@@ -4,7 +4,7 @@ import scale from '../../../utils/scale';
 import {GrayColors} from '../../../constants/colors';
 
 export const DividerContainer = styled(View)`
-  width: full;
+  width: 100%;
   height: ${scale(10)}px;
   background-color: ${GrayColors[200]};
 `;
