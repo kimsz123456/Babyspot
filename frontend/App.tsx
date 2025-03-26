@@ -1,11 +1,11 @@
 import React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import BottomTabNavigator from './src/navigation/BottomTabNavigator';
+import RootNavigator from './src/navigation/RootNavigator';
 
 const App = () => {
   return (
     <SafeAreaProvider>
-      <BottomTabNavigator />
+      <RootNavigator />
     </SafeAreaProvider>
   );
 };
