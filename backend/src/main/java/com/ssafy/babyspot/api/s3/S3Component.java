@@ -1,0 +1,72 @@
+package com.ssafy.babyspot.api.s3;
+
+import java.net.URL;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import com.ssafy.babyspot.exception.CustomException;
+
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+
+@Component
+public class S3Component {
+
+	private final S3Presigner presigner;
+
+	@Value("${cloud.aws.s3.babyspot-bucket}")
+	private String bucket;
+
+	public S3Component(S3Presigner presigner) {
+		this.presigner = presigner;
+	}
+
+	public Map<String, String> generateProfilePreSignedUrl(String memberId,
+		String profileImgFilename,
+		String contentType) {
+		Map<String, String> urls = new HashMap<>();
+
+		if (profileImgFilename != null && !profileImgFilename.isEmpty()) {
+			String profileKey = String.format("profile/%s/%s", memberId, profileImgFilename);
+
+			URL profileImgPreSignedUrl = presigner.presignPutObject(
+				PutObjectPresignRequest.builder()
+					.signatureDuration(Duration.ofMinutes(10))
+					.putObjectRequest(req -> req
+						.bucket(bucket)
+						.key(profileKey)
+						.contentType(contentType))
+					.build()
+			).url();
+
+			urls.put("profileImgPreSignedUrl", profileImgPreSignedUrl.toString());
+			urls.put("profileKey", profileKey);
+		}
+
+		return urls;
+	}
+
+	public String generatePreSignedUrlForProfileImageUpdate(String profileKey, String contentType) {
+		if (profileKey == null || profileKey.isEmpty()) {
+			throw new CustomException(HttpStatus.BAD_REQUEST, "프로필 이미지 키가 필요합니다.");
+		}
+
+		URL profileImgPreSignedUrl = presigner.presignPutObject(
+			PutObjectPresignRequest.builder()
+				.signatureDuration(Duration.ofMinutes(10))
+				.putObjectRequest(req -> req
+					.bucket(bucket)
+					.key(profileKey)
+					.contentType(contentType))
+				.build()
+		).url();
+
+		return profileImgPreSignedUrl.toString();
+	}
+
+}
