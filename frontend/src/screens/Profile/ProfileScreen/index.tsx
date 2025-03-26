@@ -21,10 +21,10 @@ const ProfileScreen = () => {
         <S.ProfileEdit source={IC_PROFILE_EDIT} />
       </S.ProfileContainer>
       <S.ReviewContainer>
-        <S.ReviewTitleContanier>
+        <S.ReviewTitleContainer>
           <S.ReviewTitle>내 리뷰</S.ReviewTitle>
           <S.MoreReview>더보기</S.MoreReview>
-        </S.ReviewTitleContanier>
+        </S.ReviewTitleContainer>
         <MyReviewList />
       </S.ReviewContainer>
       <DividerContainer />
