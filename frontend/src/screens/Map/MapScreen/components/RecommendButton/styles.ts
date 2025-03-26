@@ -11,7 +11,8 @@ export const RecommendButton = styled(TouchableOpacity)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: ${scale(4)}px ${scale(9.5)}px;
+  aspect-ratio: 1;
+  padding: ${scale(4)}px;
   border: 1px solid ${PrimaryColors[500]};
   border-radius: 8px;
   background-color: ${PrimaryColors[500]};
