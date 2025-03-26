@@ -1,9 +1,14 @@
 import React from 'react';
+import {Image, ImageSourcePropType, Text, View} from 'react-native';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import MapScreen from '../screens/Map/MapScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
-import {Image, ImageSourcePropType, Text, View} from 'react-native';
+import SearchScreen from '../screens/Map/SearchScreen';
+
 import {
   IC_MAP_NAV,
   IC_MAP_NAV_ACTIVE,
@@ -16,7 +21,7 @@ import styled from 'styled-components/native';
 import scale from '../utils/scale';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const BOTTOM_TAB_INFROMATION: {
+const BOTTOM_TAB_INFORMATION: {
   [key: string]: {
     label: string;
     iconSource_inactive: ImageSourcePropType;
@@ -39,6 +44,23 @@ const Tab = createBottomTabNavigator({
   screens: {Map: {screen: MapScreen}, Profile: {screen: ProfileScreen}},
 });
 
+const Stack = createNativeStackNavigator();
+
+const MapStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Map"
+      component={MapScreen}
+      options={{headerShown: false}}
+    />
+    <Stack.Screen
+      name="Search"
+      component={SearchScreen}
+      options={{presentation: 'modal', headerShown: false}}
+    />
+  </Stack.Navigator>
+);
+
 const BottomTabNavigator = () => {
   const insets = useSafeAreaInsets();
 
@@ -59,8 +81,8 @@ const BottomTabNavigator = () => {
               <IconImage
                 source={
                   focused
-                    ? BOTTOM_TAB_INFROMATION[route.name].iconSource_active
-                    : BOTTOM_TAB_INFROMATION[route.name].iconSource_inactive
+                    ? BOTTOM_TAB_INFORMATION[route.name].iconSource_active
+                    : BOTTOM_TAB_INFORMATION[route.name].iconSource_inactive
                 }
               />
             );
@@ -70,13 +92,13 @@ const BottomTabNavigator = () => {
             return (
               <View style={{flexDirection: 'row'}}>
                 <TabBarLabel $focused={focused}>
-                  {BOTTOM_TAB_INFROMATION[route.name].label}
+                  {BOTTOM_TAB_INFORMATION[route.name].label}
                 </TabBarLabel>
               </View>
             );
           },
         })}>
-        <Tab.Screen name="Map" component={MapScreen} />
+        <Tab.Screen name="Map" component={MapStack} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </NavigationContainer>
