@@ -3,7 +3,7 @@ import * as S from './styles';
 import ProfileImage from './components/ProfileImage';
 import MyInformation from './components/MyInformation';
 import ChildAge from './components/ChildAge';
-import ProfileEditButton from '../../../components/atoms/Button/ProfileEditButton';
+import MainButton from '../../../components/atoms/Button/MainButton';
 
 const ProfileEditScreen = () => {
   return (
@@ -13,7 +13,7 @@ const ProfileEditScreen = () => {
       <MyInformation />
       <ChildAge />
       <S.ProfileEditButtonWrapper>
-        <ProfileEditButton />
+        <MainButton text="프로필 수정" />
       </S.ProfileEditButtonWrapper>
     </S.BackGround>
   );
