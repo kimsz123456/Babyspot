@@ -42,7 +42,7 @@ const GPSState = styled(Text)`
 `;
 const GPSQuestion = styled(Image)`
   width: ${scale(24)}px;
-  height: ${scale(24)};
+  height: ${scale(24)}px;
 `;
 
 const PrivacyTermsContainer = styled(View)`
