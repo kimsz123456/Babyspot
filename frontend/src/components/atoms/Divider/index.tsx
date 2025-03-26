@@ -1,6 +1,12 @@
 import React from 'react';
 import * as S from './styles';
 
-export const Divider = () => {
-  return <S.DividerContainer />;
+const ThickDivider = () => {
+  return <S.ThickDividerContainer />;
 };
+
+const ThinDivider = () => {
+  return <S.ThinDividerContainer />;
+};
+
+export {ThickDivider, ThinDivider};
