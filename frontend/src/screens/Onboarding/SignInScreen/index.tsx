@@ -1,11 +1,17 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {IC_APP_LOGO, IC_KAKAO_LOGO} from '../../../constants/icons';
+import * as S from './styles';
 
 const SignInScreen = () => {
   return (
-    <View>
-      <Text>Sign In</Text>
-    </View>
+    <S.SignInScreenContainer>
+      <S.SignInAppLogoImage source={IC_APP_LOGO} />
+      <S.BetweenMarginView />
+      <S.KakaoLoginButton onPress={() => {}}>
+        <S.KakaoLogoImage source={IC_KAKAO_LOGO} />
+        <S.KakaoLoginButtonText>카카오 로그인</S.KakaoLoginButtonText>
+      </S.KakaoLoginButton>
+    </S.SignInScreenContainer>
   );
 };
 
