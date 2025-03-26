@@ -28,9 +28,13 @@ const IC_MAP_NAV_ACTIVE: ImageRequireSource = require('../../assets/icons/map-na
 const IC_PROFILE_NAV: ImageRequireSource = require('../../assets/icons/profile-nav.png');
 const IC_PROFILE_NAV_ACTIVE: ImageRequireSource = require('../../assets/icons/profile-nav-active.png');
 
-const IC_RESTUARANT_MARKER: ImageRequireSource = require('../../assets/icons/restaurant-marker.png');
+const IC_RESTAURANT_MARKER: ImageRequireSource = require('../../assets/icons/restaurant-marker.png');
 
 const IC_BABY: ImageRequireSource = require('../../assets/icons/baby.png');
+const IC_SEARCH: ImageRequireSource = require('../../assets/icons/search.png');
+const IC_CLOSE: ImageRequireSource = require('../../assets/icons/close.png');
+
+const IC_RETRY: ImageRequireSource = require('../../assets/icons/retry.png');
 
 export {
   IC_AGE1,
@@ -56,6 +60,9 @@ export {
   IC_MAP_NAV_ACTIVE,
   IC_PROFILE_NAV,
   IC_PROFILE_NAV_ACTIVE,
-  IC_RESTUARANT_MARKER,
+  IC_RESTAURANT_MARKER as IC_RESTAURANT_MARKER,
   IC_BABY,
+  IC_SEARCH,
+  IC_CLOSE,
+  IC_RETRY,
 };
