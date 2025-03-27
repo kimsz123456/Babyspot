@@ -8,9 +8,11 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.Point;
 
+import com.ssafy.babyspot.converter.ListToJsonConverter;
 import com.ssafy.babyspot.domain.reveiw.Review;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -61,8 +63,8 @@ public class Store {
 	private Boolean playZone;
 	private Boolean parking;
 
-	@JdbcTypeCode(SqlTypes.JSON)
-	@Column(columnDefinition = "jsonb")
+	@Column(name = "kids_menu", columnDefinition = "json")
+	@Convert(converter = ListToJsonConverter.class)
 	private List<String> kidsMenu;
 
 	@OneToMany(mappedBy = "store")
