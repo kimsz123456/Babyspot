@@ -21,6 +21,7 @@ import MOCK from '../NearStoreListScreen/components/StoreBasicInformation/mock';
 
 import * as S from './styles';
 import {geocoding} from '../../../services/mapService';
+import {useMapStore} from '../../../stores/mapStore';
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
@@ -28,6 +29,7 @@ const MapScreen = () => {
 
   const [selectedMarker, setSelectedMarker] = useState(-1);
 
+  const clearAddress = useMapStore(state => state.clearAddress);
   const route = useRoute();
   const address = (route.params as any)?.address as string;
 
@@ -40,6 +42,7 @@ const MapScreen = () => {
   };
 
   const handlePress = async () => {
+    clearAddress();
     // if (!mapRef.current) {
     //   return;
     // }
