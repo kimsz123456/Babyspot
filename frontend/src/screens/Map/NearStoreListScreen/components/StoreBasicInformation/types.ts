@@ -2,6 +2,15 @@ export interface BusinessHoursType {
   [day: string]: string;
 }
 
+export interface AmenitiesType {
+  babyChair: boolean;
+  babyTableware: boolean;
+  diaperChangingStation: boolean;
+  nursingRoom: boolean;
+  groupTable: boolean;
+  playZone: boolean;
+}
+
 export interface StoreBasicInformationType {
   storeId: number;
   title: string;
@@ -20,13 +29,7 @@ export interface StoreBasicInformationType {
   babyAges: number[];
   okZone: boolean;
 
-  babyChair: boolean;
-  babyTableware: boolean;
-  strollerAccess: boolean;
-  diaperChangingStation: boolean;
-  nursingRoom: boolean;
-  groupTable: boolean;
-  playZone: boolean;
+  amenities: AmenitiesType;
   kidsMenu: string;
 
   latitude: number;

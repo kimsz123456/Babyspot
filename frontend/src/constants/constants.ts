@@ -6,6 +6,12 @@ import {
   IC_AGE5,
   IC_AGE6,
   IC_AGE7,
+  IC_BABY_BOTTLE,
+  IC_CHAIR,
+  IC_CUTLERY,
+  IC_DIAPER,
+  IC_PLAYGROUND,
+  IC_TABLE,
 } from './icons';
 
 export const FIGMA_DESIGN_WIDTH = 360;
@@ -30,3 +36,21 @@ export const DAY = [
   '금요일',
   '토요일',
 ] as const;
+
+export const AMENITY_NAME = {
+  babyChair: '유아 의자',
+  babyTableware: '유아 식기',
+  diaperChangingStation: '기저귀 교환대',
+  nursingRoom: '수유실',
+  groupTable: '다인 테이블',
+  playZone: '놀이방',
+} as const;
+
+export const AMENITY_ICON = {
+  babyChair: IC_CHAIR,
+  babyTableware: IC_CUTLERY,
+  diaperChangingStation: IC_DIAPER,
+  nursingRoom: IC_BABY_BOTTLE,
+  groupTable: IC_TABLE,
+  playZone: IC_PLAYGROUND,
+} as const;

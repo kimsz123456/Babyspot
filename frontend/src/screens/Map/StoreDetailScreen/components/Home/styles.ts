@@ -65,3 +65,34 @@ export const CategoryContainer = styled(View)`
   flex-direction: column;
   gap: ${scale(8)}px;
 `;
+
+export const CategoryCardList = styled(View)`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
+export const CategoryCardContainer = styled(View)`
+  justify-content: center;
+  width: 25%;
+`;
+
+export const CategoryCard = styled(View)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${scale(8)}px;
+  width: ${scale(66)}px;
+  padding: ${scale(8)}px;
+`;
+
+export const CategoryIcon = styled(Image)`
+  width: ${scale(32)}px;
+  height: ${scale(32)}px;
+`;
+
+export const CategoryName = styled(Text)`
+  ${FontStyles.captionMedium}
+  color: ${GrayColors[700]};
+  text-align: center;
+`;

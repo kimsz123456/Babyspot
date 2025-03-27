@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 
-import {StoreBasicInformationType} from '../../../NearStoreListScreen/components/StoreBasicInformation/types';
+import {
+  AmenitiesType,
+  StoreBasicInformationType,
+} from '../../../NearStoreListScreen/components/StoreBasicInformation/types';
 import {StoreDetailInformationType} from '../../types';
 
 import {
@@ -12,7 +15,11 @@ import {
   IC_PHONE,
   IC_SUBWAY,
 } from '../../../../../constants/icons';
-import {DAY} from '../../../../../constants/constants';
+import {
+  AMENITY_ICON,
+  AMENITY_NAME,
+  DAY,
+} from '../../../../../constants/constants';
 
 import * as S from './styles';
 
@@ -56,6 +63,10 @@ const Home = ({basicInformation, detailInformation}: HomeProps) => {
       hours: basicInformation.businessHour[day] || '정보 없음',
     }));
   };
+
+  const filteredAmenities = (
+    Object.keys(basicInformation.amenities) as (keyof AmenitiesType)[]
+  ).filter(key => basicInformation.amenities[key]);
 
   const handleBusinessHourPress = () => {
     setIsBusinessHourOpened(prev => !prev);
@@ -109,6 +120,16 @@ const Home = ({basicInformation, detailInformation}: HomeProps) => {
           <S.Icon source={IC_CATEGORY} />
           <S.BasicText>카테고리</S.BasicText>
         </S.LineContainer>
+        <S.CategoryCardList>
+          {filteredAmenities.map(amenity => (
+            <S.CategoryCardContainer>
+              <S.CategoryCard>
+                <S.CategoryIcon source={AMENITY_ICON[amenity]} />
+                <S.CategoryName>{AMENITY_NAME[amenity]}</S.CategoryName>
+              </S.CategoryCard>
+            </S.CategoryCardContainer>
+          ))}
+        </S.CategoryCardList>
       </S.CategoryContainer>
     </S.HomeContainer>
   );
