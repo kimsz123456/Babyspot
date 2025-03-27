@@ -11,6 +11,7 @@ import PlaceSearchButton from '../components/PlaceSearchButton';
 import RecommendButton from './components/RecommendButton';
 import Chip from './components/Chip';
 import ResearchButton from './components/ResearchButton';
+import StoreBasicScreen from '../StoreBasicScreen';
 import {GetRangeInfo} from '../../../services/mapService';
 
 import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
@@ -21,6 +22,8 @@ import * as S from './styles';
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
   const [mapSize, setMapSize] = useState({width: 0, height: 0});
+
+  const [selectedMarker, setSelectedMarker] = useState(-1);
 
   const onLayoutMap = (e: LayoutChangeEvent) => {
     const {width, height} = e.nativeEvent.layout;
@@ -55,6 +58,14 @@ const MapScreen = () => {
     // }
   };
 
+  const handleMarkerTab = (idx: number) => {
+    setSelectedMarker(idx);
+  };
+
+  const handleNaverMapTab = () => {
+    setSelectedMarker(-1);
+  };
+
   return (
     <S.MapScreenContainer>
       <S.FloatingContainer>
@@ -70,6 +81,7 @@ const MapScreen = () => {
       <S.NaverMap
         ref={mapRef}
         onLayout={onLayoutMap}
+        onTapMap={handleNaverMapTab}
         initialCamera={{
           latitude: 37.498040483,
           longitude: 127.02758183,
@@ -77,20 +89,26 @@ const MapScreen = () => {
         }} // 강남역
         isIndoorEnabled={true}
         isExtentBoundedInKorea={true}>
-        {MOCK.map(data => (
+        {MOCK.map((data, idx) => (
           <NaverMapMarkerOverlay
+            key={idx}
             latitude={data.latitude}
             longitude={data.longitude}
             width={30}
             height={40}
             image={IC_RESTAURANT_MARKER}
+            onTap={() => handleMarkerTab(idx)}
           />
         ))}
       </S.NaverMap>
 
       <ResearchButton onPress={handlePress} />
 
-      <NearStoreListScreen />
+      {selectedMarker >= 0 ? (
+        <StoreBasicScreen store={MOCK[selectedMarker]} />
+      ) : (
+        <NearStoreListScreen />
+      )}
     </S.MapScreenContainer>
   );
 };
