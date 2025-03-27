@@ -8,14 +8,16 @@ import {
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {MyReviewInformationType} from './types';
-import {AGE_MARKERS, DAY} from '../../../../../constants/constants';
-import {IC_COMMENT, IC_YELLOW_STAR} from '../../../../../constants/icons';
+import {AGE_MARKERS} from '../../../../../constants/constants';
+import {
+  IC_GRAY_STAR,
+  IC_HEART,
+  IC_YELLOW_STAR,
+} from '../../../../../constants/icons';
 
 import * as S from './styles';
 
 const {width} = Dimensions.get('window');
-
-const CURRENT_DAY = new Date().getDay();
 
 interface MyReviewInformationProps {
   store: MyReviewInformationType;
@@ -26,6 +28,7 @@ const MyReviewInformation = ({
   store,
   imageCarouselRef,
 }: MyReviewInformationProps) => {
+  const totalImages = store.imageUrls.length;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -37,28 +40,6 @@ const MyReviewInformation = ({
 
   return (
     <S.MyReviewInformationContainer>
-      <S.CarouselContainer>
-        <ScrollView
-          ref={imageCarouselRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}>
-          {store.imageUrls.map((imageUrl, idx) => (
-            <S.ImageContainer key={idx}>
-              <S.StoreImage source={{uri: imageUrl}} />
-            </S.ImageContainer>
-          ))}
-        </ScrollView>
-        <S.ImageIndicatorContainer>
-          <S.ImageIndicator>
-            <S.ImageCurrentIndex>{currentIndex + 1}</S.ImageCurrentIndex>/
-            {store.imageUrls.length}
-          </S.ImageIndicator>
-        </S.ImageIndicatorContainer>
-      </S.CarouselContainer>
-
       <S.DetailContainer>
         <S.FirstRowContainer>
           <S.StoreName>{store.name}</S.StoreName>
@@ -81,22 +62,44 @@ const MyReviewInformation = ({
 
         <S.SecondRowContainer>
           <S.RatingContainer>
-            <S.SmallIcon source={IC_YELLOW_STAR} />
-            <S.Rating>별점 {store.rating}</S.Rating>
+            <S.RatingText>내 별점</S.RatingText>
+            <S.Rating>{store.rating}.0</S.Rating>
+            {[...Array(5)].map((_, i) => (
+              <S.SmallIcon
+                key={i}
+                source={i < store.rating ? IC_YELLOW_STAR : IC_GRAY_STAR}
+              />
+            ))}
           </S.RatingContainer>
-          <S.ReviewContainer>
-            <S.SmallIcon source={IC_COMMENT} />
-            <S.ReviewCount>리뷰 {store.numberOfReviews}개</S.ReviewCount>
-          </S.ReviewContainer>
         </S.SecondRowContainer>
-
-        <S.BusinessHourContainer>
-          <S.Day>{DAY[CURRENT_DAY]}</S.Day>
-          <S.BusinessHour>
-            {store.businessHours[DAY[CURRENT_DAY]]}
-          </S.BusinessHour>
-        </S.BusinessHourContainer>
+        <S.ReviewText>{store.review}</S.ReviewText>
       </S.DetailContainer>
+
+      <S.ImageContainer>
+        {totalImages > 4 ? (
+          <>
+            {store.imageUrls.slice(0, 3).map((imageUrl, idx) => (
+              <S.Images key={idx} source={{uri: imageUrl}} />
+            ))}
+            <S.OverlayWrapper key="overlay">
+              <S.Images source={{uri: store.imageUrls[3]}} />
+              <S.OverlayText>+{totalImages - 4}</S.OverlayText>
+            </S.OverlayWrapper>
+          </>
+        ) : (
+          store.imageUrls.map((imageUrl, idx) => (
+            <S.Images key={idx} source={{uri: imageUrl}} />
+          ))
+        )}
+      </S.ImageContainer>
+
+      <S.LastRowContainer>
+        <S.LikesContainer>
+          <S.LikeIcon source={IC_HEART} />
+          <S.Likes>{store.likes}</S.Likes>
+        </S.LikesContainer>
+        <S.Date>{store.date}</S.Date>
+      </S.LastRowContainer>
     </S.MyReviewInformationContainer>
   );
 };
