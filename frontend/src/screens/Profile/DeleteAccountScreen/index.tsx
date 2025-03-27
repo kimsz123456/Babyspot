@@ -3,8 +3,10 @@ import * as S from './styles';
 import MainButton from '../../../components/atoms/Button/MainButton';
 import SubButton from '../../../components/atoms/Button/SubButton';
 import {View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const DeleteAccountScreen = () => {
+  const navigation = useNavigation();
   const contentTexts = [
     '본 서비스를 탈퇴하시면 더이상 ‘베이비 스팟’ 서비스를 이용하실 수 없습니다.',
     '삭제된 정보는 다시 복구할 수 없습니다.',
@@ -25,8 +27,14 @@ const DeleteAccountScreen = () => {
           </S.ContentContainer>
         ))}
         <S.ButtonWrapper>
-          <SubButton text="탈퇴하기" />
-          <MainButton text="취소하기" />
+          <SubButton
+            text="탈퇴하기"
+            onPress={() => navigation.navigate('ProfileMain')}
+          />
+          <MainButton
+            text="취소하기"
+            onPress={() => navigation.navigate('ProfileMain')}
+          />
         </S.ButtonWrapper>
       </S.DeleteAccountContainer>
     </S.BackGround>
