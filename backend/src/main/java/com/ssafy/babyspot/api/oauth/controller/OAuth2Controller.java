@@ -7,10 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,12 +18,10 @@ import com.ssafy.babyspot.api.oauth.dto.KakaoAuthResponse;
 import com.ssafy.babyspot.api.oauth.dto.RefreshTokenResponse;
 import com.ssafy.babyspot.api.oauth.service.OAuth2UserInfoService;
 import com.ssafy.babyspot.api.oauth.service.TokenService;
-import com.ssafy.babyspot.api.oauth.utils.CookieUtil;
 import com.ssafy.babyspot.domain.member.Member;
 import com.ssafy.babyspot.domain.member.dto.SignUpToken;
 import com.ssafy.babyspot.domain.member.service.MemberService;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -44,12 +41,21 @@ public class OAuth2Controller {
 	}
 
 	@PostMapping("/refresh-token")
-	public ResponseEntity<RefreshTokenResponse> refreshToken(@CookieValue(name = "refresh-token") String refreshToken,
-		HttpServletResponse response, Authentication authentication) {
-		String registrationId = tokenService.getRegistrationId(refreshToken);
-		if (registrationId == null || refreshToken.isEmpty()) {
-			return ResponseEntity.badRequest().body(new RefreshTokenResponse("refresh-token 이 없습니다.", null, null));
+	public ResponseEntity<RefreshTokenResponse> refreshToken(
+		@RequestHeader(value = "X-Refresh-Token", required = false) String refreshToken,
+		HttpServletResponse response) {
+
+		if (refreshToken == null || refreshToken.isEmpty()) {
+			return ResponseEntity.badRequest()
+				.body(new RefreshTokenResponse("refresh-token 이 없습니다.", null, null));
 		}
+
+		String registrationId = tokenService.getRegistrationId(refreshToken);
+		if (registrationId == null) {
+			return ResponseEntity.badRequest()
+				.body(new RefreshTokenResponse("등록 ID가 없습니다.", null, null));
+		}
+
 		if (!tokenService.validateToken(refreshToken)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 				.body(new RefreshTokenResponse("refresh-token 이 유효하지 않습니다", null, null));
@@ -67,15 +73,11 @@ public class OAuth2Controller {
 		String newAccessToken = tokenService.createAccessToken(member.getId(), registrationId);
 		String newRefreshToken = tokenService.createRefreshToken(member.getId(), registrationId);
 
+		// 로그 확인용
 		logger.info("New access token: " + newAccessToken);
 		logger.info("New refresh token: " + newRefreshToken);
 
-		Cookie accessCookie = CookieUtil.createAccessCookie(newAccessToken, false);
-		response.addCookie(accessCookie);
-
-		Cookie refreshCookie = CookieUtil.createRefreshCookie(newRefreshToken, false);
-		response.addCookie(refreshCookie);
-
+		// 모바일에서는 쿠키 대신 JSON 응답에 토큰 포함
 		return ResponseEntity.ok(new RefreshTokenResponse("Token Refreshed", newAccessToken, newRefreshToken));
 	}
 
