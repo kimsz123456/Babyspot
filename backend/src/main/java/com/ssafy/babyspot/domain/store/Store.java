@@ -40,7 +40,7 @@ public class Store {
 	private String contactNumber;
 	private String transportationConvenience;
 	private String category;
-	
+
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(columnDefinition = "jsonb")
 	private List<Integer> babyAges;
@@ -61,7 +61,9 @@ public class Store {
 	private Boolean playZone;
 	private Boolean parking;
 
-	private String kidsMenu;
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(columnDefinition = "jsonb")
+	private List<String> kidsMenu;
 
 	@OneToMany(mappedBy = "store")
 	private List<StoreMenu> menus = new ArrayList<>();

@@ -15,6 +15,7 @@ import com.ssafy.babyspot.domain.store.StoreImage;
 import com.ssafy.babyspot.domain.store.StoreKeyword;
 import com.ssafy.babyspot.domain.store.StoreMenu;
 import com.ssafy.babyspot.domain.store.dto.KeywordDto;
+import com.ssafy.babyspot.domain.store.dto.KidsMenuDto;
 import com.ssafy.babyspot.domain.store.dto.SentimentAnalysisDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDefaultInfoDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDetailDto;
@@ -83,7 +84,6 @@ public class StoreService {
 				dto.setReviewCount(store.getReviewCount());
 				dto.setStrollerAccess(store.getStrollerAccess());
 				dto.setNursingRoom(store.getNursingRoom());
-				dto.setKidsMenu(store.getKidsMenu());
 				dto.setParking(store.getParking());
 				dto.setOkZone(store.getOkZone());
 				dto.setCategory(store.getCategory());
@@ -110,6 +110,32 @@ public class StoreService {
 
 		return menus.stream()
 			.map(menu -> new StoreMenuDto(menu.getName(), menu.getPrice(), menu.getImage()))
+			.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public List<KidsMenuDto> getKidsMenu(int storeId) {
+		List<String> kidsMenuNames = storeRepository.findById(storeId)
+			.map(Store::getKidsMenu)
+			.orElse(Collections.emptyList());
+
+		List<StoreMenu> storeMenus = storeMenuRepository.findAllByStore_Id(storeId);
+
+		return kidsMenuNames.stream()
+			.map(kidsMenuName -> {
+				StoreMenu menu = storeMenus.stream()
+					.filter(storeMenu -> storeMenu.getName().equals(kidsMenuName))
+					.findFirst()
+					.orElse(null);
+
+				Integer price = (menu != null) ? menu.getPrice() : null;
+
+				KidsMenuDto dto = new KidsMenuDto();
+				dto.setBabyMenuName(kidsMenuName);
+				dto.setBabyMenuPrice(price);
+
+				return dto;
+			})
 			.collect(Collectors.toList());
 	}
 
@@ -158,6 +184,7 @@ public class StoreService {
 		List<StoreMenuDto> storeMenus = getStoreMenus(storeId);
 		List<KeywordDto> keywords = getKeywordsAndReviews(storeId);
 		SentimentAnalysisDto sentiment = getSentimentAnalysis(storeId);
+		List<KidsMenuDto> kidsMenus = getKidsMenu(storeId);
 
 		return StoreDetailDto.builder()
 			.storeId(store.getId())
@@ -166,6 +193,7 @@ public class StoreService {
 			.menus(storeMenus)
 			.keywordsAndReviews(keywords)
 			.sentiment(sentiment)
+			.kidsMenu(kidsMenus)
 			.build();
 	}
 }

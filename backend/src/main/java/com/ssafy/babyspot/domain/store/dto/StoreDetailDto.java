@@ -20,4 +20,6 @@ public class StoreDetailDto {
 
 	private SentimentAnalysisDto sentiment;
 
+	private List<KidsMenuDto> kidsMenu;
+
 }
