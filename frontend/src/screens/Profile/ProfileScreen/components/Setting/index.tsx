@@ -2,8 +2,11 @@ import React from 'react';
 import * as S from './styles';
 import {IC_QUESTION, IC_RIGHT_ARROW} from '../../../../../constants/icons';
 import {ThinDivider} from '../../../../../components/atoms/Divider';
+import {useNavigation} from '@react-navigation/native';
 
 const Setting = () => {
+  const navigation = useNavigation();
+
   return (
     <S.SettingContainer>
       <S.SettingTitle>설정</S.SettingTitle>
@@ -32,7 +35,9 @@ const Setting = () => {
         </S.LogoutContainer>
         <ThinDivider />
         <S.DeleteAccountContainer>
-          <S.DeleteAccount>회원탈퇴</S.DeleteAccount>
+          <S.DeleteAccount onPress={() => navigation.navigate('DeleteAccount')}>
+            회원탈퇴
+          </S.DeleteAccount>
         </S.DeleteAccountContainer>
       </S.SettingItems>
     </S.SettingContainer>
