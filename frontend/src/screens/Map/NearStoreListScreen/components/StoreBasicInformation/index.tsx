@@ -66,7 +66,7 @@ const StoreBasicInformation = ({
           <S.StoreName>{store.title}</S.StoreName>
           <S.StoreCategory>{store.category}</S.StoreCategory>
           <S.AgeMarkerContainer>
-            {store.ages.map((age, idx) => (
+            {store.babyAges.map((age, idx) => (
               <S.AgeMarker
                 key={idx}
                 source={AGE_MARKERS[age]}
@@ -74,7 +74,7 @@ const StoreBasicInformation = ({
               />
             ))}
           </S.AgeMarkerContainer>
-          {store.isOKZone && (
+          {store.okZone && (
             <S.OKZoneMarker>
               <S.OKZoneText>OK Zone</S.OKZoneText>
             </S.OKZoneMarker>

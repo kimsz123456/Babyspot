@@ -17,8 +17,8 @@ export interface StoreBasicInformationType {
 
   category: string;
   imageUrls: string[];
-  ages: number[];
-  isOKZone: boolean;
+  babyAges: number[];
+  okZone: boolean;
 
   babyChair: boolean;
   babyTableware: boolean;
