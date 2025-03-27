@@ -1,6 +1,8 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {LayoutChangeEvent} from 'react-native';
 
+import {Alert} from 'react-native';
+import {useRoute} from '@react-navigation/native';
 import {
   NaverMapMarkerOverlay,
   NaverMapViewRef,
@@ -18,12 +20,16 @@ import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
 import MOCK from '../NearStoreListScreen/components/StoreBasicInformation/mock';
 
 import * as S from './styles';
+import {geocoding} from '../../../services/mapService';
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
   const [mapSize, setMapSize] = useState({width: 0, height: 0});
 
   const [selectedMarker, setSelectedMarker] = useState(-1);
+
+  const route = useRoute();
+  const address = (route.params as any)?.address as string;
 
   const onLayoutMap = (e: LayoutChangeEvent) => {
     const {width, height} = e.nativeEvent.layout;
@@ -66,6 +72,35 @@ const MapScreen = () => {
     setSelectedMarker(-1);
   };
 
+  const moveToAddress = async (address: string) => {
+    try {
+      const response = await geocoding(address);
+
+      if (!response) {
+        Alert.alert('주소를 찾을 수 없습니다.');
+        return;
+      }
+
+      const latitude = parseFloat(response.y);
+      const longitude = parseFloat(response.x);
+
+      mapRef.current?.animateCameraTo({
+        latitude,
+        longitude,
+        zoom: 15,
+      });
+    } catch (error) {
+      Alert.alert('위치 이동 중 오류 발생');
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (address) {
+      moveToAddress(address);
+    }
+  }, [address]);
+
   return (
     <S.MapScreenContainer>
       <S.FloatingContainer>
@@ -86,7 +121,7 @@ const MapScreen = () => {
           latitude: 37.498040483,
           longitude: 127.02758183,
           zoom: 15,
-        }} // 강남역
+        }}
         isIndoorEnabled={true}
         isExtentBoundedInKorea={true}>
         {MOCK.map((data, idx) => (

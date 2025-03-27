@@ -7,11 +7,13 @@ import {IC_LEFT_ARROW} from '../../../../constants/icons';
 
 import * as S from './styles';
 import {useMapNavigation} from '../../../../hooks/useNavigationHooks';
+import {useMapStore} from '../../../../stores/mapStore';
 
-// TODO: 검색 화면의 경우, 카카오 API 연결
 const PlaceSearchButton = () => {
   const navigation = useMapNavigation();
   const router = useRoute();
+
+  const selectedAddress = useMapStore(state => state.selectedAddress);
 
   return (
     <S.PlaceSearchButton
@@ -27,7 +29,14 @@ const PlaceSearchButton = () => {
           <S.LeftArrowIcon source={IC_LEFT_ARROW} />
         </Pressable>
       )}
-      <S.Placeholder>검색할 장소를 입력해주세요</S.Placeholder>
+      <S.Placeholder
+        isPlaceholder={!(router.name == 'MapMain' && selectedAddress != null)}>
+        {router.name == 'MapMain' && selectedAddress
+          ? selectedAddress.buildingName
+            ? selectedAddress.buildingName + ', ' + selectedAddress.roadAddress
+            : selectedAddress.roadAddress
+          : `검색할 장소를 입력해주세요`}
+      </S.Placeholder>
     </S.PlaceSearchButton>
   );
 };

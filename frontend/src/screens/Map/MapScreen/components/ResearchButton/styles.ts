@@ -1,12 +1,12 @@
-import {Image, Pressable, Text} from 'react-native';
+import {Image, Pressable, Text, TouchableOpacity} from 'react-native';
 
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 
 import scale from '../../../../../utils/scale';
 import {GrayColors, PrimaryColors} from '../../../../../constants/colors';
 import {FontStyles} from '../../../../../constants/fonts';
 
-export const ResearchButton = styled(Pressable)`
+export const ResearchButton = styled(TouchableOpacity)`
   position: absolute;
   bottom: ${scale(40)}px;
   align-self: center;

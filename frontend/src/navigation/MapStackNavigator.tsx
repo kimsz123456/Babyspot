@@ -9,7 +9,7 @@ import KakaoPostcodeScreen from '../screens/Map/SearchScreen/KakaoPostcodeScreen
 import {StoreBasicInformationType} from '../screens/Map/NearStoreListScreen/components/StoreBasicInformation/types';
 
 export type MapStackParamList = {
-  MapMain: undefined;
+  MapMain: {address: string};
   Search: undefined;
   KakaoPostcode: undefined;
   StoreDetail: {storeBasicInformation: StoreBasicInformationType};
