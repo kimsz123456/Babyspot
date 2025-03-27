@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import AuthStackNavigator from './AuthStackNavigator';
+import OnboardingStackNavigator from './OnboardingStackNavigator';
 import BottomTabNavigator from './BottomTabNavigator';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {getTokenByRefreshToken} from '../services/onboardingService';
@@ -48,7 +48,11 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer>
-      {refreshTokenAlived ? <BottomTabNavigator /> : <AuthStackNavigator />}
+      {refreshTokenAlived ? (
+        <BottomTabNavigator />
+      ) : (
+        <OnboardingStackNavigator />
+      )}
     </NavigationContainer>
   );
 };
