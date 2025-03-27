@@ -10,7 +10,7 @@ export const MenuContainer = styled(View)`
   display: flex;
   flex-direction: column;
   gap: ${scale(8)}px;
-  padding: ${scale(24)}px ${scale(16)}px;
+  padding: ${scale(16)}px ${scale(24)}px;
 `;
 
 export const Title = styled(Text)`
