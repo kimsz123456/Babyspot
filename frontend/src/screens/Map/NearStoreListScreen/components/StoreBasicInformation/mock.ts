@@ -3,7 +3,7 @@ import {StoreBasicInformationType} from './types';
 const MOCK: StoreBasicInformationType[] = [
   {
     storeId: 1,
-    title: 'Happy Kids Café',
+    title: '멀티캠퍼스',
     address: '서울특별시 강남구 테헤란로 123',
     contactNumber: '02-1234-5678',
     businessHour: {
@@ -40,12 +40,12 @@ const MOCK: StoreBasicInformationType[] = [
       playZone: true,
     },
     kidsMenu: '유아용 피자, 주스',
-    latitude: 37.4979,
-    longitude: 127.0276,
+    latitude: 37.501287,
+    longitude: 127.03961,
   },
   {
     storeId: 2,
-    title: 'Little Explorers',
+    title: '딸기우유 맛집',
     address: '서울특별시 마포구 홍대입구로 45',
     contactNumber: '02-9876-5432',
     businessHour: {
@@ -77,12 +77,12 @@ const MOCK: StoreBasicInformationType[] = [
       playZone: true,
     },
     kidsMenu: '어린이 도시락, 우유',
-    latitude: 37.5563,
-    longitude: 126.9237,
+    latitude: 37.50030043017048,
+    longitude: 127.0348519087094,
   },
   {
     storeId: 3,
-    title: "Baby's Delight",
+    title: '망고 레스토랑',
     address: '서울특별시 용산구 이태원로 102',
     contactNumber: '02-5678-9101',
     businessHour: {
@@ -116,12 +116,12 @@ const MOCK: StoreBasicInformationType[] = [
       playZone: true,
     },
     kidsMenu: '유아 스파게티, 망고주스',
-    latitude: 37.5345,
-    longitude: 126.9945,
+    latitude: 37.4974306889922,
+    longitude: 127.03720559943504,
   },
   {
     storeId: 4,
-    title: 'Tiny Tot Garden',
+    title: '요거트데이',
     address: '서울특별시 송파구 잠실로 88',
     contactNumber: '02-3333-4444',
     businessHour: {
@@ -155,12 +155,12 @@ const MOCK: StoreBasicInformationType[] = [
       playZone: true,
     },
     kidsMenu: '어린이 세트, 요거트',
-    latitude: 37.5146,
-    longitude: 127.1022,
+    latitude: 37.49721682047636,
+    longitude: 127.04094254737977,
   },
   {
     storeId: 5,
-    title: 'Kids Funland',
+    title: '피자 조아 감튀 조아',
     address: '서울특별시 강서구 공항대로 420',
     contactNumber: '02-5555-6666',
     businessHour: {
@@ -194,8 +194,8 @@ const MOCK: StoreBasicInformationType[] = [
       playZone: true,
     },
     kidsMenu: '피자, 감자튀김',
-    latitude: 37.5583,
-    longitude: 126.7977,
+    latitude: 37.50265263345407,
+    longitude: 127.03622136429853,
   },
 ];
 
