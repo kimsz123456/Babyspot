@@ -38,6 +38,13 @@ export const BasicText = styled(Text)`
   color: ${GrayColors[800]};
 `;
 
+export const BoldText = styled(Text)`
+  ${FontStyles.captionMedium}
+  line-height: ${scale(18)}px;
+  color: ${GrayColors[800]};
+  font-weight: 700;
+`;
+
 export const BusinessHourContainer = styled(TouchableOpacity)`
   display: flex;
   flex-direction: row;

@@ -76,7 +76,7 @@ const Home = ({basicInformation, detailInformation}: HomeProps) => {
         <S.LineContainer>
           <S.Icon source={IC_CLOCK} />
           <S.TextContainer>
-            <S.BasicText>{DAY[CURRENT_DAY]}</S.BasicText>
+            <S.BoldText>{DAY[CURRENT_DAY]}</S.BoldText>
             <S.BasicText>
               {basicInformation.businessHour[DAY[CURRENT_DAY]]}
             </S.BasicText>
