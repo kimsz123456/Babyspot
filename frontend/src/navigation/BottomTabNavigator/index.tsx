@@ -4,6 +4,7 @@ import ProfileScreen from '../../screens/Profile/ProfileScreen';
 import scale from '../../utils/scale';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MapStackNavigator from './../MapStackNavigator';
+import ProfileStackNavigator from '../ProfileStackNavigator';
 import BottomTabBarIcon from './BottomTabBarIcon';
 import BottomTabBarLabel from './BottomTabBarLabel';
 
@@ -25,7 +26,7 @@ const BottomTabNavigator = () => {
         tabBarLabel: ({focused}) => BottomTabBarLabel({focused, route}),
       })}>
       <Tab.Screen name="Map" component={MapStackNavigator} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Profile" component={ProfileStackNavigator} />
     </Tab.Navigator>
   );
 };

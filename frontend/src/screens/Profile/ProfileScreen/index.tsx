@@ -1,10 +1,11 @@
 import React from 'react';
 import * as S from './styles.ts';
 import {IMG_DEFAULT_PROFILE} from '../../../constants/images.ts';
-import {IC_AGE3, IC_PROFILE_EDIT} from '../../../constants/icons.ts';
+import {IC_AGE3} from '../../../constants/icons.ts';
 import {MyReviewList} from './components/MyReviewList/index.tsx';
 import {ThickDividerContainer} from '../../../components/atoms/Divider/styles.ts';
 import Setting from './components/Setting/index.tsx';
+import ProfileEditIconButton from './components/Buttons/index.tsx';
 
 const ProfileScreen = () => {
   const name = '감귤하우스';
@@ -19,7 +20,7 @@ const ProfileScreen = () => {
           </S.NameContainer>
           <S.AgeIcons source={IC_AGE3} />
         </S.ProfileInfo>
-        <S.ProfileEdit source={IC_PROFILE_EDIT} />
+        <ProfileEditIconButton />
       </S.ProfileContainer>
       <S.ReviewContainer>
         <S.ReviewTitleContainer>
