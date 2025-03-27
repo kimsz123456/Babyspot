@@ -16,9 +16,18 @@ const DeleteAccountTitle = styled(Text)`
   color: ${GrayColors[800]};
   padding-bottom: ${scale(32)}px;
 `;
+const ContentContainer = styled(View)`
+  flex-direction: row;
+`;
+const ContentsNumber = styled(Text)`
+  ${FontStyles.bodyMedium};
+  color: ${GrayColors[800]};
+  width: ${scale(20)}px;
+`;
 const Contents = styled(Text)`
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
+  width: ${scale(292)}px;
 `;
 const ButtonWrapper = styled(View)`
   padding-top: ${scale(24)}px;
@@ -29,6 +38,8 @@ export {
   BackGround,
   DeleteAccountContainer,
   DeleteAccountTitle,
+  ContentContainer,
+  ContentsNumber,
   Contents,
   ButtonWrapper,
 };
