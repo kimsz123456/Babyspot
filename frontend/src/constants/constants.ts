@@ -42,7 +42,7 @@ export const AMENITY_NAME = {
   babyTableware: '유아 식기',
   diaperChangingStation: '기저귀 교환대',
   nursingRoom: '수유실',
-  groupTable: '다인 테이블',
+  groupTable: '6인 이상 테이블',
   playZone: '놀이방',
 } as const;
 
