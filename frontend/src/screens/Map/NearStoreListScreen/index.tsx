@@ -34,6 +34,7 @@ const NearStoreListScreen = () => {
               key={idx}
               store={store}
               imageCarouselRef={imageCarouselRef}
+              isShownBusinessHour={true}
             />
           ))}
         </S.NearStoreListScreenContainer>

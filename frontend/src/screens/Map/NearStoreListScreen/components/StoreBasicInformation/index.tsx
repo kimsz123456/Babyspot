@@ -20,11 +20,13 @@ const CURRENT_DAY = new Date().getDay();
 interface StoreBasicInformationProps {
   store: StoreBasicInformationType;
   imageCarouselRef: RefObject<ScrollView | null>;
+  isShownBusinessHour?: boolean;
 }
 
 const StoreBasicInformation = ({
   store,
   imageCarouselRef,
+  isShownBusinessHour,
 }: StoreBasicInformationProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -90,12 +92,14 @@ const StoreBasicInformation = ({
           </S.ReviewContainer>
         </S.SecondRowContainer>
 
-        <S.BusinessHourContainer>
-          <S.Day>{DAY[CURRENT_DAY]}</S.Day>
-          <S.BusinessHour>
-            {store.businessHours[DAY[CURRENT_DAY]]}
-          </S.BusinessHour>
-        </S.BusinessHourContainer>
+        {isShownBusinessHour && (
+          <S.BusinessHourContainer>
+            <S.Day>{DAY[CURRENT_DAY]}</S.Day>
+            <S.BusinessHour>
+              {store.businessHours[DAY[CURRENT_DAY]]}
+            </S.BusinessHour>
+          </S.BusinessHourContainer>
+        )}
       </S.DetailContainer>
     </S.StoreBasicInformationContainer>
   );
