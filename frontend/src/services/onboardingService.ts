@@ -48,12 +48,23 @@ export const getTokenByRefreshToken =
     }
   };
 
-export const signUp = async (
-  params: SignUpRequest,
-): Promise<SignUpResponse> => {
+export const signUp = async ({
+  params,
+  tempToken,
+}: {
+  params: SignUpRequest;
+  tempToken: string;
+}): Promise<SignUpResponse> => {
   try {
-    const result = await api.post('/memebers/signup', {params});
+    const result = await api.post('/members/signup', params, {
+      headers: {
+        'X-Temp-Token': tempToken,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
 
+    console.log(result);
     return result.data;
   } catch (error) {
     throw error;

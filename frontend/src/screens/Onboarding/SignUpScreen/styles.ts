@@ -1,8 +1,8 @@
 import {GrayColors, PrimaryColors} from './../../../constants/colors';
 import {Text, View} from 'react-native';
-import styled from 'styled-components';
 import {FontStyles} from '../../../constants/fonts';
 import scale from '../../../utils/scale';
+import styled from 'styled-components';
 
 export const SignUpScreenView = styled(View)`
   flex: 1;

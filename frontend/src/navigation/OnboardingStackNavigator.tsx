@@ -20,7 +20,7 @@ const OnboardingStackNavigator = () => {
   const Stack = createNativeStackNavigator<OnboardingStackParamList>();
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="SignIn">
       <Stack.Screen
         name="SignIn"
         component={SignInScreen}

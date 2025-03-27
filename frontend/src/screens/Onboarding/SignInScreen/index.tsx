@@ -7,11 +7,10 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {useGlobalStore} from '../../../stores/globalStore';
 import {useOnboardingStore} from '../../../stores/onboardingStore';
 import {useOnboardingNavigation} from '../../../hooks/useNavigationHooks';
-import {useNavigation} from '@react-navigation/native';
 
 const SignInScreen = () => {
   const navigation = useOnboardingNavigation();
-  const mapNavigation = useNavigation();
+  const setIsLoggedIn = useGlobalStore(state => state.setIsLoggedIn);
 
   const signInByKakao = async () => {
     const token: KakaoOAuthToken = await login();
@@ -26,7 +25,7 @@ const SignInScreen = () => {
       if (response.access_token == null) {
         navigation.navigate('SignUp');
       } else {
-        mapNavigation.navigate('Map');
+        setIsLoggedIn(true);
       }
     } catch (error) {
       return Promise.reject(error);

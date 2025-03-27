@@ -3,6 +3,7 @@ import * as S from './styles';
 import MainButton from '../../../../components/atoms/Button/MainButton';
 import {IC_AGE1} from '../../../../constants/icons';
 import {useOnboardingStore} from '../../../../stores/onboardingStore';
+import {useOnboardingNavigation} from '../../../../hooks/useNavigationHooks';
 
 const sampleImagePaths = [
   'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
@@ -11,6 +12,8 @@ const sampleImagePaths = [
   'https://images.khan.co.kr/article/2024/03/05/news-p.v1.20240305.9dc707937ff0483e9f91ee16c87312dd_P1.jpg',
 ];
 const ProfileImageScreen = () => {
+  const navigation = useOnboardingNavigation();
+
   const profileImagePath = useOnboardingStore(state => state.profileImagePath);
   const setProfileImagePath = useOnboardingStore(
     state => state.setProfileImagePath,
@@ -35,7 +38,13 @@ const ProfileImageScreen = () => {
           )}
         </S.CameraButton>
       </S.SingUpInputSection>
-      <MainButton text={'다음'} />
+      <MainButton
+        text={'다음'}
+        onPress={() => {
+          navigation.navigate('AddChild');
+        }}
+        disabled={!profileImagePath}
+      />
     </S.SignUpScreenView>
   );
 };
