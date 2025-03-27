@@ -63,7 +63,7 @@ const StoreBasicInformation = ({
 
       <S.DetailContainer>
         <S.FirstRowContainer>
-          <S.StoreName>{store.name}</S.StoreName>
+          <S.StoreName>{store.title}</S.StoreName>
           <S.StoreCategory>{store.category}</S.StoreCategory>
           <S.AgeMarkerContainer>
             {store.ages.map((age, idx) => (
@@ -88,7 +88,7 @@ const StoreBasicInformation = ({
           </S.RatingContainer>
           <S.ReviewContainer>
             <S.SmallIcon source={IC_COMMENT} />
-            <S.ReviewCount>리뷰 {store.numberOfReviews}개</S.ReviewCount>
+            <S.ReviewCount>리뷰 {store.reviewCount}개</S.ReviewCount>
           </S.ReviewContainer>
         </S.SecondRowContainer>
 
@@ -96,7 +96,7 @@ const StoreBasicInformation = ({
           <S.BusinessHourContainer>
             <S.Day>{DAY[CURRENT_DAY]}</S.Day>
             <S.BusinessHour>
-              {store.businessHours[DAY[CURRENT_DAY]]}
+              {store.businessHour[DAY[CURRENT_DAY]]}
             </S.BusinessHour>
           </S.BusinessHourContainer>
         )}
