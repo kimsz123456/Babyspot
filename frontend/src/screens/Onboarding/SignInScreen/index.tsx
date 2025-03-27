@@ -1,11 +1,35 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {IC_APP_LOGO, IC_KAKAO_LOGO} from '../../../constants/icons';
+import * as S from './styles';
+import {kakaoLogin} from '../../../services/onboardingService';
+import {KakaoOAuthToken, login} from '@react-native-seoul/kakao-login';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {useGlobalStore} from '../../../stores/globalStore';
+import {useOnboardingStore} from '../../../stores/onboardingStore';
 
 const SignInScreen = () => {
+  const signInByKakao = async () => {
+    const token: KakaoOAuthToken = await login();
+
+    try {
+      const response = await kakaoLogin(token.accessToken);
+
+      useGlobalStore.getState().setAccessToken(response.access_token);
+      useOnboardingStore.getState().setTempToken(response.temp_token);
+      await EncryptedStorage.setItem('refreshToken', response.refresh_token);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
   return (
-    <View>
-      <Text>Sign In</Text>
-    </View>
+    <S.SignInScreenContainer>
+      <S.SignInAppLogoImage source={IC_APP_LOGO} />
+      <S.BetweenMarginView />
+      <S.KakaoLoginButton onPress={signInByKakao}>
+        <S.KakaoLogoImage source={IC_KAKAO_LOGO} />
+        <S.KakaoLoginButtonText>카카오 로그인</S.KakaoLoginButtonText>
+      </S.KakaoLoginButton>
+    </S.SignInScreenContainer>
   );
 };
 

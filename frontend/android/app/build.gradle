@@ -87,8 +87,10 @@ android {
         versionCode 1
         versionName "1.0"
         manifestPlaceholders = [
-            NAVER_CLIENT_ID: project.env.NAVER_CLIENT_ID ?: ""
+            NAVER_CLIENT_ID: project.env.NAVER_CLIENT_ID ?: "",
+            KAKAO_NATIVE_APP_KEY: project.env.KAKAO_NATIVE_APP_KEY ?: ""
         ]
+        resValue "string", "kakao_app_key", project.env.KAKAO_NATIVE_APP_KEY ?: ""
     }
     signingConfigs {
         debug {
