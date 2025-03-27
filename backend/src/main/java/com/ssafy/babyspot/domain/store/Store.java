@@ -2,6 +2,7 @@ package com.ssafy.babyspot.domain.store;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -38,7 +39,12 @@ public class Store {
 	private String address;
 	private String contactNumber;
 	private String transportationConvenience;
-	private String businessHour;
+	private String category;
+
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(columnDefinition = "jsonb")
+	private Map<String, String> businessHour;
+
 	private float rating;
 	private int reviewCount;
 
