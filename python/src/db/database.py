@@ -53,7 +53,11 @@ class PostgresImporter:
           transportation_convenience = restaurant.get(
               "transportation_convenience", "")
           contact_number = restaurant.get("contact_number", "")
-          business_hours = restaurant.get("business_hours", "")
+          # business_hours 가져오기
+          business_hours = restaurant.get("business_hours", {})
+
+          # 항상 JSON 문자열로 변환
+          business_hours_json = json.dumps(business_hours)
 
           # 새로운 필드는 기본값으로 설정
           category = "음식점"  # 기본 카테고리 설정
@@ -91,7 +95,7 @@ class PostgresImporter:
                           location = EXCLUDED.location;
                   """, (
               address, transportation_convenience, contact_number,
-              business_hours,
+              business_hours_json,
               title, baby_chair, baby_tableware, category, kids_menu, parking,
               rating, review_count, ok_zone, location
             ))

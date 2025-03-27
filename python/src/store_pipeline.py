@@ -17,21 +17,36 @@ def run_home_info_pipeline(restaurant_id):
   review_dir = f"/user/hadoop/final_rest_home_information_json/restaurant_id={restaurant_id}"
 
   system_prompt = f"""
-    항상 한국어로 대답 부탁드립니다.
-    다음 텍스트 데이터를 분석하여 다음과 같은 형식으로 정제해주세요:
+  항상 한국어로 대답 부탁드립니다.
+  다음 텍스트 데이터를 분석하여 다음과 같은 형식으로 정제해주세요:
 
-    {{
-      "restaurant_id": "{restaurant_id}",
-      "address": "주소",
-      "transportation_convenience": "대중교통 접근성",
-      "contact_number": "전화번호",
-      "business_hours": "영업시간"
+  {{
+    "restaurant_id": "{restaurant_id}",
+    "address": "주소",
+    "transportation_convenience": "대중교통 접근성",
+    "contact_number": "전화번호",
+    "business_hours": {{
+      "월": "11:00-21:30",
+      "화": "11:00-21:30",
+      "수": "11:00-21:30",
+      "목": "11:00-21:30",
+      "금": "11:00-21:30",
+      "토": "11:00-21:30",
+      "일": "휴무",
+      "브레이크타임": "14:30-17:00"
     }}
+  }}
 
-    단, restaurant_id를 제외하고, 데이터에서 찾을 수 없는 정보는 빈 문자열("")로 표시해주세요.
-    반드시 순수한 JSON만 반환해주시고, 마크다운이나 추가 설명을 포함하지 마세요.
-    다른 언어로 설명을 추가하지 마세요.
-    """
+  데이터 파싱 규칙:
+  1. 영업시간 정보가 "11:00 - 21:30"와 같은 형식으로 되어 있다면, "11:00-21:30"으로 변환 (공백 제거)
+  2. 휴무일의 경우 해당 요일에 "휴무"로 표시
+  3. 브레이크타임이 있는 경우 시작과 종료 시간만 "14:30-17:00" 형식으로 추출
+  4. 브레이크타임이 없는 경우 "" (빈 문자열)로 설정
+
+  단, restaurant_id를 제외하고, 데이터에서 찾을 수 없는 정보는 빈 문자열("")로 표시해주세요.
+  반드시 순수한 JSON만 반환해주시고, 마크다운이나 추가 설명을 포함하지 마세요.
+  다른 언어로 설명을 추가하지 마세요.
+  """
 
   result = pipeline.process_directory(
       hdfs_directory=review_dir,
@@ -236,7 +251,6 @@ def save_to_database(json_file_paths):
 
         # PostgreSQL에 데이터 저장
         db_importer.import_to_postgres(data)
-        print(f"✅ {json_file_path} 파일의 데이터가 데이터베이스에 성공적으로 저장되었습니다.")
       except Exception as e:
         print(f"❌ {json_file_path} 파일 저장 중 오류 발생: {e}")
   except Exception as e:
@@ -251,10 +265,10 @@ def main():
   결과를 병합한 후, 사용자가 원하는 시점에 PostgreSQL 데이터베이스에 저장합니다.
   """
   # 여기서 원하는 레스토랑 범위를 직접 설정하세요
-  START_ID = 11  # 시작 레스토랑 ID
-  END_ID = 20  # 종료 레스토랑 ID
+  START_ID = 1  # 시작 레스토랑 ID
+  END_ID = 10  # 종료 레스토랑 ID
   PIPELINE_ONLY = False  # True: 파이프라인만 실행, False: 파이프라인 + 병합
-  MERGE_ONLY = False  # True: 병합만 실행, False: 파이프라인 + 병합
+  MERGE_ONLY = True  # True: 병합만 실행, False: 파이프라인 + 병합
 
   # 유효한 범위인지 확인
   if START_ID < 1 or START_ID > END_ID:
