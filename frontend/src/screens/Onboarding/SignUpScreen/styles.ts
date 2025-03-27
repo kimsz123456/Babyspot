@@ -27,6 +27,9 @@ export const SignUpWelcomeSubTitle = styled(Text)`
   color: ${GrayColors[800]};
 `;
 
+export const SingUpInputSection = styled(View)`
+  gap: ${scale(40)}px;
+`;
 export const SignUpInputSectionTitle = styled(Text)`
   ${FontStyles.headingMedium};
   color: ${GrayColors[800]};
