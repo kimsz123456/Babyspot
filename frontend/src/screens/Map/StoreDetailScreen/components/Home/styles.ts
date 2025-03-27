@@ -73,6 +73,8 @@ export const CategoryCardList = styled(View)`
 `;
 
 export const CategoryCardContainer = styled(View)`
+  display: flex;
+  flex-direction: row;
   justify-content: center;
   width: 25%;
 `;

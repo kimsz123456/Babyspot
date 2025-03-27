@@ -122,7 +122,7 @@ const Home = ({basicInformation, detailInformation}: HomeProps) => {
         </S.LineContainer>
         <S.CategoryCardList>
           {filteredAmenities.map(amenity => (
-            <S.CategoryCardContainer>
+            <S.CategoryCardContainer key={amenity}>
               <S.CategoryCard>
                 <S.CategoryIcon source={AMENITY_ICON[amenity]} />
                 <S.CategoryName>{AMENITY_NAME[amenity]}</S.CategoryName>
