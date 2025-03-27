@@ -1,9 +1,8 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import MapScreen from '../screens/Map/MapScreen';
-import SearchScreen from '../screens/Map/SearchScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import ProfileEditScreen from '../screens/Profile/ProfileEditScreen';
+import DeleteAccountScreen from '../screens/Profile/DeleteAccountScreen';
 
 const ProfileStackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -19,6 +18,11 @@ const ProfileStackNavigator = () => {
         name="ProfileEdit"
         component={ProfileEditScreen}
         options={{title: '프로필 수정'}}
+      />
+      <Stack.Screen
+        name="DeleteAccount"
+        component={DeleteAccountScreen}
+        options={{title: '회원탈퇴'}}
       />
     </Stack.Navigator>
   );
