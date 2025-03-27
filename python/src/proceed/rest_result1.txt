@@ -1,0 +1,8 @@
+{
+    "restaurant_id": "1",
+    "title": "황기닭곰탕",
+    "parking": false,
+    "baby_chair": true,
+    "baby_tableware": false,
+    "kids_menu": "돈까스"
+}

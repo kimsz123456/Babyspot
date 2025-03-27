@@ -1,0 +1,17 @@
+{
+    "restaurant_id": "2",
+    "title": "파불고기 1974 용마산점",
+    "parking": false, 
+    "baby_chair": false, 
+    "baby_tableware": false, 
+    "kids_menu": ""
+}
+
+{
+    "restaurant_id": "2",
+    "title": "",
+    "parking": false, 
+    "baby_chair": false, 
+    "baby_tableware": false, 
+    "kids_menu": "파불고기"
+}

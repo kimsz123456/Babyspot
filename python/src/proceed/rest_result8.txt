@@ -1,0 +1,8 @@
+{
+    "restaurant_id": "8",
+    "title": "이어도참치",
+    "parking": true, 
+    "baby_chair": true, 
+    "baby_tableware": false, 
+    "kids_menu": "회덮밥"
+}
