@@ -1,7 +1,3 @@
-export interface BusinessHoursType {
-  [day: string]: string;
-}
-
 export interface MyReviewInformationType {
   name: string;
   category: string;
@@ -9,6 +5,7 @@ export interface MyReviewInformationType {
   ages: number[];
   isOKZone: boolean;
   rating: number;
-  numberOfReviews: number;
-  businessHours: BusinessHoursType;
+  review: string;
+  likes: number;
+  date: string;
 }

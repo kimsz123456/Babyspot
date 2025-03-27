@@ -6,20 +6,30 @@ import MOCK from '../MyReviewListScreen/components/MyReviewInformation/mocks';
 
 import * as S from './styles';
 import MyReviewInformation from './components/MyReviewInformation';
+import {ThinDivider} from '../../../components/atoms/Divider';
 
 const MyReviewListScreen = () => {
   const imageCarouselRef = useRef<ScrollView>(null);
 
   return (
-    <S.MyReviewListScreenContainer>
-      {MOCK.map((store, idx) => (
-        <MyReviewInformation
-          key={idx}
-          store={store}
-          imageCarouselRef={imageCarouselRef}
-        />
-      ))}
-    </S.MyReviewListScreenContainer>
+    <ScrollView>
+      <S.MyReviewListScreenContainer>
+        {MOCK.map((store, idx) => (
+          <React.Fragment key={idx}>
+            <MyReviewInformation
+              key={idx}
+              store={store}
+              imageCarouselRef={imageCarouselRef}
+            />
+            {idx !== MOCK.length - 1 && (
+              <S.Divider>
+                <ThinDivider />
+              </S.Divider>
+            )}
+          </React.Fragment>
+        ))}
+      </S.MyReviewListScreenContainer>
+    </ScrollView>
   );
 };
 
