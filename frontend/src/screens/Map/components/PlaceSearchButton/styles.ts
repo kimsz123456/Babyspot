@@ -1,10 +1,14 @@
 import {Image, Pressable, Text} from 'react-native';
 
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 
 import scale from '../../../../utils/scale';
 import {FontStyles} from '../../../../constants/fonts';
 import {GrayColors} from '../../../../constants/colors';
+
+interface PlaceholderProps {
+  isPlaceholder: boolean;
+}
 
 export const PlaceSearchButton = styled(Pressable)`
   flex: 1;
@@ -26,7 +30,11 @@ export const LeftArrowIcon = styled(Image)`
   height: ${scale(24)}px;
 `;
 
-export const Placeholder = styled(Text)`
+export const Placeholder = styled(Text).attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail',
+})<PlaceholderProps>`
   ${FontStyles.bodyMedium}
-  color: ${GrayColors[300]};
+  color: ${({isPlaceholder}) =>
+    isPlaceholder ? GrayColors[300] : GrayColors[800]};
 `;
