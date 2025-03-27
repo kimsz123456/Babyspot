@@ -11,6 +11,7 @@ import {StoreBasicInformationType} from './components/StoreBasicInformation/type
 import scale from '../../../utils/scale';
 
 import * as S from './styles';
+import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 
 const SNAP_POINTS = [scale(32), '80%'];
 
@@ -18,7 +19,7 @@ const NearStoreListScreen = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const imageCarouselRef = useRef<ScrollView>(null);
 
-  const navigation = useNavigation<any>(); // TODO: 타입 수정
+  const navigation = useMapNavigation();
 
   const handleStorePress = (store: StoreBasicInformationType) => {
     navigation.navigate('StoreDetail', {storeBasicInformation: store});
