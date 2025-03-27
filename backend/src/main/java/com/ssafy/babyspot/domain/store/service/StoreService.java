@@ -85,6 +85,9 @@ public class StoreService {
 				dto.setNursingRoom(store.getNursingRoom());
 				dto.setKidsMenu(store.getKidsMenu());
 				dto.setParking(store.getParking());
+				dto.setOkZone(store.getOkZone());
+				dto.setCategory(store.getCategory());
+				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : List.of(1, 2, 3));
 				return dto;
 			})
 			.collect(Collectors.toList());

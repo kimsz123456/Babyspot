@@ -40,6 +40,10 @@ public class Store {
 	private String contactNumber;
 	private String transportationConvenience;
 	private String category;
+	
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(columnDefinition = "jsonb")
+	private List<Integer> babyAges;
 
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(columnDefinition = "jsonb")

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "sotore_keyword")
+@Table(name = "store_keyword")
 public class StoreKeyword {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
