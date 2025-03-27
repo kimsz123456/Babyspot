@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^5.1.2",
     "@mj-studio/react-native-naver-map": "file:./libs/mj-studio-react-native-naver-map",
     "@react-native-seoul/kakao-login": "^5.4.1",
     "@react-navigation/bottom-tabs": "^7.3.2",

@@ -41,6 +41,8 @@ const IC_IMAGE_EDIT: ImageRequireSource = require('../../assets/icons/image-edit
 const IC_APP_LOGO: ImageRequireSource = require('../../assets/icons/app-logo.png');
 const IC_KAKAO_LOGO: ImageRequireSource = require('../../assets/icons/kakao-logo.png');
 
+const IC_COMMENT: ImageRequireSource = require('../../assets/icons/comment.png');
+
 export {
   IC_AGE1,
   IC_AGE2,
@@ -73,4 +75,5 @@ export {
   IC_IMAGE_EDIT,
   IC_APP_LOGO,
   IC_KAKAO_LOGO,
+  IC_COMMENT,
 };

@@ -6,8 +6,10 @@ import {MyReviewList} from './components/MyReviewList/index.tsx';
 import {ThickDividerContainer} from '../../../components/atoms/Divider/styles.ts';
 import Setting from './components/Setting/index.tsx';
 import ProfileEditIconButton from './components/Buttons/index.tsx';
+import {useNavigation} from '@react-navigation/native';
 
 const ProfileScreen = () => {
+  const navigation = useNavigation();
   const name = '감귤하우스';
   return (
     <S.BackGround>
@@ -25,7 +27,9 @@ const ProfileScreen = () => {
       <S.ReviewContainer>
         <S.ReviewTitleContainer>
           <S.ReviewTitle>내 리뷰</S.ReviewTitle>
-          <S.MoreReview>더보기</S.MoreReview>
+          <S.MoreReview onPress={() => navigation.navigate('MyReviewList')}>
+            더보기
+          </S.MoreReview>
         </S.ReviewTitleContainer>
         <MyReviewList />
       </S.ReviewContainer>
