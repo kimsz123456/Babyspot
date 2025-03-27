@@ -1,19 +1,19 @@
-interface storeImageType {
+export interface storeImageType {
   storeImg: string;
 }
 
-interface menuType {
+export interface menuType {
   name: string;
   price: number;
   image: string;
 }
 
-interface keywordsAndReviewsType {
+export interface keywordsAndReviewsType {
   keyword: string;
   reviews: string[];
 }
 
-interface sentimentType {
+export interface sentimentType {
   positive: string[];
   negative: string[];
 }

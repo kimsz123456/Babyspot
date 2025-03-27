@@ -32,6 +32,26 @@ const MOCK: StoreDetailInformationType = {
       price: 15000,
       image: 'https://example.com/images/menu4.jpg',
     },
+    {
+      name: '감귤 도넛',
+      price: 15000,
+      image: 'https://example.com/images/menu1.jpg',
+    },
+    {
+      name: '감귤 찌개',
+      price: 15000,
+      image: 'https://example.com/images/menu2.jpg',
+    },
+    {
+      name: '감귤 온면',
+      price: 15000,
+      image: 'https://example.com/images/menu3.jpg',
+    },
+    {
+      name: '찐 제주 감귤 500g',
+      price: 15000,
+      image: 'https://example.com/images/menu4.jpg',
+    },
   ],
   keywordsAndReviews: [
     {

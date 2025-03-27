@@ -3,3 +3,7 @@ export const formatDateToString = (date: Date): string => {
   const day = String(date.getDate()).padStart(2, '0');
   return `${month}.${day}`;
 };
+
+export const formatPrice = (num: number): string => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
