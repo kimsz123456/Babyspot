@@ -19,7 +19,7 @@ const CURRENT_DAY = new Date().getDay();
 
 interface StoreBasicInformationProps {
   store: StoreBasicInformationType;
-  imageCarouselRef: RefObject<ScrollView | null>;
+  imageCarouselRef?: RefObject<ScrollView | null>;
   isShownBusinessHour?: boolean;
 }
 

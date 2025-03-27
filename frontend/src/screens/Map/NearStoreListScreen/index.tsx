@@ -21,7 +21,7 @@ const NearStoreListScreen = () => {
   const navigation = useNavigation<any>(); // TODO: 타입 수정
 
   const handleStorePress = (store: StoreBasicInformationType) => {
-    navigation.navigate('StoreDetail', {store: store});
+    navigation.navigate('StoreDetail', {storeBasicInformation: store});
   };
 
   return (

@@ -1,13 +1,18 @@
 import React from 'react';
 
-import {Text} from 'react-native';
+import {useRoute} from '@react-navigation/native';
+
+import StoreBasicInformation from '../NearStoreListScreen/components/StoreBasicInformation';
 
 import * as S from './styles';
 
 const StoreDetailScreen = () => {
+  const route = useRoute<any>(); // TODO: 타입 변경
+  const {storeBasicInformation} = route.params;
+
   return (
     <S.StoreDetailScreenContainer>
-      <Text>Test</Text>
+      <StoreBasicInformation store={storeBasicInformation} />
     </S.StoreDetailScreenContainer>
   );
 };
