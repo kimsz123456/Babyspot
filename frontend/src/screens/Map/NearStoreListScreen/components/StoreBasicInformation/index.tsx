@@ -19,12 +19,14 @@ const CURRENT_DAY = new Date().getDay();
 
 interface StoreBasicInformationProps {
   store: StoreBasicInformationType;
-  imageCarouselRef: RefObject<ScrollView | null>;
+  imageCarouselRef?: RefObject<ScrollView | null>;
+  isShownBusinessHour?: boolean;
 }
 
 const StoreBasicInformation = ({
   store,
   imageCarouselRef,
+  isShownBusinessHour,
 }: StoreBasicInformationProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -61,10 +63,10 @@ const StoreBasicInformation = ({
 
       <S.DetailContainer>
         <S.FirstRowContainer>
-          <S.StoreName>{store.name}</S.StoreName>
+          <S.StoreName>{store.title}</S.StoreName>
           <S.StoreCategory>{store.category}</S.StoreCategory>
           <S.AgeMarkerContainer>
-            {store.ages.map((age, idx) => (
+            {store.babyAges.map((age, idx) => (
               <S.AgeMarker
                 key={idx}
                 source={AGE_MARKERS[age]}
@@ -72,7 +74,7 @@ const StoreBasicInformation = ({
               />
             ))}
           </S.AgeMarkerContainer>
-          {store.isOKZone && (
+          {store.okZone && (
             <S.OKZoneMarker>
               <S.OKZoneText>OK Zone</S.OKZoneText>
             </S.OKZoneMarker>
@@ -86,16 +88,18 @@ const StoreBasicInformation = ({
           </S.RatingContainer>
           <S.ReviewContainer>
             <S.SmallIcon source={IC_COMMENT} />
-            <S.ReviewCount>리뷰 {store.numberOfReviews}개</S.ReviewCount>
+            <S.ReviewCount>리뷰 {store.reviewCount}개</S.ReviewCount>
           </S.ReviewContainer>
         </S.SecondRowContainer>
 
-        <S.BusinessHourContainer>
-          <S.Day>{DAY[CURRENT_DAY]}</S.Day>
-          <S.BusinessHour>
-            {store.businessHours[DAY[CURRENT_DAY]]}
-          </S.BusinessHour>
-        </S.BusinessHourContainer>
+        {isShownBusinessHour && (
+          <S.BusinessHourContainer>
+            <S.Day>{DAY[CURRENT_DAY]}</S.Day>
+            <S.BusinessHour>
+              {store.businessHour[DAY[CURRENT_DAY]]}
+            </S.BusinessHour>
+          </S.BusinessHourContainer>
+        )}
       </S.DetailContainer>
     </S.StoreBasicInformationContainer>
   );
