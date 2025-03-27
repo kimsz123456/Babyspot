@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {RefObject, useRef} from 'react';
 
 import BottomSheet from '@gorhom/bottom-sheet';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -22,7 +22,9 @@ const NearStoreListScreen = () => {
       index={0}
       snapPoints={SNAP_POINTS}
       handleComponent={() => null}
-      simultaneousHandlers={imageCarouselRef}>
+      simultaneousHandlers={
+        imageCarouselRef as unknown as RefObject<ScrollView>
+      }>
       <S.BottomSheetContent>
         <S.NearStoreListScreenContainer>
           <S.TopIcon />
