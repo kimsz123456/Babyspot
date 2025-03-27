@@ -36,5 +36,4 @@ export const ChipContainer = styled(View)`
 
 export const NaverMap = styled(NaverMapView)`
   flex: 1;
-  padding: ${scale(32)}px ${scale(64)}px;
 `;
