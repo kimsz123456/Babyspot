@@ -87,7 +87,9 @@ public class StoreService {
 				dto.setParking(store.getParking());
 				dto.setOkZone(store.getOkZone());
 				dto.setCategory(store.getCategory());
-				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : List.of(1, 2, 3));
+				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : List.of(1, 2, 3)); // 추후 수정 필요
+				List<StoreImageDto> storeImages = getStoreImages(store.getId());
+				dto.setImages(storeImages);
 				return dto;
 			})
 			.collect(Collectors.toList());

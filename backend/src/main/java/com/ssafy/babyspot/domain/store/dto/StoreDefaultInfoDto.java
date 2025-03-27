@@ -29,4 +29,5 @@ public class StoreDefaultInfoDto {
 	private Boolean okZone;
 	private String category;
 	private List<Integer> babyAges;
+	private List<StoreImageDto> images;
 }
