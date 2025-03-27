@@ -16,6 +16,7 @@ const IC_QUESTION: ImageRequireSource = require('../../assets/icons/question.png
 
 const IC_LEFT_ARROW: ImageRequireSource = require('../../assets/icons/left-arrow.png');
 const IC_RIGHT_ARROW: ImageRequireSource = require('../../assets/icons/right-arrow.png');
+const IC_DOWN_ARROW: ImageRequireSource = require('../../assets/icons/down-arrow.png');
 const IC_MINUS: ImageRequireSource = require('../../assets/icons/minus.png');
 const IC_PLUS: ImageRequireSource = require('../../assets/icons/plus.png');
 
@@ -43,6 +44,20 @@ const IC_KAKAO_LOGO: ImageRequireSource = require('../../assets/icons/kakao-logo
 
 const IC_COMMENT: ImageRequireSource = require('../../assets/icons/comment.png');
 
+const IC_CATEGORY: ImageRequireSource = require('../../assets/icons/category.png');
+const IC_CLOCK: ImageRequireSource = require('../../assets/icons/clock.png');
+const IC_LOCATION: ImageRequireSource = require('../../assets/icons/location.png');
+const IC_PARKING: ImageRequireSource = require('../../assets/icons/parking.png');
+const IC_PHONE: ImageRequireSource = require('../../assets/icons/phone.png');
+const IC_SUBWAY: ImageRequireSource = require('../../assets/icons/subway.png');
+
+const IC_DIAPER: ImageRequireSource = require('../../assets/icons/diapers.png');
+const IC_CUTLERY: ImageRequireSource = require('../../assets/icons/cutlery.png');
+const IC_CHAIR: ImageRequireSource = require('../../assets/icons/chair.png');
+const IC_TABLE: ImageRequireSource = require('../../assets/icons/table.png');
+const IC_BABY_BOTTLE: ImageRequireSource = require('../../assets/icons/baby-bottle.png');
+const IC_PLAYGROUND: ImageRequireSource = require('../../assets/icons/playground.png');
+
 export {
   IC_AGE1,
   IC_AGE2,
@@ -58,6 +73,7 @@ export {
   IC_QUESTION,
   IC_LEFT_ARROW,
   IC_RIGHT_ARROW,
+  IC_DOWN_ARROW,
   IC_MINUS,
   IC_PLUS,
   IC_PROFILE_EDIT,
@@ -76,4 +92,16 @@ export {
   IC_APP_LOGO,
   IC_KAKAO_LOGO,
   IC_COMMENT,
+  IC_CATEGORY,
+  IC_CLOCK,
+  IC_LOCATION,
+  IC_PARKING,
+  IC_PHONE,
+  IC_SUBWAY,
+  IC_BABY_BOTTLE,
+  IC_CHAIR,
+  IC_CUTLERY,
+  IC_DIAPER,
+  IC_PLAYGROUND,
+  IC_TABLE,
 };
