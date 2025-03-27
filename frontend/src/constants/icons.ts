@@ -36,6 +36,8 @@ const IC_CLOSE: ImageRequireSource = require('../../assets/icons/close.png');
 
 const IC_RETRY: ImageRequireSource = require('../../assets/icons/retry.png');
 
+const IC_IMAGE_EDIT: ImageRequireSource = require('../../assets/icons/image-edit.png');
+
 const IC_APP_LOGO: ImageRequireSource = require('../../assets/icons/app-logo.png');
 const IC_KAKAO_LOGO: ImageRequireSource = require('../../assets/icons/kakao-logo.png');
 
@@ -68,6 +70,7 @@ export {
   IC_SEARCH,
   IC_CLOSE,
   IC_RETRY,
+  IC_IMAGE_EDIT,
   IC_APP_LOGO,
   IC_KAKAO_LOGO,
 };
