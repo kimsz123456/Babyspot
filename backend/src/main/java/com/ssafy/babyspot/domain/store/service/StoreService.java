@@ -84,6 +84,7 @@ public class StoreService {
 				dto.setStrollerAccess(store.getStrollerAccess());
 				dto.setNursingRoom(store.getNursingRoom());
 				dto.setKidsMenu(store.getKidsMenu());
+				dto.setParking(store.getParking());
 				return dto;
 			})
 			.collect(Collectors.toList());

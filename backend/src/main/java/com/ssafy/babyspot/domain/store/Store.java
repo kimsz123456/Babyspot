@@ -49,6 +49,7 @@ public class Store {
 	private Boolean nursingRoom;
 	private Boolean groupTable;
 	private Boolean playZone;
+	private Boolean parking;
 
 	private String kidsMenu;
 

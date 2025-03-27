@@ -22,4 +22,5 @@ public class StoreDefaultInfoDto {
 	private Boolean groupTable;
 	private Boolean playZone;
 	private String kidsMenu;
+	private Boolean parking;
 }
