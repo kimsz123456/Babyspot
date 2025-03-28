@@ -28,10 +28,7 @@ export const SearchAndRecommendContainer = styled(View)`
   padding: 0 ${scale(24)}px;
 `;
 
-export const ChipContainer = styled(ScrollView)`
-  /* padding: 0 ${scale(24)}px;
-  width: 100%; */
-`;
+export const ChipContainer = styled(ScrollView)``;
 
 export const NaverMap = styled(NaverMapView)`
   flex: 1;
