@@ -17,17 +17,11 @@ public class StoreDefaultInfoDto {
 	private Map<String, String> businessHour;
 	private Float rating;
 	private Integer reviewCount;
-	private Boolean babyChair;
-	private Boolean babyTableware;
-	private Boolean strollerAccess;
-	private Boolean diaperChangingStation;
-	private Boolean nursingRoom;
-	private Boolean groupTable;
-	private Boolean playZone;
 	private String kidsMenu;
 	private Boolean parking;
 	private Boolean okZone;
 	private String category;
 	private List<Integer> babyAges;
 	private List<StoreImageDto> images;
+	private List<ConvenienceDto> convenience;
 }

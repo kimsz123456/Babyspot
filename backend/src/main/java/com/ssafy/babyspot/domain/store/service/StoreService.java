@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import com.ssafy.babyspot.domain.store.Store;
 import com.ssafy.babyspot.domain.store.StoreImage;
 import com.ssafy.babyspot.domain.store.StoreKeyword;
 import com.ssafy.babyspot.domain.store.StoreMenu;
+import com.ssafy.babyspot.domain.store.dto.ConvenienceDto;
 import com.ssafy.babyspot.domain.store.dto.KeywordDto;
 import com.ssafy.babyspot.domain.store.dto.KidsMenuDto;
 import com.ssafy.babyspot.domain.store.dto.SentimentAnalysisDto;
@@ -40,6 +43,7 @@ public class StoreService {
 	private final StoreKeywordRepository storeKeywordRepository;
 	private final KeywordReviewRepository keywordReviewRepository;
 	private final SentimentAnalysisRepository sentimentAnalysisRepository;
+	private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
 
 	public StoreService(StoreRepository storeRepository, StoreImageRepository storeImageRepository,
 		StoreMenuRepository storeMenuRepository, StoreKeywordRepository storeKeywordRepository,
@@ -62,34 +66,40 @@ public class StoreService {
 		double minLong = Math.min(topLeftLong, bottomRightLong);
 		double maxLong = Math.max(topLeftLong, bottomRightLong);
 
+		// 매장 데이터를 가져옵니다
 		List<Store> stores = storeRepository.findStoresInRange(minLong, minLat, maxLong, maxLat);
+		logger.info("Number of stores found: " + stores.size());
 
+		// 가져온 데이터를 DTO로 변환합니다
 		return stores.stream()
 			.map(store -> {
 				StoreDefaultInfoDto dto = new StoreDefaultInfoDto();
 				dto.setStoreId(store.getId());
-				dto.setLatitude(store.getLocation().getY());
-				dto.setLongitude(store.getLocation().getX());
+				dto.setLatitude(store.getLocation().getY()); // 위도
+				dto.setLongitude(store.getLocation().getX()); // 경도
 				dto.setAddress(store.getAddress());
-				dto.setBabyChair(store.getBabyChair());
-				dto.setPlayZone(store.getPlayZone());
-				dto.setGroupTable(store.getGroupTable());
 				dto.setRating(store.getRating());
-				dto.setBabyTableware(store.getBabyTableware());
 				dto.setBusinessHour(store.getBusinessHour());
 				dto.setContactNumber(store.getContactNumber());
-				dto.setDiaperChangingStation(store.getDiaperChangingStation());
 				dto.setTitle(store.getTitle());
 				dto.setTransportationConvenience(store.getTransportationConvenience());
 				dto.setReviewCount(store.getReviewCount());
-				dto.setStrollerAccess(store.getStrollerAccess());
-				dto.setNursingRoom(store.getNursingRoom());
 				dto.setParking(store.getParking());
 				dto.setOkZone(store.getOkZone());
 				dto.setCategory(store.getCategory());
-				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : List.of(1, 2, 3)); // 추후 수정 필요
+				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : List.of(1, 2, 3));
+
+				ConvenienceDto convenienceDto = new ConvenienceDto();
+				convenienceDto.setBabyChair(store.getBabyChair());
+				convenienceDto.setBabyTableware(store.getBabyTableware());
+				convenienceDto.setPlayZone(store.getPlayZone());
+				convenienceDto.setNursingRoom(store.getNursingRoom());
+				convenienceDto.setGroupTable(store.getGroupTable());
+
 				List<StoreImageDto> storeImages = getStoreImages(store.getId());
 				dto.setImages(storeImages);
+				dto.setConvenience(List.of(convenienceDto));
+
 				return dto;
 			})
 			.collect(Collectors.toList());
