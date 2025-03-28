@@ -1,2 +1,0 @@
-
-//# sourceMappingURL=MarkerSymbol.js.map
