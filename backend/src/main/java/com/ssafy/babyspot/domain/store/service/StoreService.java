@@ -66,11 +66,9 @@ public class StoreService {
 		double minLong = Math.min(topLeftLong, bottomRightLong);
 		double maxLong = Math.max(topLeftLong, bottomRightLong);
 
-		// 매장 데이터를 가져옵니다
 		List<Store> stores = storeRepository.findStoresInRange(minLong, minLat, maxLong, maxLat);
 		logger.info("Number of stores found: " + stores.size());
 
-		// 가져온 데이터를 DTO로 변환합니다
 		return stores.stream()
 			.map(store -> {
 				StoreDefaultInfoDto dto = new StoreDefaultInfoDto();
@@ -90,14 +88,15 @@ public class StoreService {
 				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : List.of(1, 2, 3));
 
 				ConvenienceDto convenienceDto = new ConvenienceDto();
-				convenienceDto.setBabyChair(store.getBabyChair());
-				convenienceDto.setBabyTableware(store.getBabyTableware());
-				convenienceDto.setPlayZone(store.getPlayZone());
-				convenienceDto.setNursingRoom(store.getNursingRoom());
-				convenienceDto.setGroupTable(store.getGroupTable());
+				convenienceDto.getConvenienceDetails().put("babyChair", store.getBabyChair());
+				convenienceDto.getConvenienceDetails().put("babyTableware", store.getBabyTableware());
+				convenienceDto.getConvenienceDetails().put("playZone", store.getPlayZone());
+				convenienceDto.getConvenienceDetails().put("nursingRoom", store.getNursingRoom());
+				convenienceDto.getConvenienceDetails().put("groupTable", store.getGroupTable());
 
 				List<StoreImageDto> storeImages = getStoreImages(store.getId());
 				dto.setImages(storeImages);
+
 				dto.setConvenience(List.of(convenienceDto));
 
 				return dto;
