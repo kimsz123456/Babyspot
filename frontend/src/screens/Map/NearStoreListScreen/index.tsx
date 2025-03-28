@@ -9,13 +9,16 @@ import {StoreBasicInformationType} from './components/StoreBasicInformation/type
 import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 
 import scale from '../../../utils/scale';
-import MOCK from './components/StoreBasicInformation/mock';
 
 import * as S from './styles';
 
 const SNAP_POINTS = [scale(32), '80%'];
 
-const NearStoreListScreen = () => {
+interface NearStoreListScreenProps {
+  stores: StoreBasicInformationType[];
+}
+
+const NearStoreListScreen = ({stores}: NearStoreListScreenProps) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const imageCarouselRef = useRef<ScrollView>(null);
 
@@ -38,7 +41,7 @@ const NearStoreListScreen = () => {
         <S.NearStoreListScreenContainer>
           <S.TopIcon />
           <S.Title>주변 음식점</S.Title>
-          {MOCK.map(store => (
+          {stores.map(store => (
             <TouchableWithoutFeedback
               key={store.storeId}
               onPress={() => handleStorePress(store)}>

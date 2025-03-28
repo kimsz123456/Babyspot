@@ -147,7 +147,7 @@ const MapScreen = () => {
       {selectedMarker >= 0 ? (
         <StoreBasicScreen store={stores[selectedMarker]} />
       ) : (
-        <NearStoreListScreen />
+        <NearStoreListScreen stores={stores} />
       )}
     </S.MapScreenContainer>
   );
