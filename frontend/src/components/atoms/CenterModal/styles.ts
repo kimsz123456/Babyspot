@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
 import styled from 'styled-components';
 import scale from '../../../utils/scale';
 import {FontStyles} from '../../../constants/fonts';
@@ -21,6 +21,10 @@ export const ModalContainer = styled(View)`
   align-items: stretch;
 `;
 
+export const TopImageContainer = styled(View)`
+  align-items: center;
+`;
+
 export const Title = styled(Text)`
   ${FontStyles.headingMedium};
   text-align: left;
@@ -41,13 +45,14 @@ export const CancelButton = styled(TouchableOpacity)`
   border: 1px solid ${PrimaryColors[500]};
   align-items: center;
 `;
-export const SubmitButton = styled(TouchableOpacity)`
+export const SubmitButton = styled(TouchableOpacity)<{disabled?: boolean}>`
   flex: 1;
   padding: ${scale(16)}px 0;
   background-color: ${PrimaryColors[500]};
   border: 1px solid ${PrimaryColors[500]};
   border-radius: ${scale(10)}px;
   align-items: center;
+  opacity: ${({disabled}) => (disabled ? 0.5 : 1)};
 `;
 
 export const CancelText = styled(Text)`

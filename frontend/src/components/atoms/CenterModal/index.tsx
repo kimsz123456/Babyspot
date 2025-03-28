@@ -5,11 +5,13 @@ import * as S from './styles';
 interface CenteredModalProps {
   visible: boolean;
   title?: string;
-  children: React.ReactNode;
-  cancelText: string;
+  children?: React.ReactNode;
+  cancelText?: string;
   confirmText: string;
   onCancel: () => void;
   onConfirm: () => void;
+  confirmDisabled?: boolean;
+  topImage?: React.ReactNode;
 }
 
 const CenteredModal = ({
@@ -20,6 +22,8 @@ const CenteredModal = ({
   confirmText,
   onCancel,
   onConfirm,
+  confirmDisabled = false,
+  topImage,
 }: CenteredModalProps) => {
   return (
     <Modal
@@ -31,13 +35,21 @@ const CenteredModal = ({
         <S.Backdrop>
           <Pressable>
             <S.ModalContainer>
+              {topImage && (
+                <S.TopImageContainer>{topImage}</S.TopImageContainer>
+              )}
               {title && <S.Title>{title}</S.Title>}
               <S.Body>{children}</S.Body>
-              <S.ButtonRow>
-                <S.CancelButton onPress={onCancel}>
-                  <S.CancelText>{cancelText}</S.CancelText>
-                </S.CancelButton>
-                <S.SubmitButton onPress={onConfirm}>
+              <S.ButtonRow
+                style={{
+                  justifyContent: cancelText ? 'space-between' : 'center',
+                }}>
+                {cancelText && (
+                  <S.CancelButton onPress={onCancel}>
+                    <S.CancelText>{cancelText}</S.CancelText>
+                  </S.CancelButton>
+                )}
+                <S.SubmitButton onPress={onConfirm} disabled={confirmDisabled}>
                   <S.SubmitText>{confirmText}</S.SubmitText>
                 </S.SubmitButton>
               </S.ButtonRow>
