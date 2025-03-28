@@ -4,12 +4,14 @@ import * as S from './styles';
 
 interface ChipProps {
   label: string;
+  isSelected?: boolean;
+  onPressed: () => void;
 }
 
-const Chip = ({label}: ChipProps) => {
+const Chip = ({label, isSelected, onPressed}: ChipProps) => {
   return (
-    <S.Chip>
-      <S.ChipText>{label}</S.ChipText>
+    <S.Chip $isSelected={isSelected} onPress={onPressed}>
+      <S.ChipText $isSelected={isSelected}>{label}</S.ChipText>
     </S.Chip>
   );
 };
