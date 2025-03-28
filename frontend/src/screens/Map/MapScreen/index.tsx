@@ -145,6 +145,30 @@ const MapScreen = () => {
 
   return (
     <S.MapScreenContainer>
+      <S.NaverMap
+        ref={mapRef}
+        onLayout={onLayoutMap}
+        onTapMap={handleNaverMapTab}
+        initialCamera={{
+          latitude: 37.498040483,
+          longitude: 127.02758183,
+          zoom: 15,
+        }}
+        isIndoorEnabled={true}
+        isExtentBoundedInKorea={true}>
+        {stores.map((data, idx) => (
+          <NaverMapMarkerOverlay
+            key={idx}
+            latitude={data.latitude}
+            longitude={data.longitude}
+            width={30}
+            height={40}
+            image={IC_RESTAURANT_MARKER}
+            onTap={() => handleMarkerTab(idx)}
+          />
+        ))}
+      </S.NaverMap>
+
       <S.FloatingContainer>
         <S.SearchAndRecommendContainer>
           <PlaceSearchButton />
@@ -171,30 +195,6 @@ const MapScreen = () => {
           })}
         </S.ChipContainer>
       </S.FloatingContainer>
-
-      <S.NaverMap
-        ref={mapRef}
-        onLayout={onLayoutMap}
-        onTapMap={handleNaverMapTab}
-        initialCamera={{
-          latitude: 37.498040483,
-          longitude: 127.02758183,
-          zoom: 15,
-        }}
-        isIndoorEnabled={true}
-        isExtentBoundedInKorea={true}>
-        {stores.map((data, idx) => (
-          <NaverMapMarkerOverlay
-            key={idx}
-            latitude={data.latitude}
-            longitude={data.longitude}
-            width={30}
-            height={40}
-            image={IC_RESTAURANT_MARKER}
-            onTap={() => handleMarkerTab(idx)}
-          />
-        ))}
-      </S.NaverMap>
 
       <ResearchButton onPress={handlePress} />
 

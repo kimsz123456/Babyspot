@@ -1,5 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
-
 import React, {RefObject, useRef} from 'react';
 import BottomSheet, {TouchableWithoutFeedback} from '@gorhom/bottom-sheet';
 import {ScrollView} from 'react-native-gesture-handler';

@@ -11,7 +11,6 @@ export const MapScreenContainer = styled(View)`
 `;
 
 export const FloatingContainer = styled(View)`
-  z-index: 10;
   position: absolute;
   top: ${scale(32)}px;
   width: 100%;
