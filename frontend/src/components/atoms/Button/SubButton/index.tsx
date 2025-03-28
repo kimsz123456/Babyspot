@@ -4,7 +4,7 @@ import SubButtonTextType from './types';
 
 const SubButton = ({text, onPress}: SubButtonTextType) => {
   return (
-    <S.SubButtonContainer>
+    <S.SubButtonContainer onPress={onPress}>
       <S.SubButtonText>{text}</S.SubButtonText>
     </S.SubButtonContainer>
   );
