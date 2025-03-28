@@ -23,6 +23,19 @@ import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
 import MOCK from '../NearStoreListScreen/components/StoreBasicInformation/mock';
 
 import * as S from './styles';
+import scale from '../../../utils/scale';
+
+const mockChips: ChipProps[] = [
+  {label: '유아 의자', isSelected: false},
+  {label: '유아 식기', isSelected: false},
+  {label: '기저귀 교환대', isSelected: false},
+  {label: '수유실', isSelected: false},
+  {label: '놀이터', isSelected: false},
+];
+interface ChipProps {
+  label: string;
+  isSelected: boolean;
+}
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
@@ -107,6 +120,29 @@ const MapScreen = () => {
     }
   }, [address]);
 
+  // 필터 칩 관련
+  const initialChips = useRef(mockChips);
+  const [chips, setChips] = useState(mockChips);
+
+  // 선택되지 않았을 때 칩 자리를 기억해 유지하는 로직
+  const handleChipPressed = (selectedIndex: number) => {
+    setChips(prev => {
+      const updated = prev.map((chip, index) =>
+        index === selectedIndex
+          ? {...chip, isSelected: !chip.isSelected}
+          : chip,
+      );
+
+      const selected = updated.filter(chip => chip.isSelected);
+      const unselected = initialChips.current.filter(
+        initialChip =>
+          !updated.find(chip => chip.label === initialChip.label)?.isSelected,
+      );
+
+      return [...selected, ...unselected];
+    });
+  };
+
   return (
     <S.MapScreenContainer>
       <S.FloatingContainer>
@@ -114,8 +150,25 @@ const MapScreen = () => {
           <PlaceSearchButton />
           <RecommendButton />
         </S.SearchAndRecommendContainer>
-        <S.ChipContainer>
-          <Chip label="유아 의자" />
+        <S.ChipContainer
+          horizontal
+          contentContainerStyle={{
+            columnGap: scale(8),
+            paddingHorizontal: scale(24),
+          }}
+          showsHorizontalScrollIndicator={false}>
+          {chips.map((chip, index) => {
+            return (
+              <Chip
+                key={index}
+                isSelected={chip.isSelected}
+                label={chip.label}
+                onPressed={() => {
+                  handleChipPressed(index);
+                }}
+              />
+            );
+          })}
         </S.ChipContainer>
       </S.FloatingContainer>
 
