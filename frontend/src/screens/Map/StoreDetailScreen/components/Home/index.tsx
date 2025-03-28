@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import {
-  AmenitiesType,
+  ConvenienceType,
   StoreBasicInformationType,
 } from '../../../NearStoreListScreen/components/StoreBasicInformation/types';
 import {StoreDetailInformationType} from '../../types';
@@ -16,8 +16,8 @@ import {
   IC_SUBWAY,
 } from '../../../../../constants/icons';
 import {
-  AMENITY_ICON,
-  AMENITY_NAME,
+  CONVENIENCE_ICON,
+  CONVENIENCE_NAME,
   DAY,
 } from '../../../../../constants/constants';
 
@@ -30,7 +30,7 @@ interface HomeProps {
   detailInformation: StoreDetailInformationType;
 }
 
-const Home = ({basicInformation, detailInformation}: HomeProps) => {
+const Home = ({basicInformation}: HomeProps) => {
   const [isBusinessHourOpened, setIsBusinessHourOpened] = useState(false);
 
   const getParkingInformation = () => {
@@ -65,8 +65,10 @@ const Home = ({basicInformation, detailInformation}: HomeProps) => {
   };
 
   const filteredAmenities = (
-    Object.keys(basicInformation.amenities) as (keyof AmenitiesType)[]
-  ).filter(key => basicInformation.amenities[key]);
+    Object.keys(
+      basicInformation.convenience[0].convenienceDetails,
+    ) as (keyof ConvenienceType['convenienceDetails'])[]
+  ).filter(key => basicInformation.convenience[0].convenienceDetails[key]);
 
   const handleBusinessHourPress = () => {
     setIsBusinessHourOpened(prev => !prev);
@@ -121,11 +123,11 @@ const Home = ({basicInformation, detailInformation}: HomeProps) => {
           <S.BasicText>카테고리</S.BasicText>
         </S.LineContainer>
         <S.CategoryCardList>
-          {filteredAmenities.map(amenity => (
-            <S.CategoryCardContainer key={amenity}>
+          {filteredAmenities.map(convenience => (
+            <S.CategoryCardContainer key={convenience}>
               <S.CategoryCard>
-                <S.CategoryIcon source={AMENITY_ICON[amenity]} />
-                <S.CategoryName>{AMENITY_NAME[amenity]}</S.CategoryName>
+                <S.CategoryIcon source={CONVENIENCE_ICON[convenience]} />
+                <S.CategoryName>{CONVENIENCE_NAME[convenience]}</S.CategoryName>
               </S.CategoryCard>
             </S.CategoryCardContainer>
           ))}

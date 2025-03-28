@@ -1,17 +1,17 @@
-import {useNavigation} from '@react-navigation/native';
-
 import React, {RefObject, useRef} from 'react';
+
 import BottomSheet, {TouchableWithoutFeedback} from '@gorhom/bottom-sheet';
 import {ScrollView} from 'react-native-gesture-handler';
 
-import MOCK from './components/StoreBasicInformation/mock';
 import StoreBasicInformation from './components/StoreBasicInformation';
 import {StoreBasicInformationType} from './components/StoreBasicInformation/types';
 
+import {useMapNavigation} from '../../../hooks/useNavigationHooks';
+
 import scale from '../../../utils/scale';
+import MOCK from './components/StoreBasicInformation/mock';
 
 import * as S from './styles';
-import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 
 const SNAP_POINTS = [scale(32), '80%'];
 

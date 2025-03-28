@@ -20,7 +20,6 @@ import {useMapStore} from '../../../stores/mapStore';
 import {StoreBasicInformationType} from '../NearStoreListScreen/components/StoreBasicInformation/types';
 
 import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
-import MOCK from '../NearStoreListScreen/components/StoreBasicInformation/mock';
 
 import * as S from './styles';
 
@@ -146,7 +145,7 @@ const MapScreen = () => {
       <ResearchButton onPress={handlePress} />
 
       {selectedMarker >= 0 ? (
-        <StoreBasicScreen store={MOCK[selectedMarker]} />
+        <StoreBasicScreen store={stores[selectedMarker]} />
       ) : (
         <NearStoreListScreen />
       )}
