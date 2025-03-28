@@ -37,7 +37,7 @@ export const DAY = [
   '토요일',
 ] as const;
 
-export const AMENITY_NAME = {
+export const CONVENIENCE_NAME = {
   babyChair: '유아 의자',
   babyTableware: '유아 식기',
   diaperChangingStation: '기저귀 교환대',
@@ -46,7 +46,7 @@ export const AMENITY_NAME = {
   playZone: '놀이방',
 } as const;
 
-export const AMENITY_ICON = {
+export const CONVENIENCE_ICON = {
   babyChair: IC_CHAIR,
   babyTableware: IC_CUTLERY,
   diaperChangingStation: IC_DIAPER,

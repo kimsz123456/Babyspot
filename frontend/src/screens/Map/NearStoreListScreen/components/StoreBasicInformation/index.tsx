@@ -47,16 +47,16 @@ const StoreBasicInformation = ({
           showsHorizontalScrollIndicator={false}
           onScroll={handleScroll}
           scrollEventThrottle={16}>
-          {store.imageUrls.map((imageUrl, idx) => (
+          {store.images.map((image, idx) => (
             <S.ImageContainer key={idx}>
-              <S.StoreImage source={{uri: imageUrl}} />
+              <S.StoreImage source={{uri: image.storeImg}} />
             </S.ImageContainer>
           ))}
         </ScrollView>
         <S.ImageIndicatorContainer>
           <S.ImageIndicator>
             <S.ImageCurrentIndex>{currentIndex + 1}</S.ImageCurrentIndex>/
-            {store.imageUrls.length}
+            {store.images.length}
           </S.ImageIndicator>
         </S.ImageIndicatorContainer>
       </S.CarouselContainer>
