@@ -47,12 +47,16 @@ export interface RoadAddress {
   zone_no: string;
 }
 
-export const GetRangeInfo = async (data: RangeInfoParameterType) => {
-  const result = await api.get(
-    `/store/rangeinfo?topLeftLat=${data.topLeftLat}&topLeftLong=${data.topLeftLong}&bottomRightLat=${data.bottomRightLat}&bottomRightLong=${data.bottomRightLong}`,
-  );
+export const getRangeInfo = async (data: RangeInfoParameterType) => {
+  try {
+    const result = await api.get(
+      `/store/rangeinfo?topLeftLat=${data.topLeftLat}&topLeftLong=${data.topLeftLong}&bottomRightLat=${data.bottomRightLat}&bottomRightLong=${data.bottomRightLong}`,
+    );
 
-  return result.data;
+    return result.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const geocoding = async (

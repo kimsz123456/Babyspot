@@ -14,19 +14,21 @@ import RecommendButton from './components/RecommendButton';
 import Chip from './components/Chip';
 import ResearchButton from './components/ResearchButton';
 import StoreBasicScreen from '../StoreBasicScreen';
-import {GetRangeInfo} from '../../../services/mapService';
+import {getRangeInfo} from '../../../services/mapService';
+import {geocoding} from '../../../services/mapService';
+import {useMapStore} from '../../../stores/mapStore';
+import {StoreBasicInformationType} from '../NearStoreListScreen/components/StoreBasicInformation/types';
 
 import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
 import MOCK from '../NearStoreListScreen/components/StoreBasicInformation/mock';
 
 import * as S from './styles';
-import {geocoding} from '../../../services/mapService';
-import {useMapStore} from '../../../stores/mapStore';
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
   const [mapSize, setMapSize] = useState({width: 0, height: 0});
 
+  const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
 
   const clearAddress = useMapStore(state => state.clearAddress);
@@ -36,35 +38,36 @@ const MapScreen = () => {
   const onLayoutMap = (e: LayoutChangeEvent) => {
     const {width, height} = e.nativeEvent.layout;
 
-    console.log(width, height);
-
     setMapSize({width, height});
   };
 
   const handlePress = async () => {
     clearAddress();
-    // if (!mapRef.current) {
-    //   return;
-    // }
-    // try {
-    //   const topLeft = await mapRef.current.screenToCoordinate({
-    //     screenX: 0,
-    //     screenY: 0,
-    //   });
-    //   const bottomRight = await mapRef.current.screenToCoordinate({
-    //     screenX: mapSize.width * 3.75,
-    //     screenY: mapSize.height * 3.75,
-    //   });
-    //   const response = await GetRangeInfo({
-    //     topLeftLat: topLeft.latitude,
-    //     topLeftLong: topLeft.longitude,
-    //     bottomRightLat: bottomRight.latitude,
-    //     bottomRightLong: bottomRight.longitude,
-    //   });
-    //   console.log(response);
-    // } catch (e) {
-    //   return Promise.reject(e);
-    // }
+    if (!mapRef.current) {
+      return;
+    }
+    try {
+      const topLeft = await mapRef.current.screenToCoordinate({
+        screenX: 0,
+        screenY: 0,
+      });
+      const bottomRight = await mapRef.current.screenToCoordinate({
+        screenX: mapSize.width * 3.75,
+        screenY: mapSize.height * 3.75,
+      });
+      const response = await getRangeInfo({
+        topLeftLat: topLeft.latitude,
+        topLeftLong: topLeft.longitude,
+        bottomRightLat: bottomRight.latitude,
+        bottomRightLong: bottomRight.longitude,
+      });
+
+      setStores(response);
+
+      console.log(response);
+    } catch (e) {
+      return Promise.reject(e);
+    }
   };
 
   const handleMarkerTab = (idx: number) => {
@@ -127,7 +130,7 @@ const MapScreen = () => {
         }}
         isIndoorEnabled={true}
         isExtentBoundedInKorea={true}>
-        {MOCK.map((data, idx) => (
+        {stores.map((data, idx) => (
           <NaverMapMarkerOverlay
             key={idx}
             latitude={data.latitude}
