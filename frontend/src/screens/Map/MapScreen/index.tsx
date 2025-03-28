@@ -109,16 +109,6 @@ const MapScreen = () => {
 
   return (
     <S.MapScreenContainer>
-      <S.FloatingContainer>
-        <S.SearchAndRecommendContainer>
-          <PlaceSearchButton />
-          <RecommendButton />
-        </S.SearchAndRecommendContainer>
-        <S.ChipContainer>
-          <Chip label="유아 의자" />
-        </S.ChipContainer>
-      </S.FloatingContainer>
-
       <S.NaverMap
         ref={mapRef}
         onLayout={onLayoutMap}
@@ -142,6 +132,16 @@ const MapScreen = () => {
           />
         ))}
       </S.NaverMap>
+
+      <S.FloatingContainer>
+        <S.SearchAndRecommendContainer>
+          <PlaceSearchButton />
+          <RecommendButton />
+        </S.SearchAndRecommendContainer>
+        <S.ChipContainer>
+          <Chip label="유아 의자" />
+        </S.ChipContainer>
+      </S.FloatingContainer>
 
       <ResearchButton onPress={handlePress} />
 

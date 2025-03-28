@@ -7,9 +7,7 @@ import scale from '../../../utils/scale';
 import {GrayColors} from '../../../constants/colors';
 import {FontStyles} from '../../../constants/fonts';
 
-export const BottomSheetContainer = styled(BottomSheet)`
-  z-index: 20;
-`;
+export const BottomSheetContainer = styled(BottomSheet)``;
 
 export const BottomSheetContent = styled(BottomSheetScrollView).attrs({
   showsVerticalScrollIndicator: false,
