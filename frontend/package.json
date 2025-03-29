@@ -12,7 +12,7 @@
   "dependencies": {
     "@actbase/react-daum-postcode": "^1.0.4",
     "@gorhom/bottom-sheet": "^5.1.2",
-    "@mj-studio/react-native-naver-map": "file:./libs/mj-studio-react-native-naver-map",
+    "@mj-studio/react-native-naver-map": "^2.3.0",
     "@react-native-picker/picker": "^2.11.0",
     "@react-native-seoul/kakao-login": "^5.4.1",
     "@react-navigation/bottom-tabs": "^7.3.2",

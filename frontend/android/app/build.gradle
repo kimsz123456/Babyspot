@@ -79,9 +79,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.sojucompany.babyspot"
+    namespace "com.littlewaterdrops.babyspot"
     defaultConfig {
-        applicationId "com.sojucompany.babyspot"
+        applicationId "com.littlewaterdrops.babyspot"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
