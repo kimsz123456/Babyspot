@@ -7,11 +7,12 @@ import Home from './components/Home';
 import Menu from './components/Menu';
 import {ThickDivider} from '../../../components/atoms/Divider';
 
-import MOCK from './mock';
+import MOCK, {keywordSectionMock} from './mock';
 
 import * as S from './styles';
 import KidMenu from './components/KidMenu';
 import {withDivider} from '../../../utils/withDivider';
+import KeywordSection from './components/Keyword';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
 
@@ -52,6 +53,10 @@ const StoreDetailScreen = () => {
           />,
           <KidMenu menus={MOCK.menus} />,
           <Menu menus={MOCK.menus} />,
+          <KeywordSection
+            keywords={keywordSectionMock.keywords}
+            totalCount={keywordSectionMock.totalCount}
+          />,
         ],
         <ThickDivider />,
       )}

@@ -1,4 +1,53 @@
+import {KeywordSectionProps} from './components/Keyword';
 import {StoreDetailInformationType} from './types';
+
+export const keywordSectionMock: KeywordSectionProps = {
+  totalCount: 30,
+  keywords: [
+    {
+      keyword: '청결',
+      count: 12,
+      keywordReviews: [
+        {
+          reviewFrom: 'blog',
+          content: '아이와 함께 방문했는데 화장실도 깨끗하고 위생적이었어요.',
+        },
+        {
+          reviewFrom: 'place',
+          content: '테이블 정리가 잘 되어 있어 쾌적했어요.',
+        },
+      ],
+    },
+    {
+      keyword: '친절',
+      count: 8,
+      keywordReviews: [
+        {
+          reviewFrom: 'cafe',
+          content: '사장님이 너무 친절해서 기분 좋게 식사했어요.',
+        },
+        {
+          reviewFrom: 'place',
+          content: '직원분들이 아이에게도 친절하게 대해주셔서 좋았어요.',
+        },
+      ],
+    },
+    {
+      keyword: '편의',
+      count: 10,
+      keywordReviews: [
+        {
+          reviewFrom: 'blog',
+          content: '놀이 공간도 있어서 아이가 심심해하지 않았어요.',
+        },
+        {
+          reviewFrom: 'cafe',
+          content: '유아식 의자가 준비돼 있어 편했어요.',
+        },
+      ],
+    },
+  ],
+};
 
 const MOCK: StoreDetailInformationType = {
   storeId: 1,
