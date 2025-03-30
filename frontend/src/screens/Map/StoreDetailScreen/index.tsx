@@ -10,6 +10,8 @@ import {ThickDivider} from '../../../components/atoms/Divider';
 import MOCK from './mock';
 
 import * as S from './styles';
+import KidMenu from './components/KidMenu';
+import {withDivider} from '../../../utils/withDivider';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
 
@@ -42,9 +44,17 @@ const StoreDetailScreen = () => {
         ))}
       </S.TabBar>
 
-      <Home basicInformation={storeBasicInformation} detailInformation={MOCK} />
-      <ThickDivider />
-      <Menu label="메뉴" menus={MOCK.menus} />
+      {withDivider(
+        [
+          <Home
+            basicInformation={storeBasicInformation}
+            detailInformation={MOCK}
+          />,
+          <KidMenu menus={MOCK.menus} />,
+          <Menu menus={MOCK.menus} />,
+        ],
+        <ThickDivider />,
+      )}
     </S.StoreDetailScreenContainer>
   );
 };

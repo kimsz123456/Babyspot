@@ -85,19 +85,6 @@ export const AgeMarker = styled(Image)<{$ageIndex: number}>`
   height: ${scale(24)}px;
 `;
 
-export const OKZoneMarker = styled(View)`
-  padding: ${scale(4)}px;
-  border-radius: 15px;
-  border-width: 1px;
-  border-color: ${SecondaryColors[500]};
-  background-color: ${GrayColors[0]};
-`;
-
-export const OKZoneText = styled(Text)`
-  ${FontStyles.captionSmall}
-  color: ${SecondaryColors[500]};
-`;
-
 export const SecondRowContainer = styled(View)`
   display: flex;
   flex-direction: row;

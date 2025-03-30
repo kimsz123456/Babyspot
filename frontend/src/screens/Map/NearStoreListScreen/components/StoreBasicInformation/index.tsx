@@ -12,6 +12,7 @@ import {AGE_MARKERS, DAY} from '../../../../../constants/constants';
 import {IC_COMMENT, IC_YELLOW_STAR} from '../../../../../constants/icons';
 
 import * as S from './styles';
+import OKZoneMarker from '../../../../../components/atoms/OKZoneMarker';
 
 const {width} = Dimensions.get('window');
 
@@ -74,11 +75,7 @@ const StoreBasicInformation = ({
               />
             ))}
           </S.AgeMarkerContainer>
-          {store.okZone && (
-            <S.OKZoneMarker>
-              <S.OKZoneText>OK Zone</S.OKZoneText>
-            </S.OKZoneMarker>
-          )}
+          {store.okZone && <OKZoneMarker />}
         </S.FirstRowContainer>
 
         <S.SecondRowContainer>
