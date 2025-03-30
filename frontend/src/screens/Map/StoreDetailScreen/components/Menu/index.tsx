@@ -1,11 +1,6 @@
 import React, {useState} from 'react';
-
-import {ThinDivider} from '../../../../../components/atoms/Divider';
-import {IC_DOWN_ARROW} from '../../../../../constants/icons';
 import {menuType} from '../../types';
-
 import {formatPrice} from '../../../../../utils/format';
-
 import * as S from './styles';
 import MoreButtonWithDivider from '../../../../../components/atoms/MoreButtonWithDivider';
 
