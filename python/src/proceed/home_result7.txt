@@ -1,0 +1,7 @@
+{
+      "restaurant_id": "7",
+      "address": "서울 중랑구 면목로 341",
+      "transportation_convenience": "7사가정역 1번 출구에서 65m",
+      "contact_number": "02-491-4488",
+      "business_hours": "월 ~ 일: 11:30 - 23:00"
+}

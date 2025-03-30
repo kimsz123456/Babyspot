@@ -1,0 +1,12 @@
+{
+  "restaurant_id": "9",
+  "address": "서울 중랑구 중랑천로10길 24 1층 대흥정육식당",
+  "transportation_convenience": "경의중앙경춘중랑역 4번 출구에서 466m",
+  "contact_number": "02-435-6288",
+  "business_hours": "월~수, 금~일 10:00 - 22:00 (매달 2, 4번째 일요일 휴무)",
+  "title": "대흥정육식당",
+  "parking": true,
+  "baby_chair": true,
+  "kids_menu": "계란찜",
+  "location": "POINT(127.0744795 37.59179)"
+}

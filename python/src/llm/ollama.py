@@ -110,7 +110,7 @@ class OllamaClient:
     print(f"메시지가 {len(message_chunks)}개 청크로 분할되었습니다.")
 
     # 각 청크마다 LLM에 요청 보내기
-    model = "qwen2.5:latest"  # 모델 고정
+    model = "qwen2.5:14b"  # 모델 고정
     results = []
     error_messages = []
 

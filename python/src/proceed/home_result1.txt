@@ -1,0 +1,7 @@
+{
+      "restaurant_id": "1",
+      "address": "서울 중랑구 동일로 633",
+      "transportation_convenience": "7면목역 3번 출구에서 756m",
+      "contact_number": "02-435-7999",
+      "business_hours": "매일 00:00 - 24:00"
+}
