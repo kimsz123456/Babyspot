@@ -7,12 +7,15 @@ import SearchScreen from '../screens/Map/SearchScreen';
 import StoreDetailScreen from '../screens/Map/StoreDetailScreen';
 import KakaoPostcodeScreen from '../screens/Map/SearchScreen/KakaoPostcodeScreen';
 import {StoreBasicInformationType} from '../screens/Map/NearStoreListScreen/components/StoreBasicInformation/types';
+import {KeywordProps} from '../screens/Map/StoreDetailScreen/components/Keyword';
+import KeywordReviewScreen from '../screens/Map/KeywordReviewScreen';
 
 export type MapStackParamList = {
   MapMain: {address: string};
   Search: undefined;
   KakaoPostcode: undefined;
   StoreDetail: {storeBasicInformation: StoreBasicInformationType};
+  KeywordReview: {keywordInformation: KeywordProps};
 };
 
 const MapStackNavigator = () => {
@@ -39,6 +42,11 @@ const MapStackNavigator = () => {
         name="StoreDetail"
         component={StoreDetailScreen}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="KeywordReview"
+        component={KeywordReviewScreen}
+        options={() => ({title: '키워드 리뷰'})}
       />
     </Stack.Navigator>
   );
