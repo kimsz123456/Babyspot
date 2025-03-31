@@ -58,6 +58,10 @@ const IC_TABLE: ImageRequireSource = require('../../assets/icons/table.png');
 const IC_BABY_BOTTLE: ImageRequireSource = require('../../assets/icons/baby-bottle.png');
 const IC_PLAYGROUND: ImageRequireSource = require('../../assets/icons/playground.png');
 
+const IC_NAVER_BLOG: ImageRequireSource = require('../../assets/icons/naver-blog.png');
+const IC_NAVER_PLACE: ImageRequireSource = require('../../assets/icons/naver-place.png');
+const IC_NAVER_CAFE: ImageRequireSource = require('../../assets/icons/naver-cafe.png');
+
 export {
   IC_AGE1,
   IC_AGE2,
@@ -104,4 +108,7 @@ export {
   IC_DIAPER,
   IC_PLAYGROUND,
   IC_TABLE,
+  IC_NAVER_BLOG,
+  IC_NAVER_CAFE,
+  IC_NAVER_PLACE,
 };
