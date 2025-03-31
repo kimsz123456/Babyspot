@@ -1,0 +1,66 @@
+import {Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import styled from 'styled-components';
+import {PrimaryColors, GrayColors} from '../../../constants/colors';
+import {FontStyles} from '../../../constants/fonts';
+import scale from '../../../utils/scale';
+
+export const ReviewListScreenScrollView = styled(ScrollView)`
+  background-color: ${GrayColors[0]};
+  flex: 1;
+`;
+
+export const ReviewContainer = styled(SafeAreaView)`
+  background-color: ${GrayColors[0]};
+  flex: 1;
+  flex-direction: column;
+  gap: ${scale(16)}px;
+  padding: ${scale(16)}px ${scale(24)}px;
+`;
+
+export const TitleHeaderContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  gap: ${scale(16)}px;
+  justify-content: space-between;
+`;
+
+export const TitleInformationContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  gap: ${scale(4)}px;
+`;
+
+export const InformationListContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  gap: ${scale(8)}px;
+`;
+
+export const InformationContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const InformationIconImage = styled(Image)`
+  width: ${scale(16)}px;
+  height: ${scale(16)}px;
+`;
+
+export const InformationText = styled(Text)<{$isStar: boolean}>`
+  color: ${({$isStar}) => ($isStar ? PrimaryColors[500] : GrayColors[800])};
+  ${FontStyles.captionMedium};
+`;
+
+export const Title = styled(Text)`
+  ${FontStyles.headingMedium}
+  color: ${GrayColors[800]};
+`;
+
+export const FilterIconImage = styled(Image)`
+  width: ${scale(24)}px;
+  height: ${scale(24)}px;
+`;
+
+export const ReviewCardListContainer = styled(View)`
+  gap: ${scale(8)}px;
+`;

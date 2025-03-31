@@ -10,17 +10,25 @@ import ReviewCard, {ReviewCardProps} from './ReviewCard';
 import {withDivider} from '../../../../../utils/withDivider';
 import {ThinDivider} from '../../../../../components/atoms/Divider';
 import MoreButtonWithDivider from '../../../../../components/atoms/MoreButtonWithDivider';
+import {useMapNavigation} from '../../../../../hooks/useNavigationHooks';
 
 export interface ReviewProps {
   totalRating: number;
   totalReviewCount: number;
   reviews: ReviewCardProps[];
+  storeName: string;
 }
 
 const Review = (props: ReviewProps) => {
+  const navigation = useMapNavigation();
+
   const visibleReviews = props.reviews.slice(0, 2);
 
-  const handleMoreButtonPress = () => {};
+  const handleMoreButtonPress = () => {
+    navigation.navigate('ReviewListScreen', {
+      reviewInformation: props,
+    });
+  };
 
   return (
     <S.ReviewContainer>
