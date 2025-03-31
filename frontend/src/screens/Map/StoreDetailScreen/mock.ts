@@ -1,5 +1,6 @@
 import {FamilyReviewProps} from './components/FamilyReview';
 import {KeywordSectionProps} from './components/Keyword';
+import {ReviewCardProps} from './components/Review/ReviewCard';
 import {StoreDetailInformationType} from './types';
 
 export const keywordSectionMock: KeywordSectionProps = {
@@ -64,6 +65,79 @@ export const familyReviewMocks: FamilyReviewProps = {
     '구이가 불친절하고 귤이 맛없어요...',
   ],
 };
+
+export const reviewMocks: ReviewCardProps[] = [
+  {
+    name: 'Soshy',
+    profileImagePath:
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+
+    reviewCount: 12,
+    imageUrls: [],
+    ages: [1, 3],
+    rating: 2.5,
+    review:
+      '나의 고향... 제주도의 맛이 나는 감귤 집입니다... 감귤은 촉촉했고, 귤밥은 쫀득하니 아주 맛있었습니다. 앞으로 자주 찾을 것 같아요.',
+    likes: 13,
+    date: '25.03.19',
+  },
+  {
+    name: 'Soshy',
+    profileImagePath:
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+
+    reviewCount: 12,
+    imageUrls: [
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+    ],
+    ages: [1],
+    rating: 2.5,
+    review:
+      '나의 고향... 제주도의 맛이 나는 감귤 집입니다... 감귤은 촉촉했고, 귤밥은 쫀득하니 아주 맛있었습니다. 앞으로 자주 찾을 것 같아요.',
+    likes: 13,
+    date: '25.03.19',
+  },
+  {
+    name: 'Soshy',
+    profileImagePath:
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+
+    reviewCount: 12,
+    imageUrls: [
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+    ],
+    ages: [1, 3],
+    rating: 2.5,
+    review:
+      '나의 고향... 제주도의 맛이 나는 감귤 집입니다... 감귤은 촉촉했고, 귤밥은 쫀득하니 아주 맛있었습니다. 앞으로 자주 찾을 것 같아요.',
+    likes: 13,
+    date: '25.03.19',
+  },
+  {
+    name: 'Soshy',
+    profileImagePath:
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+
+    reviewCount: 12,
+    imageUrls: [
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
+    ],
+    ages: [1, 3],
+    rating: 2.5,
+    review:
+      '나의 고향... 제주도의 맛이 나는 감귤 집입니다... 감귤은 촉촉했고, 귤밥은 쫀득하니 아주 맛있었습니다. 앞으로 자주 찾을 것 같아요.',
+    likes: 13,
+    date: '25.03.19',
+  },
+];
 
 const MOCK: StoreDetailInformationType = {
   storeId: 1,
