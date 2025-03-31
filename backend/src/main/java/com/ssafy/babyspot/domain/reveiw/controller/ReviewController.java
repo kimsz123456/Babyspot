@@ -20,6 +20,7 @@ import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
 import com.ssafy.babyspot.domain.reveiw.dto.UpdateRequestDto;
 import com.ssafy.babyspot.domain.reveiw.dto.UpdateReviewResponseDto;
 import com.ssafy.babyspot.domain.reveiw.service.ReviewService;
+import com.ssafy.babyspot.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,6 +56,33 @@ public class ReviewController {
 		@RequestBody UpdateRequestDto dto) {
 		UpdateReviewResponseDto responseDto = reviewService.updateReview(authentication, dto, reviewId);
 		return ResponseEntity.ok(responseDto);
+	}
+
+	@GetMapping("/{store_id}/myreview")
+	public ResponseEntity<ReviewResponseDto> StoreMyReview(Authentication authentication,
+		@PathVariable("store_id") int storeId) {
+		if (authentication.getName().isEmpty()) {
+			throw new CustomException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+		}
+		int memberId = Integer.parseInt(authentication.getName());
+		ReviewResponseDto dto = reviewService.getStoreMyReview(storeId, memberId);
+		return ResponseEntity.ok(dto);
+	}
+
+	@GetMapping("/myreview")
+	public ResponseEntity<Page<ReviewResponseDto>> getMyReview(Authentication authentication, Pageable pageable) {
+		if (authentication.getName().isEmpty()) {
+			throw new CustomException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+		}
+		int memberId;
+
+		try {
+			memberId = Integer.parseInt(authentication.getName());
+		} catch (NumberFormatException e) {
+			throw new CustomException(HttpStatus.UNAUTHORIZED, "유효하지 않은 인증입니다.");
+		}
+		Page<ReviewResponseDto> reviews = reviewService.getMyReview(memberId, pageable);
+		return ResponseEntity.ok(reviews);
 	}
 
 }

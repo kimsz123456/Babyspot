@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -97,7 +99,13 @@ public class ReviewService {
 
 	@Transactional(readOnly = true)
 	public Page<ReviewResponseDto> getReview(int storeId, Pageable pageable) {
-		Page<Review> reviews = reviewRepository.findAllByStore_Id(storeId, pageable);
+		Pageable sortedPageable = PageRequest.of(
+			pageable.getPageNumber(),
+			pageable.getPageSize(),
+			Sort.by("createdAt").descending()
+		);
+
+		Page<Review> reviews = reviewRepository.findAllByStore_Id(storeId, sortedPageable);
 
 		return reviews.map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
@@ -113,6 +121,59 @@ public class ReviewService {
 			List<String> imgUrls = review.getImages().stream()
 				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
 				.collect(Collectors.toList());
+			dto.setImgUrls(imgUrls);
+			dto.setLikeCount(review.getReviewLikes().size());
+			return dto;
+		});
+	}
+
+	@Transactional(readOnly = true)
+	public ReviewResponseDto getStoreMyReview(int storeId, int memberId) {
+		Review review = reviewRepository.findByStore_IdAndMember_Id(storeId, memberId)
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "해당 매장에 나의 리뷰가 없습니다."));
+
+		ReviewResponseDto dto = new ReviewResponseDto();
+		dto.setReviewId(review.getId());
+		dto.setMemberId(review.getMember().getId());
+		dto.setMemberNickname(review.getMember().getNickname());
+		dto.setStoreId(review.getStore().getId());
+		dto.setRating(review.getRating());
+		dto.setCreatedAt(review.getCreatedAt());
+		dto.setContent(review.getContent());
+		dto.setBabyAges(review.getBabyAges());
+
+		List<String> imgUrls = review.getImages().stream()
+			.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+			.toList();
+		dto.setImgUrls(imgUrls);
+		dto.setLikeCount(review.getReviewLikes().size());
+		return dto;
+	}
+
+	@Transactional(readOnly = true)
+	public Page<ReviewResponseDto> getMyReview(int memberId, Pageable pageable) {
+		Pageable sortedPageable = PageRequest.of(
+			pageable.getPageNumber(),
+			pageable.getPageSize(),
+			Sort.by("createdAt").descending()
+		);
+
+		Page<Review> reviews = reviewRepository.findAllByMember_id(memberId, pageable);
+
+		return reviews.map(review -> {
+			ReviewResponseDto dto = new ReviewResponseDto();
+			dto.setReviewId(review.getId());
+			dto.setMemberId(review.getMember().getId());
+			dto.setMemberNickname(review.getMember().getNickname());
+			dto.setStoreId(review.getStore().getId());
+			dto.setRating(review.getRating());
+			dto.setCreatedAt(review.getCreatedAt());
+			dto.setContent(review.getContent());
+			dto.setBabyAges(review.getBabyAges());
+
+			List<String> imgUrls = review.getImages().stream()
+				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+				.toList();
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
 			return dto;
