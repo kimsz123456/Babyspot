@@ -4,6 +4,7 @@ import ProfileScreen from '../screens/Profile/ProfileScreen';
 import ProfileEditScreen from '../screens/Profile/ProfileEditScreen';
 import DeleteAccountScreen from '../screens/Profile/DeleteAccountScreen';
 import MyReviewListScreen from '../screens/Profile/MyReviewListScreen';
+import PrivacyPolicyScreen from '../screens/Profile/PrivacyPolicyScreen';
 
 const ProfileStackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -24,6 +25,11 @@ const ProfileStackNavigator = () => {
         name="MyReviewList"
         component={MyReviewListScreen}
         options={{title: '내 리뷰'}}
+      />
+      <Stack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicyScreen}
+        options={{title: '개인정보 이용약관'}}
       />
       <Stack.Screen
         name="DeleteAccount"
