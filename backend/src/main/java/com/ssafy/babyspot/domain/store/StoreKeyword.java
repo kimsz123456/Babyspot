@@ -26,4 +26,6 @@ public class StoreKeyword {
 
 	private String keyword;
 
+	private int count;
+
 }
