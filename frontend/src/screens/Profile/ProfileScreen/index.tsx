@@ -5,7 +5,7 @@ import {IC_AGE3} from '../../../constants/icons.ts';
 import {MyReviewList} from './components/MyReviewList/index.tsx';
 import {ThickDividerContainer} from '../../../components/atoms/Divider/styles.ts';
 import Setting from './components/Setting/index.tsx';
-import ProfileEditIconButton from './components/Buttons/index.tsx';
+import ProfileEditIconButton from './components/Buttons/ProfileEditIconButton/index.tsx';
 import {useNavigation} from '@react-navigation/native';
 
 const ProfileScreen = () => {

@@ -55,10 +55,6 @@ const PrivacyTermsTitle = styled(Text)`
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
 `;
-const PrivacyTermsButton = styled(Image)`
-  width: ${scale(24)}px;
-  height: ${scale(24)}px;
-`;
 
 const AppVersionContainer = styled(View)`
   padding: ${scale(8)}px 0px;
@@ -112,7 +108,6 @@ export {
   GPSQuestion,
   PrivacyTermsContainer,
   PrivacyTermsTitle,
-  PrivacyTermsButton,
   AppVersionContainer,
   AppVersionTitle,
   AppVersionNumber,
