@@ -2,7 +2,8 @@ import os
 import json
 import psycopg2
 from dotenv import load_dotenv
-
+from typing import Dict, Any, List
+from collections import Counter
 
 class PostgresImporter:
   def __init__(self):
@@ -161,6 +162,189 @@ class PostgresImporter:
     except Exception as e:
       self.conn.rollback()
       raise e
+
+  def import_keywords(self, json_content: str, store_id: str) -> Dict[str, Any]:
+    """
+    중괄호 형태로 분리된 여러 JSON 객체를 처리하여 DB에 저장
+
+    Args:
+        json_content (str): 여러 개의 {"content": "리뷰 내용", "keyword": "키워드"} 객체가 포함된 문자열
+        store_id (str): 레스토랑 ID
+
+    Returns:
+        dict: 처리 결과 및 통계
+    """
+    try:
+      # JSONL 형식 또는 분리된 JSON 객체들을 처리
+      reviews = []
+
+      # 줄 단위로 분리
+      lines = json_content.strip().split('\n')
+
+      # 현재 처리 중인 JSON 객체
+      current_json = ""
+
+      for line in lines:
+        line = line.strip()
+        if not line:
+          continue
+
+        # JSON 객체의 시작인지 확인
+        if line.startswith('{') and not current_json:
+          current_json = line
+
+          # 한 줄에 완전한 JSON이 있는 경우
+          if line.endswith('}'):
+            try:
+              review = json.loads(current_json)
+              reviews.append(review)
+              current_json = ""
+            except json.JSONDecodeError:
+              # 올바른 JSON이 아니면 무시
+              current_json = ""
+
+        # 현재 JSON 객체 처리 중
+        elif current_json:
+          current_json += " " + line
+
+          # JSON 객체가 끝났는지 확인
+          if line.endswith('}'):
+            try:
+              review = json.loads(current_json)
+              reviews.append(review)
+            except json.JSONDecodeError:
+              # 올바른 JSON이 아니면 로깅
+              print(f"잘못된 JSON 형식: {current_json}")
+
+            current_json = ""
+
+      if not reviews:
+        # JSON 배열 형식도 시도해봄
+        try:
+          # 대괄호가 있는지 확인
+          if '[' in json_content and ']' in json_content:
+            # 배열 형식의 JSON으로 시도
+            reviews = json.loads(json_content)
+            if not isinstance(reviews, list):
+              reviews = [reviews]
+        except json.JSONDecodeError:
+          # 올바른 JSON 배열이 아니면 패스
+          pass
+
+      # 모든 키워드 추출 및 카운트
+      all_keywords = []
+      for review in reviews:
+        # 'keyword' 또는 'keywords' 필드 처리
+        keyword = review.get("keyword", review.get("keywords", ""))
+        if keyword:
+          all_keywords.append(keyword)
+
+      # 키워드 빈도수 계산
+      keyword_counts = Counter(all_keywords)
+
+      # 키워드 DB 저장 및 ID 매핑 생성
+      keyword_id_map = {}
+      for keyword, count in keyword_counts.items():
+        keyword_id = self._save_keyword(keyword, count, store_id)
+        keyword_id_map[keyword] = keyword_id
+
+      # 리뷰-키워드 연결 정보 저장
+      for review in reviews:
+        content = review.get("content", "")
+        # 'keyword' 또는 'keywords' 필드 처리
+        keyword = review.get("keyword", review.get("keywords", ""))
+        if keyword and keyword in keyword_id_map and content:
+          self._save_review_keyword_relation(content, keyword_id_map[keyword])
+
+      # 트랜잭션 커밋
+      self.conn.commit()
+
+      return {
+        "success": True,
+        "total_reviews": len(reviews),
+        "unique_keywords": len(keyword_counts),
+        "keyword_counts": dict(keyword_counts)
+      }
+
+    except Exception as e:
+      self.conn.rollback()
+      print(f"❌ 키워드 처리 중 오류 발생: {e}")
+      return {
+        "success": False,
+        "error": str(e)
+      }
+
+  def _save_keyword(self, keyword: str, count: int, store_id: str) -> int:
+    """
+    키워드를 store_keyword 테이블에 저장하고 생성된 ID 반환
+
+    Args:
+        keyword (str): 키워드
+        count (int): 출현 빈도
+        store_id (str): 레스토랑 ID
+
+    Returns:
+        int: 생성된 keyword ID
+    """
+    # 기존에 동일한 키워드가 있는지 확인
+    check_query = """
+    SELECT id FROM store_keyword 
+    WHERE keyword = %s AND store_id = %s;
+    """
+    self.cursor.execute(check_query, (keyword, store_id))
+    existing = self.cursor.fetchone()
+
+    if existing:
+      # 기존 키워드가 있으면 count 업데이트
+      update_query = """
+        UPDATE store_keyword 
+        SET count = %s 
+        WHERE keyword = %s AND store_id = %s
+        RETURNING id;
+        """
+      self.cursor.execute(update_query, (count, keyword, store_id))
+      return self.cursor.fetchone()[0]
+    else:
+      # 새로운 키워드 추가
+      insert_query = """
+        INSERT INTO store_keyword (keyword, count, store_id)
+        VALUES (%s, %s, %s)
+        RETURNING id;
+        """
+      self.cursor.execute(insert_query, (keyword, count, store_id))
+      return self.cursor.fetchone()[0]
+
+  def _save_review_keyword_relation_with_source(self, content, keyword_id,
+      source):
+    """
+    리뷰 컨텐츠와 키워드 ID 간의 관계를 소스 정보와 함께 저장
+
+    Args:
+        content (str): 리뷰 내용
+        keyword_id (int): 키워드 ID
+        source (str): 리뷰 소스 ('naver' 또는 'blog')
+
+    Returns:
+        int: 저장된 관계의 ID 또는 -1(에러)
+    """
+    cursor = self.conn.cursor()
+
+    try:
+      # 리뷰 컨텐츠 & 키워드 ID & 소스 관계 저장
+      cursor.execute(
+          """
+          INSERT INTO review_keyword_relations
+          (content, keyword_id, source)
+          VALUES (%s, %s, %s)
+          RETURNING id
+          """,
+          (content, keyword_id, source)
+      )
+      relation_id = cursor.fetchone()[0]
+      return relation_id
+    except Exception as e:
+      print(f"리뷰-키워드 관계 저장 중 오류: {e}")
+      return -1
 
   def close(self):
     """

@@ -14,7 +14,7 @@ def run_home_info_pipeline(restaurant_id):
   # 데이터 정제를 위한 파이프라인 생성
   pipeline = Pipeline()
 
-  review_dir = f"/user/hadoop/final_rest_home_information_json/restaurant_id={restaurant_id}"
+  review_dir = f"/user/hadoop/big_final_rest_home_information_json/restaurant_id={restaurant_id}"
 
   system_prompt = f"""
   항상 한국어로 대답 부탁드립니다.
@@ -24,15 +24,17 @@ def run_home_info_pipeline(restaurant_id):
   주소 파싱 규칙:
   1. "주소" 값에서 도로명 주소만 추출 (예: "서울 중랑구 용마산로 707 1층")
   2. "주소" 값에서 역 정보와 출구 정보만 대중교통 편의성으로 추출
-  3. 역 이름은 항상 "역"으로 끝남
-  4. 역 이름 앞에 노선 정보가 붙어있는 경우 이를 제거하고 순수한 역 이름만 추출
-  5. 노선 정보 제거 방법:
-     a) 숫자+"역명+역" 형태: 숫자 제거 (예: "7면목역" → "면목역")
-     b) "노선명+역명+역" 형태: 노선명 제거 (예: "경춘신내역" → "신내역")
-     c) 복합 노선 정보: 역 이름 직전까지의 모든 노선 정보 제거 (예: "경의중앙경춘중랑역" → "중랑역")
-  6. 처리해야 할 주요 노선명 목록:
-     - 경춘, 수인분당, 신분당, 공항, 우이신설, 신림, 경의중앙
-  7. "찾아가는길" 정보는 무시
+  3. 역 이름 앞에 붙은 다음 노선 정보는 모두 제거해야 함:
+     - 숫자 (예: "숫자+역이름" → "역이름", "2강남역" → "강남역", "26신당역" → "신당역")
+     - "경춘" (예: "경춘신내역" → "신내역", "6경춘신내역" → "신내역")
+     - "수인분당" (예: "수인분당왕십리역" → "왕십리역")
+     - "신분당" (예: "신분당강남역" → "강남역")
+     - "공항" (예: "공항홍대입구역" → "홍대입구역")
+     - "우이신설" (예: "우이신설북한산우이역" → "북한산우이역")
+     - "신림" (예: "신림서울대입구역" → "서울대입구역")
+  4. 거리 정보에서 "미터"가 중복으로 표기되는 경우 하나만 남깁니다.
+    - 예: "756m 미터" → "756m"
+  5. "찾아가는길" 정보는 무시
 
   영업시간 파싱 규칙:
   1. "영업시간" 값에서 요일(월, 화, 수, 목, 금, 토, 일) 뒤에 나오는 시간이 해당 요일의 영업시간
@@ -58,7 +60,7 @@ def run_home_info_pipeline(restaurant_id):
       "토": "영업시간",
       "일": "영업시간 또는 휴무",
       "브레이크타임": "브레이크타임 있으면 시간, 없으면 빈 문자열",
-      "특이사항": "휴무와 같은 특이사항"
+      "특이사항": "라스트오더 정보나 기타 특이사항"
     }}
   }}
 
@@ -96,7 +98,7 @@ def run_rest_info_pipeline(restaurant_id):
   # 데이터 정제를 위한 파이프라인 생성
   pipeline = Pipeline()
 
-  review_dir = f"/user/hadoop/final_rest_info_json/restaurant_id={restaurant_id}"
+  review_dir = f"/user/hadoop/big_final_rest_info_json/restaurant_id={restaurant_id}"
 
   system_prompt = f"""
   항상 한국어로 대답 부탁드립니다.
@@ -115,7 +117,7 @@ def run_rest_info_pipeline(restaurant_id):
   다음과 같은 JSON 형식으로 정보를 정제해주세요:
   {{
     "restaurant_id": "{restaurant_id}",
-    "title": "", // 식당 이름
+    "title": "식당 이름", // store_name
     "parking": false, 
     "baby_chair": false, // "kidz_item"에서 판단할 수 있는 유아의자(의자,체어) 유무
     "baby_tableware": false, // "kidz_item"에서 판단할 수 있는 유아식기(수저,포크) 유무
@@ -200,7 +202,7 @@ def merge_restaurant_data(start_id, end_id):
 
       # home_data의 모든 필드 복사
       merged_data.update(home_data)
-
+      merged_data["restaurant_id"] = restaurant_id_str
       # rest_data_list에서 모든 유효한 정보 추출
       for rest_data in rest_data_list:
         for key, value in rest_data.items():
@@ -293,23 +295,31 @@ def main():
   지정된 범위의 레스토랑에 대해 파이프라인을 실행하고
   결과를 병합한 후, 사용자가 원하는 시점에 PostgreSQL 데이터베이스에 저장합니다.
   """
-  # 여기서 원하는 레스토랑 범위를 직접 설정하세요
-  START_ID = 1  # 시작 레스토랑 ID
-  END_ID = 9  # 종료 레스토랑 ID
+  # 처리할 레스토랑 ID 범위
+  start_id = 1
+  end_id = 10
+
+  # 레스토랑 ID 목록 (범위 또는 특정 ID 목록 사용 가능)
+  restaurant_ids = range(start_id, end_id + 1)  # 1부터 10까지
+  # restaurant_ids = [2, 5, 10, 15, 20]  # 특정 ID만 처리하려면 이렇게 리스트로 지정
+
+  # 처리 모드 설정
   PIPELINE_ONLY = False  # True: 파이프라인만 실행, False: 파이프라인 + 병합
-  MERGE_ONLY = True  # True: 병합만 실행, False: 파이프라인 + 병합
+  MERGE_ONLY = False  # True: 병합만 실행, False: 파이프라인 + 병합
 
-  # 유효한 범위인지 확인
-  if START_ID < 1 or START_ID > END_ID:
-    print("❌ 레스토랑 ID 범위가 잘못되었습니다.")
-    return
+  # ID 범위 문자열 생성 (로그 출력용)
+  if isinstance(restaurant_ids, range):
+    id_range_str = f"{start_id}~{end_id}"
+  else:
+    id_range_str = ", ".join(map(str, restaurant_ids))
 
-  print(f"\n===== 레스토랑 ID {START_ID}~{END_ID} 처리 시작 =====")
+  print(f"\n===== 레스토랑 ID {id_range_str} 처리 시작 =====")
 
   # 파이프라인 처리 단계
   if not MERGE_ONLY:
-    for restaurant_id in range(START_ID, END_ID + 1):
-      print(f"\n===== 식당 {restaurant_id} 처리 시작 =====")
+    for i, restaurant_id in enumerate(restaurant_ids, 1):
+      print(
+        f"\n===== [{i}/{len(list(restaurant_ids))}] 식당 {restaurant_id} 처리 시작 =====")
 
       # 홈 정보 파이프라인 실행
       home_result = run_home_info_pipeline(str(restaurant_id))
@@ -322,9 +332,14 @@ def main():
   # 데이터 병합 단계
   json_file_paths = []
   if not PIPELINE_ONLY:
-    print(f"\n===== 레스토랑 {START_ID}~{END_ID} 데이터 병합 시작 =====")
-    json_file_paths = merge_restaurant_data(START_ID, END_ID)
-    print(f"===== 레스토랑 {START_ID}~{END_ID} 데이터 병합 완료 =====\n")
+    print(f"\n===== 레스토랑 {id_range_str} 데이터 병합 시작 =====")
+
+    # 각 ID에 대해 데이터 병합 처리
+    for restaurant_id in restaurant_ids:
+      paths = merge_restaurant_data(restaurant_id, restaurant_id)
+      json_file_paths.extend(paths)
+
+    print(f"===== 레스토랑 {id_range_str} 데이터 병합 완료 =====\n")
 
   # 위치 정보 추가 단계
   if json_file_paths:
@@ -332,9 +347,9 @@ def main():
     for i, json_file_path in enumerate(json_file_paths):
       updated_data = add_location_to_restaurant_json(json_file_path)
       if updated_data:
-        print(f"✅ {i+1}/{len(json_file_paths)} 식당 위치 정보 추가 완료")
+        print(f"✅ {i + 1}/{len(json_file_paths)} 식당 위치 정보 추가 완료")
       else:
-        print(f"❌ {i+1}/{len(json_file_paths)} 식당 위치 정보 추가 실패")
+        print(f"❌ {i + 1}/{len(json_file_paths)} 식당 위치 정보 추가 실패")
     print(f"===== 위치 정보 추가 완료 =====\n")
 
   # 데이터베이스 저장 단계
