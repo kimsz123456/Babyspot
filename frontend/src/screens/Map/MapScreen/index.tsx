@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {LayoutChangeEvent} from 'react-native';
-
 import {Alert} from 'react-native';
+
 import {useRoute} from '@react-navigation/native';
 import {
   NaverMapMarkerOverlay,
@@ -9,6 +8,7 @@ import {
 } from '@mj-studio/react-native-naver-map';
 
 import useMapViewport from '../../../hooks/useCenterCoordinate';
+import useResearchButtonVisibility from '../../../hooks/useResearchButtonVisibility';
 import useChips from '../../../hooks/useChips';
 
 import NearStoreListScreen from '../NearStoreListScreen';
@@ -30,23 +30,18 @@ import * as S from './styles';
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
-  const [mapSize, setMapSize] = useState({width: 0, height: 0});
 
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
 
   const {centerCoordinate, mapRegion, onCameraIdle} = useMapViewport();
+  const {isVisible, updateLastSearchedCoordinate} =
+    useResearchButtonVisibility(centerCoordinate);
   const {chips, handleChipPressed} = useChips();
 
   const clearAddress = useMapStore(state => state.clearAddress);
   const route = useRoute();
   const address = (route.params as any)?.address as string;
-
-  const onLayoutMap = (e: LayoutChangeEvent) => {
-    const {width, height} = e.nativeEvent.layout;
-
-    setMapSize({width, height});
-  };
 
   const handleResearchButtonPress = async () => {
     clearAddress();
@@ -69,6 +64,8 @@ const MapScreen = () => {
       });
 
       setStores(response);
+
+      updateLastSearchedCoordinate();
     } catch (e) {
       return Promise.reject(e);
     }
@@ -115,7 +112,6 @@ const MapScreen = () => {
     <S.MapScreenContainer>
       <S.NaverMap
         ref={mapRef}
-        onLayout={onLayoutMap}
         onCameraIdle={onCameraIdle}
         onTapMap={handleNaverMapTab}
         initialCamera={{
@@ -165,7 +161,7 @@ const MapScreen = () => {
         </S.ChipContainer>
       </S.FloatingContainer>
 
-      <ResearchButton onPress={handleResearchButtonPress} />
+      {isVisible && <ResearchButton onPress={handleResearchButtonPress} />}
 
       {selectedMarker >= 0 ? (
         <StoreBasicScreen store={stores[selectedMarker]} />
