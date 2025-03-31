@@ -15,6 +15,7 @@ import {withDivider} from '../../../utils/withDivider';
 import KeywordSection from './components/Keyword';
 import FamilyReview from './components/FamilyReview';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
+import ReviewStar from './components/ReviewStar';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
 
@@ -68,6 +69,7 @@ const StoreDetailScreen = () => {
             negativeSummary={familyReviewMocks.negativeSummary}
             negativeReviews={familyReviewMocks.negativeReviews}
           />,
+          <ReviewStar />,
         ],
         <ThickDivider />,
       )}
