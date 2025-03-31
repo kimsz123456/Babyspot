@@ -33,6 +33,7 @@ const MapScreen = () => {
 
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
+  const [isPendingResearch, setIsPendingResearch] = useState(false);
 
   const {centerCoordinate, mapRegion, zoom, onCameraIdle} = useMapViewport();
   const {isVisible, updateLastSearchedCoordinate} = useResearchButtonVisibility(
@@ -41,16 +42,27 @@ const MapScreen = () => {
   const {chips, handleChipPressed} = useChips();
 
   const clearAddress = useMapStore(state => state.clearAddress);
+
   const route = useRoute();
   const address = (route.params as any)?.address as string;
 
-  const handleResearchButtonPress = async () => {
+  const handleResearchButtonPress = () => {
     clearAddress();
 
     if (!mapRef.current) {
       return;
     }
 
+    mapRef.current.animateCameraTo({
+      latitude: centerCoordinate.latitude,
+      longitude: centerCoordinate.longitude,
+      zoom: 15,
+    });
+
+    setIsPendingResearch(true);
+  };
+
+  const searchStoresInRegion = async () => {
     try {
       const {topLeft, bottomRight} = calculateMapRegion(
         centerCoordinate,
@@ -68,7 +80,9 @@ const MapScreen = () => {
 
       updateLastSearchedCoordinate();
     } catch (e) {
-      return Promise.reject(e);
+      console.error(e);
+    } finally {
+      setIsPendingResearch(false);
     }
   };
 
@@ -108,6 +122,14 @@ const MapScreen = () => {
       moveToAddress(address);
     }
   }, [address]);
+
+  useEffect(() => {
+    if (!isPendingResearch || zoom !== 15) {
+      return;
+    }
+
+    searchStoresInRegion();
+  }, [isPendingResearch, zoom]);
 
   return (
     <S.MapScreenContainer>
