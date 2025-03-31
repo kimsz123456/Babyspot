@@ -1,9 +1,9 @@
 import React from 'react';
+import {GestureResponderEvent} from 'react-native';
 
 import {IC_RETRY} from '../../../../../constants/icons';
 
 import * as S from './styles';
-import {GestureResponderEvent} from 'react-native';
 
 interface ResearchButtonProps {
   onPress: (e: GestureResponderEvent) => void;

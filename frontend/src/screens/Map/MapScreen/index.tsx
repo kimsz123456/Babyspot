@@ -1,12 +1,17 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {LayoutChangeEvent} from 'react-native';
+/* eslint-disable react-hooks/exhaustive-deps */
 
+import React, {useEffect, useRef, useState} from 'react';
 import {Alert} from 'react-native';
+
 import {useRoute} from '@react-navigation/native';
 import {
   NaverMapMarkerOverlay,
   NaverMapViewRef,
 } from '@mj-studio/react-native-naver-map';
+
+import useMapViewport from '../../../hooks/useMapViewport';
+import useResearchButtonVisibility from '../../../hooks/useResearchButtonVisibility';
+import useChips from '../../../hooks/useChips';
 
 import NearStoreListScreen from '../NearStoreListScreen';
 import PlaceSearchButton from '../components/PlaceSearchButton';
@@ -19,54 +24,64 @@ import {geocoding} from '../../../services/mapService';
 import {useMapStore} from '../../../stores/mapStore';
 import {StoreBasicInformationType} from '../NearStoreListScreen/components/StoreBasicInformation/types';
 
+import scale from '../../../utils/scale';
+import calculateMapRegion from '../../../utils/calculateMapRegion';
+import checkLocationPermission from '../../../utils/checkLocationPermission';
 import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
 
 import * as S from './styles';
-import scale from '../../../utils/scale';
-
-const mockChips: ChipProps[] = [
-  {label: '유아 의자', isSelected: false},
-  {label: '유아 식기', isSelected: false},
-  {label: '기저귀 교환대', isSelected: false},
-  {label: '수유실', isSelected: false},
-  {label: '놀이터', isSelected: false},
-];
-interface ChipProps {
-  label: string;
-  isSelected: boolean;
-}
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
-  const [mapSize, setMapSize] = useState({width: 0, height: 0});
 
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
+  const [isPendingResearch, setIsPendingResearch] = useState(false);
+
+  const {centerCoordinate, mapRegion, zoom, onCameraIdle} = useMapViewport();
+  const {isVisible, updateLastSearchedCoordinate} = useResearchButtonVisibility(
+    {centerCoordinate, zoom},
+  );
+  const {chips, handleChipPressed} = useChips();
 
   const clearAddress = useMapStore(state => state.clearAddress);
+
   const route = useRoute();
   const address = (route.params as any)?.address as string;
 
-  const onLayoutMap = (e: LayoutChangeEvent) => {
-    const {width, height} = e.nativeEvent.layout;
+  const initTracking = async () => {
+    const hasPermission = await checkLocationPermission();
 
-    setMapSize({width, height});
+    if (!hasPermission) {
+      return;
+    }
+
+    mapRef.current?.setLocationTrackingMode('Follow');
   };
 
-  const handlePress = async () => {
+  const handleResearchButtonPress = () => {
     clearAddress();
+
     if (!mapRef.current) {
       return;
     }
+
+    mapRef.current.animateCameraTo({
+      latitude: centerCoordinate.latitude,
+      longitude: centerCoordinate.longitude,
+      zoom: 15,
+    });
+
+    setIsPendingResearch(true);
+  };
+
+  const searchStoresInRegion = async () => {
     try {
-      const topLeft = await mapRef.current.screenToCoordinate({
-        screenX: 0,
-        screenY: 0,
-      });
-      const bottomRight = await mapRef.current.screenToCoordinate({
-        screenX: mapSize.width * 3.75,
-        screenY: mapSize.height * 3.75,
-      });
+      const {topLeft, bottomRight} = calculateMapRegion(
+        centerCoordinate,
+        mapRegion,
+      );
+
       const response = await getRangeInfo({
         topLeftLat: topLeft.latitude,
         topLeftLong: topLeft.longitude,
@@ -76,9 +91,11 @@ const MapScreen = () => {
 
       setStores(response);
 
-      console.log(response);
+      updateLastSearchedCoordinate();
     } catch (e) {
-      return Promise.reject(e);
+      console.error(e);
+    } finally {
+      setIsPendingResearch(false);
     }
   };
 
@@ -114,43 +131,32 @@ const MapScreen = () => {
   };
 
   useEffect(() => {
+    initTracking();
+  }, []);
+
+  useEffect(() => {
     if (address) {
       moveToAddress(address);
     }
   }, [address]);
 
-  // 필터 칩 관련
-  const initialChips = useRef(mockChips);
-  const [chips, setChips] = useState(mockChips);
+  useEffect(() => {
+    if (!isPendingResearch || zoom !== 15) {
+      return;
+    }
 
-  // 선택되지 않았을 때 칩 자리를 기억해 유지하는 로직
-  const handleChipPressed = (selectedIndex: number) => {
-    setChips(prev => {
-      const updated = prev.map((chip, index) =>
-        index === selectedIndex
-          ? {...chip, isSelected: !chip.isSelected}
-          : chip,
-      );
-
-      const selected = updated.filter(chip => chip.isSelected);
-      const unselected = initialChips.current.filter(
-        initialChip =>
-          !updated.find(chip => chip.label === initialChip.label)?.isSelected,
-      );
-
-      return [...selected, ...unselected];
-    });
-  };
+    searchStoresInRegion();
+  }, [isPendingResearch, zoom]);
 
   return (
     <S.MapScreenContainer>
       <S.NaverMap
         ref={mapRef}
-        onLayout={onLayoutMap}
+        onCameraIdle={onCameraIdle}
         onTapMap={handleNaverMapTab}
         initialCamera={{
-          latitude: 37.498040483,
-          longitude: 127.02758183,
+          latitude: centerCoordinate.latitude,
+          longitude: centerCoordinate.longitude,
           zoom: 15,
         }}
         isIndoorEnabled={true}
@@ -195,7 +201,7 @@ const MapScreen = () => {
         </S.ChipContainer>
       </S.FloatingContainer>
 
-      <ResearchButton onPress={handlePress} />
+      {isVisible && <ResearchButton onPress={handleResearchButtonPress} />}
 
       {selectedMarker >= 0 ? (
         <StoreBasicScreen store={stores[selectedMarker]} />
