@@ -1,19 +1,19 @@
 import React from 'react';
 
-import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from '@gorhom/bottom-sheet';
 
 import {StoreBasicInformationType} from '../NearStoreListScreen/components/StoreBasicInformation/types';
 import StoreBasicInformation from '../NearStoreListScreen/components/StoreBasicInformation';
 
 import * as S from './styles';
+import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 
 interface StoreBasicScreenProps {
   store: StoreBasicInformationType;
 }
 
 const StoreBasicScreen = ({store}: StoreBasicScreenProps) => {
-  const navigation = useNavigation<any>();
+  const navigation = useMapNavigation();
 
   const handleBottomSheetPress = () => {
     navigation.navigate('StoreDetail', {storeBasicInformation: store});
