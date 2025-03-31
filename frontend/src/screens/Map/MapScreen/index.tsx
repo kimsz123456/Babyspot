@@ -48,7 +48,7 @@ const MapScreen = () => {
     setMapSize({width, height});
   };
 
-  const handlePress = async () => {
+  const handleResearchButtonPress = async () => {
     clearAddress();
 
     if (!mapRef.current) {
@@ -165,7 +165,7 @@ const MapScreen = () => {
         </S.ChipContainer>
       </S.FloatingContainer>
 
-      <ResearchButton onPress={handlePress} />
+      <ResearchButton onPress={handleResearchButtonPress} />
 
       {selectedMarker >= 0 ? (
         <StoreBasicScreen store={stores[selectedMarker]} />
