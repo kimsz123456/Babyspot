@@ -7,7 +7,7 @@ import {
   NaverMapViewRef,
 } from '@mj-studio/react-native-naver-map';
 
-import useMapViewport from '../../../hooks/useCenterCoordinate';
+import useMapViewport from '../../../hooks/useMapViewport';
 import useResearchButtonVisibility from '../../../hooks/useResearchButtonVisibility';
 import useChips from '../../../hooks/useChips';
 
@@ -34,9 +34,10 @@ const MapScreen = () => {
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
 
-  const {centerCoordinate, mapRegion, onCameraIdle} = useMapViewport();
-  const {isVisible, updateLastSearchedCoordinate} =
-    useResearchButtonVisibility(centerCoordinate);
+  const {centerCoordinate, mapRegion, zoom, onCameraIdle} = useMapViewport();
+  const {isVisible, updateLastSearchedCoordinate} = useResearchButtonVisibility(
+    {centerCoordinate, zoom},
+  );
   const {chips, handleChipPressed} = useChips();
 
   const clearAddress = useMapStore(state => state.clearAddress);

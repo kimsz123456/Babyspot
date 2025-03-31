@@ -19,6 +19,7 @@ const useMapViewport = (
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
+  const [zoom, setZoom] = useState<number | undefined>(15);
 
   const onCameraIdle = (e: Camera & {region: Region}) => {
     setCenterCoordinate({
@@ -30,11 +31,14 @@ const useMapViewport = (
       latitudeDelta: e.region.latitudeDelta,
       longitudeDelta: e.region.longitudeDelta,
     });
+
+    setZoom(e.zoom);
   };
 
   return {
     centerCoordinate,
     mapRegion,
+    zoom,
     onCameraIdle,
   };
 };

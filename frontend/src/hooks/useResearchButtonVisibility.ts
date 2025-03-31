@@ -5,9 +5,18 @@ interface Coordinate {
   longitude: number;
 }
 
-const useResearchButtonVisibility = (centerCoordinate: Coordinate) => {
+interface useResearchButtonVisibilityProps {
+  centerCoordinate: Coordinate;
+  zoom?: number;
+}
+
+const useResearchButtonVisibility = ({
+  centerCoordinate,
+  zoom,
+}: useResearchButtonVisibilityProps) => {
   const [lastSearchedCoordinate, setLastSearchedCoordinate] =
     useState(centerCoordinate);
+  const [lastZoom, setLastZoom] = useState(zoom);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -17,11 +26,14 @@ const useResearchButtonVisibility = (centerCoordinate: Coordinate) => {
       Math.abs(centerCoordinate.longitude - lastSearchedCoordinate.longitude) <
         0.0001;
 
-    setIsVisible(!isSameLocation);
-  }, [centerCoordinate, lastSearchedCoordinate]);
+    const isSameZoom = lastZoom === zoom;
+
+    setIsVisible(!isSameLocation || !isSameZoom);
+  }, [centerCoordinate, lastSearchedCoordinate, zoom, lastZoom]);
 
   const updateLastSearchedCoordinate = () => {
     setLastSearchedCoordinate(centerCoordinate);
+    setLastZoom(zoom);
     setIsVisible(false);
   };
 
