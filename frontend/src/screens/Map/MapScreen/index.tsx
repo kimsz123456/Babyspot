@@ -23,6 +23,7 @@ import {useMapStore} from '../../../stores/mapStore';
 import {StoreBasicInformationType} from '../NearStoreListScreen/components/StoreBasicInformation/types';
 
 import scale from '../../../utils/scale';
+import calculateMapRegion from '../../../utils/calculateMapRegion';
 import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
 
 import * as S from './styles';
@@ -34,7 +35,7 @@ const MapScreen = () => {
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
 
-  const {centerCoordinate, onCameraIdle} = useCenterCoordinate();
+  const {centerCoordinate, mapRegion, onCameraIdle} = useCenterCoordinate();
   const {chips, handleChipPressed} = useChips();
 
   const clearAddress = useMapStore(state => state.clearAddress);
@@ -55,14 +56,10 @@ const MapScreen = () => {
     }
 
     try {
-      const topLeft = await mapRef.current.screenToCoordinate({
-        screenX: 0,
-        screenY: 0,
-      });
-      const bottomRight = await mapRef.current.screenToCoordinate({
-        screenX: mapSize.width * 3.75,
-        screenY: mapSize.height * 3.75,
-      });
+      const {topLeft, bottomRight} = calculateMapRegion(
+        centerCoordinate,
+        mapRegion,
+      );
 
       const response = await getRangeInfo({
         topLeftLat: topLeft.latitude,

@@ -15,16 +15,26 @@ const useCenterCoordinate = (
 ) => {
   const [centerCoordinate, setCenterCoordinate] =
     useState<Coordinate>(initialCenter);
+  const [mapRegion, setMapRegion] = useState({
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  });
 
   const onCameraIdle = (e: Camera & {region: Region}) => {
     setCenterCoordinate({
       latitude: e.latitude,
       longitude: e.longitude,
     });
+
+    setMapRegion({
+      latitudeDelta: e.region.latitudeDelta,
+      longitudeDelta: e.region.longitudeDelta,
+    });
   };
 
   return {
     centerCoordinate,
+    mapRegion,
     onCameraIdle,
   };
 };
