@@ -72,12 +72,10 @@ public class OAuth2Controller {
 		Member member = memberOpt.get();
 		String newAccessToken = tokenService.createAccessToken(member.getId(), registrationId);
 		String newRefreshToken = tokenService.createRefreshToken(member.getId(), registrationId);
-
-		// 로그 확인용
+		
 		logger.info("New access token: " + newAccessToken);
 		logger.info("New refresh token: " + newRefreshToken);
 
-		// 모바일에서는 쿠키 대신 JSON 응답에 토큰 포함
 		return ResponseEntity.ok(new RefreshTokenResponse("Token Refreshed", newAccessToken, newRefreshToken));
 	}
 
@@ -89,20 +87,18 @@ public class OAuth2Controller {
 				.body(new KakaoAuthResponse(null, null, "kakaoAccessToken is required.", null));
 		}
 
-		// 1. 카카오 API를 통해 사용자 정보 조회
 		Map<String, Object> userInfo = oAuth2UserInfoService.fetchProviderUserInfo("kakao", kakaoAccessToken);
 		String providerId = oAuth2UserInfoService.extractProviderId("kakao", userInfo);
 		logger.info("Extracted providerId: {}", providerId);
 
-		// 2. DB에 해당 providerId로 회원 조회 (이미 가입된 경우)
 		Optional<Member> existingMember = memberService.findByProviderId(providerId);
 		SignUpToken signUpToken;
 		if (existingMember.isPresent()) {
 			Member member = existingMember.get();
-			// 기존 회원 로그인 처리: JWT 발급
+
 			String newAccessToken = tokenService.createAccessToken(member.getId(), "kakao");
 			String newRefreshToken = tokenService.createRefreshToken(member.getId(), "kakao");
-			// 기존 회원은 임시 토큰이 없음 (null)
+
 			signUpToken = new SignUpToken(member, newAccessToken, newRefreshToken);
 		} else {
 			// 신규 회원인 경우, 추가 정보를 위한 임시 토큰 발급

@@ -7,9 +7,17 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.babyspot.domain.reveiw.Review;
+import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
+import com.ssafy.babyspot.domain.reveiw.repository.ReviewRepository;
 import com.ssafy.babyspot.domain.store.KeywordReview;
 import com.ssafy.babyspot.domain.store.SentimentAnalysis;
 import com.ssafy.babyspot.domain.store.Store;
@@ -37,6 +45,9 @@ import jakarta.transaction.Transactional;
 @Service
 public class StoreService {
 
+	@Value("${CLOUDFRONT_URL}")
+	private String CLOUDFRONT_URL;
+
 	private final StoreRepository storeRepository;
 	private final StoreImageRepository storeImageRepository;
 	private final StoreMenuRepository storeMenuRepository;
@@ -44,16 +55,19 @@ public class StoreService {
 	private final KeywordReviewRepository keywordReviewRepository;
 	private final SentimentAnalysisRepository sentimentAnalysisRepository;
 	private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
+	private final ReviewRepository reviewRepository;
 
 	public StoreService(StoreRepository storeRepository, StoreImageRepository storeImageRepository,
 		StoreMenuRepository storeMenuRepository, StoreKeywordRepository storeKeywordRepository,
-		KeywordReviewRepository keywordReviewRepository, SentimentAnalysisRepository sentimentAnalysisRepository) {
+		KeywordReviewRepository keywordReviewRepository, SentimentAnalysisRepository sentimentAnalysisRepository,
+		ReviewRepository reviewRepository) {
 		this.storeRepository = storeRepository;
 		this.storeImageRepository = storeImageRepository;
 		this.storeMenuRepository = storeMenuRepository;
 		this.storeKeywordRepository = storeKeywordRepository;
 		this.keywordReviewRepository = keywordReviewRepository;
 		this.sentimentAnalysisRepository = sentimentAnalysisRepository;
+		this.reviewRepository = reviewRepository;
 	}
 
 	@Transactional
@@ -187,13 +201,34 @@ public class StoreService {
 	public StoreDetailDto getStoreDetail(int storeId) {
 
 		Store store = storeRepository.findById(storeId)
-			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "존재하지않는 매장입니다."));
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "존재하지 않는 매장입니다."));
 
 		List<StoreImageDto> storeImages = getStoreImages(storeId);
 		List<StoreMenuDto> storeMenus = getStoreMenus(storeId);
 		List<KeywordDto> keywords = getKeywordsAndReviews(storeId);
 		SentimentAnalysisDto sentiment = getSentimentAnalysis(storeId);
 		List<KidsMenuDto> kidsMenus = getKidsMenu(storeId);
+
+		Pageable pageable = PageRequest.of(0, 3, Sort.by("createdAt").descending());
+		Page<Review> reviewPage = reviewRepository.findAllByStore_IdOrderByCreatedAtDesc(storeId, pageable);
+		List<ReviewResponseDto> latestReviews = reviewPage.stream().map(review -> {
+			ReviewResponseDto dto = new ReviewResponseDto();
+			dto.setReviewId(review.getId());
+			dto.setMemberId(review.getMember().getId());
+			dto.setMemberNickname(review.getMember().getNickname());
+			dto.setStoreId(review.getStore().getId());
+			dto.setRating(review.getRating());
+			dto.setCreatedAt(review.getCreatedAt());
+			dto.setContent(review.getContent());
+			dto.setBabyAges(review.getBabyAges());
+
+			List<String> imgUrls = review.getImages().stream()
+				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+				.collect(Collectors.toList());
+			dto.setImgUrls(imgUrls);
+			dto.setLikeCount(review.getReviewLikes().size());
+			return dto;
+		}).collect(Collectors.toList());
 
 		return StoreDetailDto.builder()
 			.storeId(store.getId())
@@ -203,6 +238,8 @@ public class StoreService {
 			.keywordsAndReviews(keywords)
 			.sentiment(sentiment)
 			.kidsMenu(kidsMenus)
+			.latestReviews(latestReviews)
 			.build();
 	}
+
 }

@@ -13,6 +13,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -23,11 +24,15 @@ public class ReviewImage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@Setter
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "review_id", nullable = false)
 	private Review review;
 
+	@Setter
 	private String imageUrl;
+	
+	@Setter
 	private int orderIndex;
 	private LocalDateTime createdAt;
 
