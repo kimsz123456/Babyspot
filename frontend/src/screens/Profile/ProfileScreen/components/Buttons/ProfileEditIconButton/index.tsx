@@ -1,11 +1,10 @@
 import React from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import * as S from './styles';
-import {IC_PROFILE_EDIT} from '../../../../../constants/icons';
+import {IC_PROFILE_EDIT} from '../../../../../../constants/icons';
 
 const ProfileEditIconButton = () => {
-  const navigation = useNavigation();
-  const router = useRoute();
+  const navigation = useNavigation<any>(); // TODO: 타입 변경
 
   return (
     <S.ProfileEditIconButton onPress={() => navigation.navigate('ProfileEdit')}>

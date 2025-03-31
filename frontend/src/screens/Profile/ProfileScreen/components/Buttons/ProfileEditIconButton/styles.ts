@@ -1,6 +1,6 @@
 import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
-import scale from '../../../../../utils/scale';
+import scale from '../../../../../../utils/scale';
 import {Image} from 'react-native';
 
 const ProfileEditIconButton = styled(Pressable)``;
