@@ -22,7 +22,7 @@ const SettingItems = styled(View)`
 `;
 
 const GPSContainer = styled(View)`
-  padding: ${scale(8)}px 0;
+  padding: ${scale(8)}px 0px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -42,11 +42,11 @@ const GPSState = styled(Text)`
 `;
 const GPSQuestion = styled(Image)`
   width: ${scale(24)}px;
-  height: ${scale(24)};
+  height: ${scale(24)}px;
 `;
 
 const PrivacyTermsContainer = styled(View)`
-  padding: ${scale(8)}px 0;
+  padding: ${scale(8)}px 0px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -61,7 +61,7 @@ const PrivacyTermsButton = styled(Image)`
 `;
 
 const AppVersionContainer = styled(View)`
-  padding: ${scale(8)}px 0;
+  padding: ${scale(8)}px 0px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -76,7 +76,7 @@ const AppVersionNumber = styled(Text)`
 `;
 
 const LogoutContainer = styled(View)`
-  padding: ${scale(8)}px 0;
+  padding: ${scale(8)}px 0px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -91,7 +91,7 @@ const LogoutButton = styled(Image)`
 `;
 
 const DeleteAccountContainer = styled(View)`
-  padding: ${scale(8)}px 0;
+  padding: ${scale(8)}px 0px;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
