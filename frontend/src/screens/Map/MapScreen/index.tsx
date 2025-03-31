@@ -8,7 +8,8 @@ import {
   NaverMapViewRef,
 } from '@mj-studio/react-native-naver-map';
 
-import {useChips} from '../../../hooks/useChips';
+import useCenterCoordinate from '../../../hooks/useCenterCoordinate';
+import useChips from '../../../hooks/useChips';
 
 import NearStoreListScreen from '../NearStoreListScreen';
 import PlaceSearchButton from '../components/PlaceSearchButton';
@@ -33,6 +34,7 @@ const MapScreen = () => {
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
 
+  const {centerCoordinate, onCameraIdle} = useCenterCoordinate();
   const {chips, handleChipPressed} = useChips();
 
   const clearAddress = useMapStore(state => state.clearAddress);
@@ -70,8 +72,6 @@ const MapScreen = () => {
       });
 
       setStores(response);
-
-      console.log(response);
     } catch (e) {
       return Promise.reject(e);
     }
@@ -119,10 +119,11 @@ const MapScreen = () => {
       <S.NaverMap
         ref={mapRef}
         onLayout={onLayoutMap}
+        onCameraIdle={onCameraIdle}
         onTapMap={handleNaverMapTab}
         initialCamera={{
-          latitude: 37.498040483,
-          longitude: 127.02758183,
+          latitude: centerCoordinate.latitude,
+          longitude: centerCoordinate.longitude,
           zoom: 15,
         }}
         isIndoorEnabled={true}

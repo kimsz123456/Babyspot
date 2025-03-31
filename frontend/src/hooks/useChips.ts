@@ -1,10 +1,5 @@
 import {useRef, useState} from 'react';
 
-export interface ChipProps {
-  label: string;
-  isSelected: boolean;
-}
-
 const mockChips: ChipProps[] = [
   {label: '유아 의자', isSelected: false},
   {label: '유아 식기', isSelected: false},
@@ -13,7 +8,12 @@ const mockChips: ChipProps[] = [
   {label: '놀이터', isSelected: false},
 ];
 
-export const useChips = () => {
+interface ChipProps {
+  label: string;
+  isSelected: boolean;
+}
+
+const useChips = () => {
   const initialChips = useRef<ChipProps[]>(mockChips);
   const [chips, setChips] = useState<ChipProps[]>(mockChips);
 
@@ -40,3 +40,5 @@ export const useChips = () => {
     handleChipPressed,
   };
 };
+
+export default useChips;
