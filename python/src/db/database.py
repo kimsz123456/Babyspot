@@ -141,7 +141,7 @@ class PostgresImporter:
         # 이미 존재하는 경우 UPDATE
         update_query = """
         UPDATE store_menu 
-        SET price = %s, image = %s
+        SET price = %s
         WHERE store_id = %s AND name = %s;
         """
         self.cursor.execute(update_query, (price, store_id, name))
@@ -151,7 +151,7 @@ class PostgresImporter:
         INSERT INTO store_menu 
             (store_id, name, price) 
         VALUES 
-            (%s, %s, %s, %s);
+            (%s, %s, %s);
         """
         self.cursor.execute(insert_query, (store_id, name, price))
 
