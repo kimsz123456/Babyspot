@@ -1,25 +1,30 @@
 import React, {useState} from 'react';
 
-import {useRoute} from '@react-navigation/native';
+import {RouteProp, useRoute} from '@react-navigation/native';
 
 import StoreBasicInformation from '../NearStoreListScreen/components/StoreBasicInformation';
 import Home from './components/Home';
 import Menu from './components/Menu';
 import {ThickDivider} from '../../../components/atoms/Divider';
 
-import MOCK, {keywordSectionMock} from './mock';
+import MOCK, {familyReviewMocks, keywordSectionMock} from './mock';
 
 import * as S from './styles';
 import KidMenu from './components/KidMenu';
 import {withDivider} from '../../../utils/withDivider';
 import KeywordSection from './components/Keyword';
+import FamilyReview from './components/FamilyReview';
+import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
+
+type StoreDetailRouteProp = RouteProp<MapStackParamList, 'StoreDetail'>;
 
 const StoreDetailScreen = () => {
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const route = useRoute<any>(); // TODO: 타입 변경
+  const route = useRoute<StoreDetailRouteProp>();
+
   const {storeBasicInformation} = route.params;
 
   const handleTabPress = (idx: number) => {
@@ -56,6 +61,12 @@ const StoreDetailScreen = () => {
           <KeywordSection
             keywords={keywordSectionMock.keywords}
             totalCount={keywordSectionMock.totalCount}
+          />,
+          <FamilyReview
+            positiveSummary={familyReviewMocks.positiveSummary}
+            positiveReviews={familyReviewMocks.positiveReviews}
+            negativeSummary={familyReviewMocks.negativeSummary}
+            negativeReviews={familyReviewMocks.negativeReviews}
           />,
         ],
         <ThickDivider />,

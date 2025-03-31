@@ -1,3 +1,4 @@
+import {FamilyReviewProps} from './components/FamilyReview';
 import {KeywordSectionProps} from './components/Keyword';
 import {StoreDetailInformationType} from './types';
 
@@ -46,6 +47,21 @@ export const keywordSectionMock: KeywordSectionProps = {
         },
       ],
     },
+  ],
+};
+
+export const familyReviewMocks: FamilyReviewProps = {
+  positiveSummary: '“가게가 친절하고 사장님이 맛있어요.”',
+  positiveReviews: [
+    '가게가 친절하고 사장님이 맛있어요!',
+    '귤이 친절하고 구이가 맛있어요!',
+    '구이가 친절하고 귤이 맛있어요!',
+  ],
+  negativeSummary: '“가게가 불친절하고 사장님이 맛없어요.”',
+  negativeReviews: [
+    '가게가 불친절하고 사장님이 맛없어요...',
+    '귤이 불친절하고 구이가 맛없어요...',
+    '구이가 불친절하고 귤이 맛없어요...',
   ],
 };
 
