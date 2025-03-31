@@ -7,7 +7,7 @@ interface Coordinate {
   longitude: number;
 }
 
-const useCenterCoordinate = (
+const useMapViewport = (
   initialCenter: Coordinate = {
     latitude: 37.498040483,
     longitude: 127.02758183,
@@ -39,4 +39,4 @@ const useCenterCoordinate = (
   };
 };
 
-export default useCenterCoordinate;
+export default useMapViewport;

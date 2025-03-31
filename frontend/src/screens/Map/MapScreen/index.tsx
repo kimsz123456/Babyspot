@@ -8,7 +8,7 @@ import {
   NaverMapViewRef,
 } from '@mj-studio/react-native-naver-map';
 
-import useCenterCoordinate from '../../../hooks/useCenterCoordinate';
+import useMapViewport from '../../../hooks/useCenterCoordinate';
 import useChips from '../../../hooks/useChips';
 
 import NearStoreListScreen from '../NearStoreListScreen';
@@ -35,7 +35,7 @@ const MapScreen = () => {
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
 
-  const {centerCoordinate, mapRegion, onCameraIdle} = useCenterCoordinate();
+  const {centerCoordinate, mapRegion, onCameraIdle} = useMapViewport();
   const {chips, handleChipPressed} = useChips();
 
   const clearAddress = useMapStore(state => state.clearAddress);
