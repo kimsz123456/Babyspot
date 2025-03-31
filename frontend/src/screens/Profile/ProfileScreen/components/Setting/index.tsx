@@ -41,22 +41,14 @@ const Setting = () => {
 
   const requestGPSPermission = async () => {
     try {
-      const granted = await PermissionsAndroid.request(
+      const currentPermission = await PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: '위치 권한 요청',
-          message: '주변 맛집을 찾기 위해 위치 권한이 필요합니다.',
-          buttonNeutral: '나중에 묻기',
-          buttonNegative: '거부',
-          buttonPositive: '허용',
-        },
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        setIsGPSEnabled(true);
-      } else {
+
+      if (!currentPermission) {
         Alert.alert(
           'GPS 권한 설정',
-          '위치 권한이 거부되었습니다.\n설정 화면에서 직접 권한을 허용해주세요.',
+          '위치 권한이 필요합니다.\n설정 화면에서 직접 권한을 허용해주세요.',
           [
             {
               text: '취소',
@@ -68,8 +60,22 @@ const Setting = () => {
             },
           ],
         );
-        setIsGPSEnabled(false);
+        return;
       }
+
+      // 권한이 아직 없는 경우에만 시스템 권한 요청
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: '위치 권한 요청',
+          message: '주변 맛집을 찾기 위해 위치 권한이 필요합니다.',
+          buttonNeutral: '나중에 묻기',
+          buttonNegative: '거부',
+          buttonPositive: '허용',
+        },
+      );
+
+      setIsGPSEnabled(granted === PermissionsAndroid.RESULTS.GRANTED);
     } catch (error) {
       console.error('GPS 권한 확인 실패:', error);
       setIsGPSEnabled(false);
