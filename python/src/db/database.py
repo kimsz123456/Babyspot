@@ -124,7 +124,6 @@ class PostgresImporter:
       store_id = menu_data.get("restaurant_id")
       name = menu_data.get("name", "")
       price = menu_data.get("price", "")
-      image = menu_data.get("image", "")
 
       # 가격이 문자열인 경우 숫자로 변환 시도
       if isinstance(price, str) and price.isdigit():
@@ -145,16 +144,16 @@ class PostgresImporter:
         SET price = %s, image = %s
         WHERE store_id = %s AND name = %s;
         """
-        self.cursor.execute(update_query, (price, image, store_id, name))
+        self.cursor.execute(update_query, (price, store_id, name))
       else:
         # 새로운 데이터인 경우 INSERT
         insert_query = """
         INSERT INTO store_menu 
-            (store_id, name, price, image) 
+            (store_id, name, price) 
         VALUES 
             (%s, %s, %s, %s);
         """
-        self.cursor.execute(insert_query, (store_id, name, price, image))
+        self.cursor.execute(insert_query, (store_id, name, price))
 
       self.conn.commit()
       return True

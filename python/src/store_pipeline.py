@@ -296,7 +296,7 @@ def main():
   결과를 병합한 후, 사용자가 원하는 시점에 PostgreSQL 데이터베이스에 저장합니다.
   """
   # 처리할 레스토랑 ID 범위
-  start_id = 1
+  start_id = 10
   end_id = 10
 
   # 레스토랑 ID 목록 (범위 또는 특정 ID 목록 사용 가능)
@@ -304,7 +304,7 @@ def main():
   # restaurant_ids = [2, 5, 10, 15, 20]  # 특정 ID만 처리하려면 이렇게 리스트로 지정
 
   # 처리 모드 설정
-  PIPELINE_ONLY = False  # True: 파이프라인만 실행, False: 파이프라인 + 병합
+  PIPELINE_ONLY = True  # True: 파이프라인만 실행, False: 파이프라인 + 병합
   MERGE_ONLY = False  # True: 병합만 실행, False: 파이프라인 + 병합
 
   # ID 범위 문자열 생성 (로그 출력용)

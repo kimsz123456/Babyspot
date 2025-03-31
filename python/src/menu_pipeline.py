@@ -16,18 +16,18 @@ def run_menu_detail_pipeline(restaurant_id):
 
   system_prompt = f"""
     항상 한국어로 대답 부탁드립니다.
+    
+    restaurant_id는 수정히지 말고, 데이터에서 찾을 수 없는 정보는 빈 문자열("")로 표시해주세요.
+    반드시 순수한 JSON만 반환해주시고, 마크다운이나 추가 설명을 포함하지 마세요.
+    다른 언어로 설명을 추가하지 마세요.
     다음 텍스트 데이터를 분석하여 다음과 같은 형식으로 정제해주세요:
 
     {{
       "restaurant_id": "{restaurant_id}",
-      "name": "음식이름",
-      "price": "8000",
-      "image": "url"
+      "name": "메뉴 이름",
+      "price": "8000" // 가격은 Integer형태로 ( 1,000원 -> 1000 ) 없으면 null
     }}
 
-    단, restaurant_id를 제외하고, 데이터에서 찾을 수 없는 정보는 빈 문자열("")로 표시해주세요.
-    반드시 순수한 JSON만 반환해주시고, 마크다운이나 추가 설명을 포함하지 마세요.
-    다른 언어로 설명을 추가하지 마세요.
     """
 
   result = pipeline.process_directory(
@@ -159,8 +159,8 @@ def main():
   결과를 PostgreSQL의 store_menu 테이블에 저장합니다.
   """
   # 설정
-  START_ID = 8  # 시작 레스토랑 ID
-  END_ID = 10  # 종료 레스토랑 ID
+  START_ID = 3  # 시작 레스토랑 ID
+  END_ID = 3  # 종료 레스토랑 ID
 
   # 유효한 범위인지 확인
   if START_ID < 1 or START_ID > END_ID:
