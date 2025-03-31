@@ -40,7 +40,7 @@ export const ReviewListContainer = styled(View)`
 export const ReviewContainer = styled(View)`
   flex-direction: row;
   gap: ${scale(8)}px;
-  padding: ${scale(8)}px;
+  padding: ${scale(8)}px 0px;
 `;
 
 export const IconImage = styled(Image)`
