@@ -1,4 +1,4 @@
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Text, View} from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -11,6 +11,12 @@ export const MenuContainer = styled(View)`
   flex-direction: column;
   gap: ${scale(8)}px;
   padding: ${scale(16)}px ${scale(24)}px;
+`;
+
+export const TitleContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  gap: ${scale(8)}px;
 `;
 
 export const Title = styled(Text)`

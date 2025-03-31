@@ -2,13 +2,14 @@ import React, {useState} from 'react';
 import {menuType} from '../../types';
 import {formatPrice} from '../../../../../utils/format';
 import * as S from './styles';
+import OKzoneMarker from '../../../../../components/atoms/OKZoneMarker';
 import MoreButtonWithDivider from '../../../../../components/atoms/MoreButtonWithDivider';
 
-interface MenuProps {
+interface KidMenuProps {
   menus: menuType[];
 }
 
-const Menu = ({menus}: MenuProps) => {
+const KidMenu = ({menus}: KidMenuProps) => {
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
   const visibleMenus = isMenuOpened ? menus : menus.slice(0, 4);
@@ -19,8 +20,10 @@ const Menu = ({menus}: MenuProps) => {
 
   return (
     <S.MenuContainer>
-      <S.Title>{`메뉴`}</S.Title>
-
+      <S.TitleContainer>
+        <S.Title>{`어린이 메뉴`}</S.Title>
+        <OKzoneMarker />
+      </S.TitleContainer>
       <S.MenuListContainer>
         {visibleMenus.map(menu => (
           <S.LineContainer key={menu.name}>
@@ -42,4 +45,4 @@ const Menu = ({menus}: MenuProps) => {
   );
 };
 
-export default Menu;
+export default KidMenu;
