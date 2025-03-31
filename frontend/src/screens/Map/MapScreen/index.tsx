@@ -8,6 +8,8 @@ import {
   NaverMapViewRef,
 } from '@mj-studio/react-native-naver-map';
 
+import {useChips} from '../../../hooks/useChips';
+
 import NearStoreListScreen from '../NearStoreListScreen';
 import PlaceSearchButton from '../components/PlaceSearchButton';
 import RecommendButton from './components/RecommendButton';
@@ -19,22 +21,10 @@ import {geocoding} from '../../../services/mapService';
 import {useMapStore} from '../../../stores/mapStore';
 import {StoreBasicInformationType} from '../NearStoreListScreen/components/StoreBasicInformation/types';
 
+import scale from '../../../utils/scale';
 import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
 
 import * as S from './styles';
-import scale from '../../../utils/scale';
-
-const mockChips: ChipProps[] = [
-  {label: '유아 의자', isSelected: false},
-  {label: '유아 식기', isSelected: false},
-  {label: '기저귀 교환대', isSelected: false},
-  {label: '수유실', isSelected: false},
-  {label: '놀이터', isSelected: false},
-];
-interface ChipProps {
-  label: string;
-  isSelected: boolean;
-}
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
@@ -42,6 +32,8 @@ const MapScreen = () => {
 
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
+
+  const {chips, handleChipPressed} = useChips();
 
   const clearAddress = useMapStore(state => state.clearAddress);
   const route = useRoute();
@@ -55,9 +47,11 @@ const MapScreen = () => {
 
   const handlePress = async () => {
     clearAddress();
+
     if (!mapRef.current) {
       return;
     }
+
     try {
       const topLeft = await mapRef.current.screenToCoordinate({
         screenX: 0,
@@ -67,6 +61,7 @@ const MapScreen = () => {
         screenX: mapSize.width * 3.75,
         screenY: mapSize.height * 3.75,
       });
+
       const response = await getRangeInfo({
         topLeftLat: topLeft.latitude,
         topLeftLong: topLeft.longitude,
@@ -118,29 +113,6 @@ const MapScreen = () => {
       moveToAddress(address);
     }
   }, [address]);
-
-  // 필터 칩 관련
-  const initialChips = useRef(mockChips);
-  const [chips, setChips] = useState(mockChips);
-
-  // 선택되지 않았을 때 칩 자리를 기억해 유지하는 로직
-  const handleChipPressed = (selectedIndex: number) => {
-    setChips(prev => {
-      const updated = prev.map((chip, index) =>
-        index === selectedIndex
-          ? {...chip, isSelected: !chip.isSelected}
-          : chip,
-      );
-
-      const selected = updated.filter(chip => chip.isSelected);
-      const unselected = initialChips.current.filter(
-        initialChip =>
-          !updated.find(chip => chip.label === initialChip.label)?.isSelected,
-      );
-
-      return [...selected, ...unselected];
-    });
-  };
 
   return (
     <S.MapScreenContainer>
