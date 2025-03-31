@@ -1,11 +1,19 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import * as S from './styles';
 import {IC_QUESTION, IC_RIGHT_ARROW} from '../../../../../constants/icons';
 import {ThinDivider} from '../../../../../components/atoms/Divider';
 import {useNavigation} from '@react-navigation/native';
+import VersionCheck from 'react-native-version-check';
 
 const Setting = () => {
   const navigation = useNavigation();
+  const [appVersion, setAppVersion] = useState('');
+
+  useEffect(() => {
+    const currentVersion = VersionCheck.getCurrentVersion();
+
+    setAppVersion(currentVersion);
+  }, []);
 
   return (
     <S.SettingContainer>
@@ -26,7 +34,7 @@ const Setting = () => {
         <ThinDivider />
         <S.AppVersionContainer>
           <S.AppVersionTitle>앱 버전</S.AppVersionTitle>
-          <S.AppVersionNumber>1.0.0</S.AppVersionNumber>
+          <S.AppVersionNumber>{appVersion}</S.AppVersionNumber>
         </S.AppVersionContainer>
         <ThinDivider />
         <S.LogoutContainer>
