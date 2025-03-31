@@ -19,6 +19,12 @@ const useResearchButtonVisibility = ({
   const [lastZoom, setLastZoom] = useState(zoom);
   const [isVisible, setIsVisible] = useState(false);
 
+  const updateLastSearchedCoordinate = () => {
+    setLastSearchedCoordinate(centerCoordinate);
+    setLastZoom(zoom);
+    setIsVisible(false);
+  };
+
   useEffect(() => {
     const isSameLocation =
       Math.abs(centerCoordinate.latitude - lastSearchedCoordinate.latitude) <
@@ -30,12 +36,6 @@ const useResearchButtonVisibility = ({
 
     setIsVisible(!isSameLocation || !isSameZoom);
   }, [centerCoordinate, lastSearchedCoordinate, zoom, lastZoom]);
-
-  const updateLastSearchedCoordinate = () => {
-    setLastSearchedCoordinate(centerCoordinate);
-    setLastZoom(zoom);
-    setIsVisible(false);
-  };
 
   return {
     isVisible,
