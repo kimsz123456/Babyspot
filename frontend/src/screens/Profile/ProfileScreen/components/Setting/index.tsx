@@ -2,19 +2,109 @@ import React, {useEffect, useState} from 'react';
 import * as S from './styles';
 import {IC_QUESTION, IC_RIGHT_ARROW} from '../../../../../constants/icons';
 import {ThinDivider} from '../../../../../components/atoms/Divider';
-import {useNavigation} from '@react-navigation/native';
+import {useProfileNavigation} from '../../../../../hooks/useNavigationHooks';
 import VersionCheck from 'react-native-version-check';
 import PrivacyPolicyButton from '../Buttons/PrivacyPolicyButton';
+import {Alert, Linking, PermissionsAndroid} from 'react-native';
+import {FontStyles} from '../../../../../constants/fonts';
+import {SystemColors} from '../../../../../constants/colors';
 
 const Setting = () => {
-  const navigation = useNavigation();
+  const navigation = useProfileNavigation();
   const [appVersion, setAppVersion] = useState('');
+  const [isGPSEnabled, setIsGPSEnabled] = useState(false);
+
+  const checkGPSPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      setIsGPSEnabled(granted);
+    } catch (error) {
+      console.error('GPS 권한 확인 실패:', error);
+      setIsGPSEnabled(false);
+    }
+  };
 
   useEffect(() => {
     const currentVersion = VersionCheck.getCurrentVersion();
-
     setAppVersion(currentVersion);
+
+    checkGPSPermission();
+
+    const unsubscribe = navigation.addListener('focus', () => {
+      checkGPSPermission();
+    });
+
+    return unsubscribe;
   }, []);
+
+  const requestGPSPermission = async () => {
+    try {
+      const currentPermission = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+
+      if (!currentPermission) {
+        Alert.alert(
+          'GPS 권한 설정',
+          '위치 권한이 필요합니다.\n설정 화면에서 직접 권한을 허용해주세요.',
+          [
+            {
+              text: '취소',
+              style: 'cancel',
+            },
+            {
+              text: '설정으로 이동',
+              onPress: () => Linking.openSettings(),
+            },
+          ],
+        );
+        return;
+      }
+
+      // 권한이 아직 없는 경우에만 시스템 권한 요청
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: '위치 권한 요청',
+          message: '주변 맛집을 찾기 위해 위치 권한이 필요합니다.',
+          buttonNeutral: '나중에 묻기',
+          buttonNegative: '거부',
+          buttonPositive: '허용',
+        },
+      );
+
+      setIsGPSEnabled(granted === PermissionsAndroid.RESULTS.GRANTED);
+    } catch (error) {
+      console.error('GPS 권한 확인 실패:', error);
+      setIsGPSEnabled(false);
+    }
+  };
+
+  const handleGPSPress = async () => {
+    if (isGPSEnabled) {
+      Alert.alert(
+        'GPS 권한 상태',
+        'GPS 권한이 허용되어 있습니다.\n설정 화면에서 권한을 변경할 수 있습니다.',
+        [
+          {
+            text: '취소',
+            style: 'cancel',
+          },
+          {
+            text: '설정으로 이동',
+            onPress: () => {
+              Linking.openSettings();
+            },
+          },
+        ],
+        {cancelable: true},
+      );
+    } else {
+      requestGPSPermission();
+    }
+  };
 
   return (
     <S.SettingContainer>
@@ -22,8 +112,15 @@ const Setting = () => {
       <S.SettingItems>
         <S.GPSContainer>
           <S.GPSTitle>GPS 설정</S.GPSTitle>
-          <S.GPSStateContainer>
-            <S.GPSState>되어있음</S.GPSState>
+          <S.GPSStateContainer onPress={handleGPSPress}>
+            <S.GPSState
+              style={{
+                color: isGPSEnabled
+                  ? `${SystemColors.success}`
+                  : `${SystemColors.danger}`,
+              }}>
+              {isGPSEnabled ? '되어있음' : '꺼져있음'}
+            </S.GPSState>
             <S.GPSQuestion source={IC_QUESTION} />
           </S.GPSStateContainer>
         </S.GPSContainer>
