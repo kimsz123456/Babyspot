@@ -32,7 +32,7 @@ api.interceptors.request.use(
       const accessToken = useGlobalStore.getState().accessToken;
 
       if (accessToken) {
-        request.headers.Authorization = accessToken;
+        request.headers.Authorization = `Bearer ${accessToken}`;
       }
     }
 

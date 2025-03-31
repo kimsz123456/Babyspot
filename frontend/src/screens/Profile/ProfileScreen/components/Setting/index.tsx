@@ -6,7 +6,6 @@ import {useProfileNavigation} from '../../../../../hooks/useNavigationHooks';
 import VersionCheck from 'react-native-version-check';
 import PrivacyPolicyButton from '../Buttons/PrivacyPolicyButton';
 import {Alert, Linking, PermissionsAndroid} from 'react-native';
-import {FontStyles} from '../../../../../constants/fonts';
 import {SystemColors} from '../../../../../constants/colors';
 
 const Setting = () => {

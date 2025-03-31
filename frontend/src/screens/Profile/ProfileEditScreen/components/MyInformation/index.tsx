@@ -12,11 +12,6 @@ const MyInformation = () => {
         <S.Nickname>{nickName}</S.Nickname>
         <ThinDivider />
       </S.NicknameContainer>
-      <S.EmailContainer>
-        <S.EmailTitle>이메일</S.EmailTitle>
-        <S.Email>{email}</S.Email>
-        <ThinDivider />
-      </S.EmailContainer>
     </S.InformationContainer>
   );
 };
