@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, {useEffect, useRef, useState} from 'react';
 import {Alert} from 'react-native';
 
@@ -24,6 +26,7 @@ import {StoreBasicInformationType} from '../NearStoreListScreen/components/Store
 
 import scale from '../../../utils/scale';
 import calculateMapRegion from '../../../utils/calculateMapRegion';
+import checkLocationPermission from '../../../utils/checkLocationPermission';
 import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
 
 import * as S from './styles';
@@ -45,6 +48,16 @@ const MapScreen = () => {
 
   const route = useRoute();
   const address = (route.params as any)?.address as string;
+
+  const initTracking = async () => {
+    const hasPermission = await checkLocationPermission();
+
+    if (!hasPermission) {
+      return;
+    }
+
+    mapRef.current?.setLocationTrackingMode('Follow');
+  };
 
   const handleResearchButtonPress = () => {
     clearAddress();
@@ -116,6 +129,10 @@ const MapScreen = () => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    initTracking();
+  }, []);
 
   useEffect(() => {
     if (address) {
