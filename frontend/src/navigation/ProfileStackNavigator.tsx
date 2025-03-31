@@ -6,6 +6,14 @@ import DeleteAccountScreen from '../screens/Profile/DeleteAccountScreen';
 import MyReviewListScreen from '../screens/Profile/MyReviewListScreen';
 import PrivacyPolicyScreen from '../screens/Profile/PrivacyPolicyScreen';
 
+export type ProfileStackParamList = {
+  ProfileMain: undefined;
+  ProfileEdit: undefined;
+  MyReviewList: undefined;
+  PrivacyPolicy: undefined;
+  DeleteAccount: undefined;
+};
+
 const ProfileStackNavigator = () => {
   const Stack = createNativeStackNavigator();
 
