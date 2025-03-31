@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, Pressable} from 'react-native';
 
 import {FontStyles} from '../../../../../constants/fonts';
 import {
@@ -31,7 +31,7 @@ const GPSTitle = styled(Text)`
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
 `;
-const GPSStateContainer = styled(View)`
+const GPSStateContainer = styled(Pressable)`
   flex-direction: row;
   align-items: center;
   gap: ${scale(8)}px;
