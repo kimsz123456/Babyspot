@@ -4,6 +4,7 @@ import {IC_QUESTION, IC_RIGHT_ARROW} from '../../../../../constants/icons';
 import {ThinDivider} from '../../../../../components/atoms/Divider';
 import {useNavigation} from '@react-navigation/native';
 import VersionCheck from 'react-native-version-check';
+import PrivacyPolicyButton from '../Buttons/PrivacyPolicyButton';
 
 const Setting = () => {
   const navigation = useNavigation();
@@ -29,7 +30,7 @@ const Setting = () => {
         <ThinDivider />
         <S.PrivacyTermsContainer>
           <S.PrivacyTermsTitle>개인정보 이용약관</S.PrivacyTermsTitle>
-          <S.PrivacyTermsButton source={IC_RIGHT_ARROW} />
+          <PrivacyPolicyButton />
         </S.PrivacyTermsContainer>
         <ThinDivider />
         <S.AppVersionContainer>
