@@ -17,9 +17,11 @@ import com.ssafy.babyspot.domain.member.dto.SignUpRequest;
 import com.ssafy.babyspot.domain.member.dto.SignUpToken;
 import com.ssafy.babyspot.domain.member.dto.UpdateProfileRequest;
 import com.ssafy.babyspot.domain.member.dto.UpdateProfileResponse;
+import com.ssafy.babyspot.domain.member.repository.BabyRepository;
 import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.exception.CustomException;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -28,12 +30,15 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final TokenService tokenService;
 	private final S3Component s3Component;
+	private final BabyRepository babyRepository;
 
 	@Autowired
-	public MemberService(MemberRepository memberRepository, TokenService tokenService, S3Component s3Component) {
+	public MemberService(MemberRepository memberRepository, TokenService tokenService, S3Component s3Component,
+		BabyRepository babyRepository) {
 		this.memberRepository = memberRepository;
 		this.tokenService = tokenService;
 		this.s3Component = s3Component;
+		this.babyRepository = babyRepository;
 	}
 
 	@Transactional
@@ -120,5 +125,14 @@ public class MemberService {
 
 		memberRepository.save(member);
 		return new UpdateProfileResponse(member.getNickname(), preSignedUrl, profileKey);
+	}
+
+	@Transactional
+	public void deleteMember(int memberId) {
+		if (!memberRepository.existsById(memberId)) {
+			throw new EntityNotFoundException("Member with id " + memberId + " does not exist.");
+		}
+		babyRepository.deleteByMemberId(memberId);
+		memberRepository.deleteById(memberId);
 	}
 }

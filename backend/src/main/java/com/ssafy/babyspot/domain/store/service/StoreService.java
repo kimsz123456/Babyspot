@@ -295,12 +295,4 @@ public class StoreService {
 		}
 	}
 
-	// @PostConstruct
-	// public void init() {
-	// 	List<Store> stores = storeRepository.findAll();
-	// 	for (Store store : stores) {
-	// 		storeImageService.saveStoreImages(store.getId());
-	// 	}
-	// }
-
 }

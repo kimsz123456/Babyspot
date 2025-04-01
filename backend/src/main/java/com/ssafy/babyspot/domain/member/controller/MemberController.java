@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,6 +68,18 @@ public class MemberController {
 		return member.map(value -> ResponseEntity.ok(MemberResponse.fromMember(value, CLOUDFRONT_URL)))
 			.orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 				.body(MemberResponse.withMessage("로그인된 사용자를 찾을 수 없습니다.")));
+	}
+
+	@DeleteMapping("/delete")
+	public ResponseEntity<Void> deleteCurrentMember(Authentication authentication) {
+		if (authentication == null || !authentication.isAuthenticated()) {
+			throw new CustomException(HttpStatus.FORBIDDEN, "인증이 필요합니다.");
+		}
+
+		int authenticatedId = Integer.parseInt(authentication.getName());
+		memberService.deleteMember(authenticatedId);
+
+		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/signup")
