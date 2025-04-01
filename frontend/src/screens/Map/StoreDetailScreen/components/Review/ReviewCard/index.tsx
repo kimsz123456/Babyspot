@@ -1,14 +1,9 @@
 import React from 'react';
 import * as S from './styles';
-import {
-  StarRatingDisplay,
-  StarIconProps,
-} from 'react-native-star-rating-widget';
-import CustomStarIcon from '../../../../../../components/atoms/CustomStarIcon';
-import {PrimaryColors, GrayColors} from '../../../../../../constants/colors';
 import {AGE_MARKERS} from '../../../../../../constants/constants';
 import {IC_HEART} from '../../../../../../constants/icons';
 import scale from '../../../../../../utils/scale';
+import StarRating from '../../../../../../components/atoms/StarRating';
 
 export interface ReviewCardProps {
   isMine?: boolean;
@@ -53,18 +48,7 @@ const ReviewCard = (props: ReviewCardProps) => {
       </S.ProfileContainer>
 
       <S.RatingContainer>
-        <StarRatingDisplay
-          rating={props.rating}
-          starSize={scale(16)}
-          color={PrimaryColors[500]}
-          emptyColor={GrayColors[300]}
-          starStyle={{
-            marginHorizontal: 0,
-          }}
-          StarIconComponent={(props: StarIconProps) => (
-            <CustomStarIcon {...props} />
-          )}
-        />
+        <StarRating rating={props.rating} starSize={scale(16)} isDisplay />
         <S.RatingText>{props.rating.toFixed(1)}</S.RatingText>
       </S.RatingContainer>
 
