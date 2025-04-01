@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.babyspot.api.s3.S3Component;
 import com.ssafy.babyspot.domain.reveiw.Review;
 import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
 import com.ssafy.babyspot.domain.reveiw.repository.ReviewRepository;
@@ -50,6 +52,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StoreService {
 
+	private final S3Component s3Component;
 	@Value("${CLOUDFRONT_URL}")
 	private String CLOUDFRONT_URL;
 
@@ -60,6 +63,7 @@ public class StoreService {
 	private final KeywordReviewRepository keywordReviewRepository;
 	private final SentimentAnalysisRepository sentimentAnalysisRepository;
 	private final ReviewRepository reviewRepository;
+	// private final StoreImageService storeImageService;
 	private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
 
 	@Transactional
@@ -136,13 +140,12 @@ public class StoreService {
 
 		List<StoreMenu> storeMenus = storeMenuRepository.findAllByStore_Id(storeId);
 
+		Map<String, StoreMenu> menuMap = storeMenus.stream()
+			.collect(Collectors.toMap(StoreMenu::getName, Function.identity()));
+
 		return kidsMenuNames.stream()
 			.map(kidsMenuName -> {
-				StoreMenu menu = storeMenus.stream()
-					.filter(storeMenu -> storeMenu.getName().equals(kidsMenuName))
-					.findFirst()
-					.orElse(null);
-
+				StoreMenu menu = menuMap.get(kidsMenuName);
 				Integer price = (menu != null) ? menu.getPrice() : null;
 
 				KidsMenuDto dto = new KidsMenuDto();
@@ -291,4 +294,13 @@ public class StoreService {
 			storeRepository.save(store);
 		}
 	}
+
+	// @PostConstruct
+	// public void init() {
+	// 	List<Store> stores = storeRepository.findAll();
+	// 	for (Store store : stores) {
+	// 		storeImageService.saveStoreImages(store.getId());
+	// 	}
+	// }
+
 }
