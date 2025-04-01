@@ -8,6 +8,14 @@ const IC_AGE5: ImageRequireSource = require('../../assets/icons/age5.png');
 const IC_AGE6: ImageRequireSource = require('../../assets/icons/age6.png');
 const IC_AGE7: ImageRequireSource = require('../../assets/icons/age7.png');
 
+const IC_NON_BORDER_AGE_1: ImageRequireSource = require('../../assets/icons/non-border-age-1.png');
+const IC_NON_BORDER_AGE_2: ImageRequireSource = require('../../assets/icons/non-border-age-2.png');
+const IC_NON_BORDER_AGE_3: ImageRequireSource = require('../../assets/icons/non-border-age-3.png');
+const IC_NON_BORDER_AGE_4: ImageRequireSource = require('../../assets/icons/non-border-age-4.png');
+const IC_NON_BORDER_AGE_5: ImageRequireSource = require('../../assets/icons/non-border-age-5.png');
+const IC_NON_BORDER_AGE_6: ImageRequireSource = require('../../assets/icons/non-border-age-6.png');
+const IC_NON_BORDER_AGE_7: ImageRequireSource = require('../../assets/icons/non-border-age-7.png');
+
 const IC_COMPLETE: ImageRequireSource = require('../../assets/icons/complete.png');
 const IC_YELLOW_STAR: ImageRequireSource = require('../../assets/icons/yellow-star.png');
 const IC_GRAY_STAR: ImageRequireSource = require('../../assets/icons/gray-star.png');
@@ -34,6 +42,7 @@ const IC_RESTAURANT_MARKER: ImageRequireSource = require('../../assets/icons/res
 const IC_BABY: ImageRequireSource = require('../../assets/icons/baby.png');
 const IC_SEARCH: ImageRequireSource = require('../../assets/icons/search.png');
 const IC_CLOSE: ImageRequireSource = require('../../assets/icons/close.png');
+const IC_CLOSE_BLACK: ImageRequireSource = require('../../assets/icons/close-black.png');
 
 const IC_RETRY: ImageRequireSource = require('../../assets/icons/retry.png');
 
@@ -72,6 +81,13 @@ export {
   IC_AGE5,
   IC_AGE6,
   IC_AGE7,
+  IC_NON_BORDER_AGE_1,
+  IC_NON_BORDER_AGE_2,
+  IC_NON_BORDER_AGE_3,
+  IC_NON_BORDER_AGE_4,
+  IC_NON_BORDER_AGE_5,
+  IC_NON_BORDER_AGE_6,
+  IC_NON_BORDER_AGE_7,
   IC_COMPLETE,
   IC_YELLOW_STAR,
   IC_GRAY_STAR,
@@ -93,6 +109,7 @@ export {
   IC_BABY,
   IC_SEARCH,
   IC_CLOSE,
+  IC_CLOSE_BLACK,
   IC_RETRY,
   IC_IMAGE_EDIT,
   IC_APP_LOGO,
