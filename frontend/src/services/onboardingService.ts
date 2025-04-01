@@ -25,6 +25,16 @@ export interface SignUpResponse {
   refreshToken: string;
 }
 
+export interface PostImgPresignedUrlRequest {
+  profileName: string;
+  contentType: string;
+}
+
+export interface PostImgPresignedUrlResponse {
+  profileImgPreSignedUrl: string;
+  profileKey: string;
+}
+
 export const kakaoLogin = async (
   kakaoAccessToken: string,
 ): Promise<KakaoLoginResponse> => {
@@ -64,7 +74,21 @@ export const signUp = async ({
       },
     });
 
-    console.log(result);
+    return result.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postImgPresignedUrl = async ({
+  contentType,
+  profileName,
+}: PostImgPresignedUrlRequest): Promise<PostImgPresignedUrlResponse> => {
+  try {
+    const result = await api.post(
+      `/members/signup/imgpresigned-url?profileName=${profileName}&contentType=${contentType}`,
+    );
+
     return result.data;
   } catch (error) {
     throw error;
