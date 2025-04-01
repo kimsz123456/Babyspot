@@ -15,6 +15,7 @@ const LinedTextInput = (props: LinedTextInputProps) => {
     <TextInput
       placeholder={props.placeholder}
       selectionColor={PrimaryColors[500]}
+      placeholderTextColor={GrayColors[300]}
       style={{
         borderBottomWidth: 1,
         borderBottomColor: isFocused ? PrimaryColors[500] : GrayColors[200],

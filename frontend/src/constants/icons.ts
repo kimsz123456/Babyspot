@@ -27,6 +27,7 @@ const IC_RIGHT_ARROW: ImageRequireSource = require('../../assets/icons/right-arr
 const IC_DOWN_ARROW: ImageRequireSource = require('../../assets/icons/down-arrow.png');
 const IC_MINUS: ImageRequireSource = require('../../assets/icons/minus.png');
 const IC_PLUS: ImageRequireSource = require('../../assets/icons/plus.png');
+const IC_SECONDARY_PLUS: ImageRequireSource = require('../../assets/icons/secondary-plus.png');
 
 const IC_PROFILE_EDIT: ImageRequireSource = require('../../assets/icons/profile-edit.png');
 
@@ -98,6 +99,7 @@ export {
   IC_DOWN_ARROW,
   IC_MINUS,
   IC_PLUS,
+  IC_SECONDARY_PLUS,
   IC_PROFILE_EDIT,
   IC_RECOMMEND_NAV,
   IC_RECOMMEND_NAV_ACTIVE,
