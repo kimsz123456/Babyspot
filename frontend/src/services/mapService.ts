@@ -47,6 +47,32 @@ export interface RoadAddress {
   zone_no: string;
 }
 
+export interface StoreDetailResponse {
+  storeId: number;
+  storeName: string;
+  images: Image[];
+  menus: any[];
+  keywordsAndReviews: any[];
+  sentiment: Sentiment;
+  kidsMenu: KidsMenu[];
+  latestReviews: any[];
+  babyAges: null;
+}
+
+export interface Image {
+  storeImg: string;
+}
+
+export interface KidsMenu {
+  babyMenuName: string;
+  babyMenuPrice: null;
+}
+
+export interface Sentiment {
+  positive: any[];
+  negative: any[];
+}
+
 export const getRangeInfo = async (data: RangeInfoParameterType) => {
   try {
     const result = await api.get(
@@ -77,6 +103,18 @@ export const geocoding = async (
     const result = response.data.documents[0];
 
     return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getStoreDetail = async (
+  storeId: number,
+): Promise<StoreDetailResponse> => {
+  try {
+    const response = await api.get(`/store/detail?storeId=${storeId}`);
+
+    return response.data;
   } catch (error) {
     throw error;
   }

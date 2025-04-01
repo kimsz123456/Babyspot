@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {RouteProp, useRoute} from '@react-navigation/native';
 
@@ -17,6 +17,7 @@ import FamilyReview from './components/FamilyReview';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import MyReview from './components/MyReview';
 import Review from './components/Review';
+import {getStoreDetail} from '../../../services/mapService';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
 
@@ -32,6 +33,16 @@ const StoreDetailScreen = () => {
   const handleTabPress = (idx: number) => {
     setSelectedTab(idx);
   };
+
+  const fetchStoreDetail = async () => {
+    try {
+      const response = await getStoreDetail(storeBasicInformation.storeId);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchStoreDetail();
+  }, []);
 
   return (
     <S.StoreDetailScreenContainer>
