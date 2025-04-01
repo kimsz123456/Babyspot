@@ -10,7 +10,7 @@ const BackGround = styled(ScrollView)`
 `;
 
 const ProfileEditButtonWrapper = styled(View)`
-  padding-top: ${scale(24)}px;
+  padding-top: ${scale(8)}px;
   padding-bottom: ${scale(32)}px;
 `;
 

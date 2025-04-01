@@ -2,15 +2,14 @@ import React, {useState} from 'react';
 import * as S from './styles';
 import MainButton from '../../../components/atoms/Button/MainButton';
 import SubButton from '../../../components/atoms/Button/SubButton';
-import {useNavigation} from '@react-navigation/native';
 import CenteredModal from '../../../components/atoms/CenterModal';
 import {Image, Text, View} from 'react-native';
 import LinedTextInput from '../../../components/atoms/Button/LinedTextInput';
 import {IC_COMPLETE} from '../../../constants/icons';
-import scale from '../../../utils/scale';
+import {useProfileNavigation} from '../../../hooks/useNavigationHooks';
 
 const DeleteAccountScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useProfileNavigation();
   const [firstModalVisible, setFirstModalVisible] = useState(false);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
   const [matchingText, setMatchingText] = useState(false);

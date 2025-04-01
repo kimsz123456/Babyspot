@@ -37,7 +37,13 @@ const Name = styled(Text)`
   font-weight: bold;
   color: ${PrimaryColors[500]};
 `;
+const AgeIconsContainer = styled(View)`
+  padding-left: ${scale(8)}px;
+  display: flex;
+  flex-direction: row;
+`;
 const AgeIcons = styled(Image)`
+  margin-left: -${scale(8)}px;
   width: ${scale(24)}px;
   height: ${scale(24)}px;
 `;
@@ -72,6 +78,7 @@ export {
   ProfileInfo,
   NameContainer,
   Name,
+  AgeIconsContainer,
   AgeIcons,
   ProfileEdit,
   ReviewContainer,

@@ -7,6 +7,7 @@ export interface MemberProfile {
   profile_img: string;
   providerId: string;
   message: string;
+  babyBirthYears: number[];
 }
 
 export const getMemberProfile = async (): Promise<MemberProfile> => {
