@@ -1,10 +1,10 @@
-import {Pressable, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import styled from 'styled-components';
 import scale from '../../../../../utils/scale';
 import {FontStyles} from '../../../../../constants/fonts';
 import {GrayColors} from '../../../../../constants/colors';
 
-export const ReviewStarContainer = styled(Pressable)`
+export const MyReviewContainer = styled(View)`
   display: flex;
   flex-direction: column;
   gap: ${scale(24)}px;
@@ -19,7 +19,7 @@ export const ReviewText = styled(Text)`
   text-align: center;
 `;
 
-export const ReviewStarText = styled(Text)`
+export const MyReviewText = styled(Text)`
   ${FontStyles.bodySmall};
   color: ${GrayColors[800]};
   text-align: center;
