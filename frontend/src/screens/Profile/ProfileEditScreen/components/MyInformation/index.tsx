@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import * as S from './styles';
-import {ThinDivider} from '../../../../../components/atoms/Divider';
 import LinedTextInput from '../../../../../components/atoms/Button/LinedTextInput';
 import {getMemberProfile} from '../../../../../services/profileService';
 
@@ -10,6 +9,7 @@ interface MyInformationProps {
 
 const MyInformation = ({onNicknameChange}: MyInformationProps) => {
   const [nickname, setNickname] = useState('');
+  const [placeholder, setPlaceholder] = useState('');
 
   useEffect(() => {
     fetchUserProfile();
@@ -18,15 +18,11 @@ const MyInformation = ({onNicknameChange}: MyInformationProps) => {
   const fetchUserProfile = async () => {
     try {
       const data = await getMemberProfile();
+      setPlaceholder(data.nickname);
       setNickname(data.nickname);
     } catch (error) {
       console.error('프로필 정보 조회 실패:', error);
     }
-  };
-
-  const handleNicknameChange = (text: string) => {
-    setNickname(text);
-    onNicknameChange(text);
   };
 
   return (
@@ -34,8 +30,15 @@ const MyInformation = ({onNicknameChange}: MyInformationProps) => {
       <S.NicknameContainer>
         <S.NicknameTitle>닉네임</S.NicknameTitle>
         <LinedTextInput
-          placeholder={nickname}
-          textEditted={handleNicknameChange}
+          placeholder={placeholder}
+          textEditted={(text: string) => {
+            if (text.trim() != '') {
+              setNickname(text);
+              onNicknameChange(text);
+            } else {
+              setNickname(nickname);
+            }
+          }}
         />
       </S.NicknameContainer>
     </S.InformationContainer>

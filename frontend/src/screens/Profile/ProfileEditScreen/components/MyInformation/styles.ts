@@ -9,9 +9,7 @@ const InformationContainer = styled(View)`
   gap: ${scale(16)}px;
 `;
 
-const NicknameContainer = styled(View)`
-  flex: 1;
-`;
+const NicknameContainer = styled(View)``;
 const NicknameTitle = styled(Text)`
   ${FontStyles.captionMedium};
   color: ${GrayColors[800]};
