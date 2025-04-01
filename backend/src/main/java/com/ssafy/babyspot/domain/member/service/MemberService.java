@@ -73,7 +73,7 @@ public class MemberService {
 
 		List<Integer> birthYears = signUpRequest.getBirthYears() != null
 			? signUpRequest.getBirthYears()
-			: null;
+			: new ArrayList<>();
 
 		if (signUpRequest.getBirthYears() != null) {
 			signUpRequest.getBirthYears().forEach(birthYear -> {
@@ -126,6 +126,7 @@ public class MemberService {
 		}
 
 		if (request.getBabyAges() != null && !request.getBabyAges().isEmpty()) {
+			// 기존 등록된 Baby 엔티티 조회
 			List<Baby> existingBabies = babyRepository.findByMember_Id(Integer.valueOf(memberId));
 			Set<Integer> existingBirthYears = existingBabies.stream()
 				.map(Baby::getBirthYear)
@@ -133,6 +134,7 @@ public class MemberService {
 
 			List<Baby> newBabies = new ArrayList<>();
 			for (Integer birthYear : request.getBabyAges()) {
+				// 해당 출생년도에 대한 Baby가 없다면 새로 생성
 				if (!existingBirthYears.contains(birthYear)) {
 					Baby baby = Baby.builder()
 						.member(member)
