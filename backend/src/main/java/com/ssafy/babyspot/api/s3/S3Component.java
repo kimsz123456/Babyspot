@@ -69,4 +69,30 @@ public class S3Component {
 		return profileImgPreSignedUrl.toString();
 	}
 
+	public Map<String, String> generateReviewImagePreSignedUrl(String storeId, String memberId, String reviewImgName,
+		String contentType) {
+		if (storeId == null || storeId.isEmpty()) {
+			throw new CustomException(HttpStatus.BAD_REQUEST, "매장 ID가 유효하지 않습니다.");
+		}
+		if (reviewImgName == null || reviewImgName.isEmpty()) {
+			throw new CustomException(HttpStatus.BAD_REQUEST, "유효하지않은 이미지입니다.");
+		}
+		Map<String, String> urls = new HashMap<>();
+		String reviewImgKey = String.format("store/reviewImg/%s/%s/%s", storeId, memberId, reviewImgName);
+
+		URL reviewImagePresignedUrl = presigner.presignPutObject(
+			PutObjectPresignRequest.builder()
+				.signatureDuration(Duration.ofMinutes(10))
+				.putObjectRequest(req -> req
+					.bucket(bucket)
+					.key(reviewImgKey)
+					.contentType(contentType))
+				.build()
+		).url();
+
+		urls.put("reviewImagePresignedUrl", reviewImagePresignedUrl.toString());
+		urls.put("reviewImgKey", reviewImgKey);
+		return urls;
+	}
+
 }

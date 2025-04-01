@@ -2,6 +2,8 @@ package com.ssafy.babyspot.domain.store.dto;
 
 import java.util.List;
 
+import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,5 +23,7 @@ public class StoreDetailDto {
 	private SentimentAnalysisDto sentiment;
 
 	private List<KidsMenuDto> kidsMenu;
+
+	private List<ReviewResponseDto> latestReviews;
 
 }
