@@ -13,6 +13,7 @@ import {ReviewProps} from '../screens/Map/StoreDetailScreen/components/Review';
 import ReviewListScreen from '../screens/Map/ReviewListScreen';
 import CustomHeader from './CustomHeader';
 import WriteReviewScreen from '../screens/Map/WriteReviewScreen';
+import WriteCompleteScreen from '../screens/Map/WriteReviewScreen/WriteCompleteScreen';
 
 export type MapStackParamList = {
   MapMain: {address: string};
@@ -22,6 +23,7 @@ export type MapStackParamList = {
   KeywordReview: {keywordInformation: KeywordProps};
   ReviewListScreen: {reviewInformation: ReviewProps; filterAges?: number[]};
   WriteReviewScreen: {storeName: string; rating: number};
+  WriteCompleteScreen: undefined;
 };
 
 const MapStackNavigator = () => {
@@ -77,6 +79,13 @@ const MapStackNavigator = () => {
               <CustomHeader props={props} title={route.params.storeName} />
             );
           },
+        })}
+      />
+      <Stack.Screen
+        name="WriteCompleteScreen"
+        component={WriteCompleteScreen}
+        options={() => ({
+          headerShown: false,
         })}
       />
     </Stack.Navigator>

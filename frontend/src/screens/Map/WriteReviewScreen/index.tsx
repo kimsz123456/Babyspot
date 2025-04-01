@@ -13,11 +13,13 @@ import {
   TouchableNativeFeedback,
 } from 'react-native';
 import MainButton from '../../../components/atoms/Button/MainButton';
+import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 
 type StoreDetailRouteProp = RouteProp<MapStackParamList, 'WriteReviewScreen'>;
 
 const WriteReviewScreen = () => {
   const route = useRoute<StoreDetailRouteProp>();
+  const navigation = useMapNavigation();
 
   const [content, setContent] = useState('');
 
@@ -56,6 +58,7 @@ const WriteReviewScreen = () => {
               text={'작성 완료'}
               onPress={() => {
                 Keyboard.dismiss();
+                navigation.navigate('WriteCompleteScreen');
               }}
             />
           </S.WriteReviewScreenContainer>
