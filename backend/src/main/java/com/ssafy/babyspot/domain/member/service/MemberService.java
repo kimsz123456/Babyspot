@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,7 +73,7 @@ public class MemberService {
 
 		List<Integer> birthYears = signUpRequest.getBirthYears() != null
 			? signUpRequest.getBirthYears()
-			: new ArrayList<>();
+			: null;
 
 		if (signUpRequest.getBirthYears() != null) {
 			signUpRequest.getBirthYears().forEach(birthYear -> {
@@ -120,6 +122,27 @@ public class MemberService {
 			} else {
 				preSignedUrl = s3Component.generatePreSignedUrlForProfileImageUpdate(profileKey,
 					request.getContentType());
+			}
+		}
+
+		if (request.getBabyAges() != null && !request.getBabyAges().isEmpty()) {
+			List<Baby> existingBabies = babyRepository.findByMember_Id(Integer.valueOf(memberId));
+			Set<Integer> existingBirthYears = existingBabies.stream()
+				.map(Baby::getBirthYear)
+				.collect(Collectors.toSet());
+
+			List<Baby> newBabies = new ArrayList<>();
+			for (Integer birthYear : request.getBabyAges()) {
+				if (!existingBirthYears.contains(birthYear)) {
+					Baby baby = Baby.builder()
+						.member(member)
+						.birthYear(birthYear)
+						.build();
+					newBabies.add(baby);
+				}
+			}
+			if (!newBabies.isEmpty()) {
+				babyRepository.saveAll(newBabies);
 			}
 		}
 

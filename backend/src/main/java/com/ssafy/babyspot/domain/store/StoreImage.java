@@ -13,6 +13,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -25,8 +26,10 @@ public class StoreImage {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "store_id", nullable = false)
+	@Setter
 	private Store store;
 
+	@Setter
 	private String storeImg;
 
 	private LocalDateTime createAt;
