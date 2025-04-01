@@ -11,6 +11,7 @@ import {useOnboardingStore} from '../../../../stores/onboardingStore';
 import {signUp} from '../../../../services/onboardingService';
 import {useGlobalStore} from '../../../../stores/globalStore';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import useUploadImageToS3 from '../../../../hooks/useUploadImageToS3';
 
 interface ChildrenButtonProps {
   year: number;
@@ -19,6 +20,15 @@ interface ChildrenButtonProps {
 
 const AddChildScreen = () => {
   const navigation = useOnboardingNavigation();
+
+  const {profileImageName, profileImageType, profileImagePath} =
+    useOnboardingStore();
+  const {uploadImage} = useUploadImageToS3({
+    imageName: profileImageName,
+    imageType: profileImageType,
+    imagePath: profileImagePath,
+  });
+
   const [childrens, setChildrens] = useState<ChildrenButtonProps[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -94,22 +104,21 @@ const AddChildScreen = () => {
 
     const tempToken = useOnboardingStore.getState().tempToken;
     const nickname = useOnboardingStore.getState().nickname;
-    const profileImagePath = useOnboardingStore.getState().profileImagePath;
+    const profileImageName = useOnboardingStore.getState().profileImageName;
     const childBirthYears = useOnboardingStore.getState().childBirthYears;
 
     try {
       if (
         nickname != null &&
-        profileImagePath != null &&
+        profileImageName != null &&
         childBirthYears?.length != 0 &&
         childBirthYears != null &&
         tempToken != null
       ) {
-        console.log('foo');
         const response = await signUp({
           params: {
             nickname,
-            profileImgUrl: profileImagePath,
+            profileImgUrl: profileImageName,
             birthYears: childBirthYears,
           },
           tempToken,
@@ -118,6 +127,8 @@ const AddChildScreen = () => {
         if (response.accessToken != null) {
           useGlobalStore.getState().setAccessToken(response.accessToken);
           await EncryptedStorage.setItem('refreshToken', response.refreshToken);
+
+          await uploadImage();
 
           navigation.navigate('SignUpComplete');
         }
@@ -133,7 +144,7 @@ const AddChildScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <S.SingUpInputSection>
             <S.SignUpInputSectionTitle>
-              {`자녀 정보를 입력해주세요.`}
+              {'자녀 정보를 입력해주세요.'}
             </S.SignUpInputSectionTitle>
 
             <View>
