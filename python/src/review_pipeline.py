@@ -371,63 +371,62 @@ for idx, restaurant_id in enumerate(restaurant_ids, 1):
     except Exception as e:
       print(f"❌ 레스토랑 ID {restaurant_id} 처리 중 오류 발생: {str(e)}")
 
-  else:
     # 2단계: 저장된 파일에서 데이터를 읽어 DB에 저장
+  try:
+    # 통합 파일 존재 여부 확인
+    if not os.path.exists(combined_output_file):
+      print(f"❌ 파일을 찾을 수 없습니다: {combined_output_file}")
+      continue
+
+    # 파일 내용 읽기
+    with open(combined_output_file, "r", encoding="utf-8") as f:
+      file_content = f.read()
+
+    # JSON 객체 파싱
+    all_reviews = parse_json_objects(file_content)
+
+    if not all_reviews:
+      print(f"❌ 파싱된 리뷰가 없습니다")
+      continue
+
+    # 소스별 리뷰 카운트
+    naver_reviews = sum(1 for r in all_reviews if r.get("source") == "naver")
+    blog_reviews = sum(1 for r in all_reviews if r.get("source") == "blog")
+
+    print(
+        f"총 {len(all_reviews)}개 리뷰 (일반: {naver_reviews}개, 블로그: {blog_reviews}개)")
+
+    # 리뷰 제한 (각 키워드당 최대 3개, 상위 5개 키워드만)
+    limited_reviews, keyword_counts, top_keywords = limit_reviews_by_keywords(
+        all_reviews, MAX_KEYWORDS, MAX_REVIEWS)
+
+    print(
+        f"2단계: 키워드 데이터 DB에 저장 중... (전체 {len(all_reviews)}개 중 {len(limited_reviews)}개 리뷰 선택)")
+
+    # DB 저장
+    db = PostgresImporter()
+
     try:
-      # 통합 파일 존재 여부 확인
-      if not os.path.exists(combined_output_file):
-        print(f"❌ 파일을 찾을 수 없습니다: {combined_output_file}")
-        continue
+      # 커스텀 함수로 제한된 리뷰와 전체 카운트 저장
+      db_result = save_limited_reviews_with_source(
+          db, limited_reviews, keyword_counts, top_keywords, restaurant_id)
 
-      # 파일 내용 읽기
-      with open(combined_output_file, "r", encoding="utf-8") as f:
-        file_content = f.read()
+      if db_result["success"]:
+        print(
+            f"✅ DB 저장 완료: {db_result['total_reviews']} 리뷰 (일반: {db_result['naver_reviews']}개, 블로그: {db_result['blog_reviews']}개), {db_result['unique_keywords']} 고유 키워드")
 
-      # JSON 객체 파싱
-      all_reviews = parse_json_objects(file_content)
+        # 상위 키워드 출력 (소스별 카운트)
+        print("\n🔑 주요 키워드:")
+        for keyword in top_keywords:
+          count = keyword_counts[keyword]
+          print(f"  - {keyword}: {count}회")
+      else:
+        print(f"❌ DB 저장 실패: {db_result.get('error', '알 수 없는 오류')}")
+    finally:
+      db.close()
 
-      if not all_reviews:
-        print(f"❌ 파싱된 리뷰가 없습니다")
-        continue
-
-      # 소스별 리뷰 카운트
-      naver_reviews = sum(1 for r in all_reviews if r.get("source") == "naver")
-      blog_reviews = sum(1 for r in all_reviews if r.get("source") == "blog")
-
-      print(
-          f"총 {len(all_reviews)}개 리뷰 (일반: {naver_reviews}개, 블로그: {blog_reviews}개)")
-
-      # 리뷰 제한 (각 키워드당 최대 3개, 상위 5개 키워드만)
-      limited_reviews, keyword_counts, top_keywords = limit_reviews_by_keywords(
-          all_reviews, MAX_KEYWORDS, MAX_REVIEWS)
-
-      print(
-          f"2단계: 키워드 데이터 DB에 저장 중... (전체 {len(all_reviews)}개 중 {len(limited_reviews)}개 리뷰 선택)")
-
-      # DB 저장
-      db = PostgresImporter()
-
-      try:
-        # 커스텀 함수로 제한된 리뷰와 전체 카운트 저장
-        db_result = save_limited_reviews_with_source(
-            db, limited_reviews, keyword_counts, top_keywords, restaurant_id)
-
-        if db_result["success"]:
-          print(
-              f"✅ DB 저장 완료: {db_result['total_reviews']} 리뷰 (일반: {db_result['naver_reviews']}개, 블로그: {db_result['blog_reviews']}개), {db_result['unique_keywords']} 고유 키워드")
-
-          # 상위 키워드 출력 (소스별 카운트)
-          print("\n🔑 주요 키워드:")
-          for keyword in top_keywords:
-            count = keyword_counts[keyword]
-            print(f"  - {keyword}: {count}회")
-        else:
-          print(f"❌ DB 저장 실패: {db_result.get('error', '알 수 없는 오류')}")
-      finally:
-        db.close()
-
-    except Exception as e:
-      print(f"❌ 파일 처리 중 오류 발생: {str(e)}")
+  except Exception as e:
+    print(f"❌ 파일 처리 중 오류 발생: {str(e)}")
 
   # 처리 시간 출력
   end_time = time.time()

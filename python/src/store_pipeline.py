@@ -1,6 +1,5 @@
 import os
 import json
-import shutil
 import re
 from pipeline.pipeline import Pipeline
 from db.database import PostgresImporter
@@ -296,8 +295,8 @@ def main():
   결과를 병합한 후, 사용자가 원하는 시점에 PostgreSQL 데이터베이스에 저장합니다.
   """
   # 처리할 레스토랑 ID 범위
-  start_id = 10
-  end_id = 10
+  start_id = 11
+  end_id = 11
 
   # 레스토랑 ID 목록 (범위 또는 특정 ID 목록 사용 가능)
   restaurant_ids = range(start_id, end_id + 1)  # 1부터 10까지

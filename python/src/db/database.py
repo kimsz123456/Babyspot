@@ -345,6 +345,82 @@ class PostgresImporter:
       print(f"리뷰-키워드 관계 저장 중 오류: {e}")
       return -1
 
+  def import_sentiment_analysis(self, positive_json, negative_json, store_id):
+    try:
+      # sentiment_analysis 테이블에 단일 행으로 저장
+      self.cursor.execute("""
+            INSERT INTO sentiment_analysis (positive, negative, store_id)
+            VALUES (%s, %s, %s)
+        """, (positive_json, negative_json, store_id))
+
+      # 트랜잭션 커밋
+      self.conn.commit()
+
+      return {
+        "success": True,
+        "store_id": store_id
+      }
+
+    except Exception as e:
+      # 트랜잭션 롤백
+      self.conn.rollback()
+      print(f"❌ 감정 분석 데이터 저장 중 오류 발생: {e}")
+      return {
+        "success": False,
+        "error": str(e)
+      }
+
+  # PostgresImporter 클래스에 update_store_child_facilities 메서드 추가
+  # db/database.py 파일에 추가할 내용
+
+  def update_store_child_facilities(self, restaurant_id, update_fields):
+    """
+    레스토랑의 아이 동반 시설 정보를 Store 테이블에 업데이트합니다.
+
+    Args:
+        restaurant_id (str): 레스토랑 ID
+        update_fields (dict): 업데이트할 필드 정보 (diaper_changing_station, nursing_room, stroller_access, group_table, play_zone)
+
+    Returns:
+        dict: 업데이트 결과 (success: 성공 여부, error: 오류 메시지)
+    """
+    try:
+      # 업데이트 쿼리 생성
+      update_query = """
+        UPDATE store
+        SET 
+            diaper_changing_station = %s,
+            nursing_room = %s,
+            stroller_access = %s,
+            group_table = %s,
+            play_zone = %s
+        WHERE id = %s
+        """
+
+      # 쿼리 파라미터 설정
+      params = (
+        update_fields.get("diaper_changing_station", False),
+        update_fields.get("nursing_room", False),
+        update_fields.get("stroller_access", False),
+        update_fields.get("group_table", False),
+        update_fields.get("play_zone", False),
+        restaurant_id
+      )
+
+      # 쿼리 실행
+      self.cursor.execute(update_query, params)
+
+      # 변경사항 저장
+      self.conn.commit()
+
+      return {"success": True}
+
+    except Exception as e:
+      # 롤백
+      self.conn.rollback()
+
+      return {"success": False, "error": str(e)}
+
   def close(self):
     """
     데이터베이스 연결을 닫습니다.
