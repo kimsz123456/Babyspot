@@ -12,7 +12,7 @@ import com.ssafy.babyspot.domain.reveiw.Review;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 	Page<Review> findAllByStore_Id(int storeId, Pageable pageable);
-
+	
 	Optional<Review> findByStore_IdAndMember_Id(int storeId, int memberId);
 
 	Page<Review> findAllByMember_id(int memberId, Pageable pageable);
