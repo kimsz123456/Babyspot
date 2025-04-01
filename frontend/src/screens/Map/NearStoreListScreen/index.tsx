@@ -11,6 +11,7 @@ import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 import scale from '../../../utils/scale';
 
 import * as S from './styles';
+import NoContent from './components/NoContent';
 
 const SNAP_POINTS = [scale(32), '80%'];
 
@@ -41,17 +42,21 @@ const NearStoreListScreen = ({stores}: NearStoreListScreenProps) => {
         <S.NearStoreListScreenContainer>
           <S.TopIcon />
           <S.Title>주변 음식점</S.Title>
-          {stores.map(store => (
-            <TouchableWithoutFeedback
-              key={store.storeId}
-              onPress={() => handleStorePress(store)}>
-              <StoreBasicInformation
-                store={store}
-                imageCarouselRef={imageCarouselRef}
-                isShownBusinessHour={true}
-              />
-            </TouchableWithoutFeedback>
-          ))}
+          {stores.length == 0 ? (
+            <NoContent />
+          ) : (
+            stores.map(store => (
+              <TouchableWithoutFeedback
+                key={store.storeId}
+                onPress={() => handleStorePress(store)}>
+                <StoreBasicInformation
+                  store={store}
+                  imageCarouselRef={imageCarouselRef}
+                  isShownBusinessHour={true}
+                />
+              </TouchableWithoutFeedback>
+            ))
+          )}
         </S.NearStoreListScreenContainer>
       </S.BottomSheetContent>
     </S.BottomSheetContainer>

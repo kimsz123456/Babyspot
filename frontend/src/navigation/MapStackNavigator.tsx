@@ -14,6 +14,7 @@ import ReviewListScreen from '../screens/Map/ReviewListScreen';
 import CustomHeader from './CustomHeader';
 import WriteReviewScreen from '../screens/Map/WriteReviewScreen';
 import WriteCompleteScreen from '../screens/Map/WriteReviewScreen/WriteCompleteScreen';
+import SelectRecommendationAgeScreen from '../screens/Map/SelectRecommendationAgeScreen';
 
 export type MapStackParamList = {
   MapMain: {address: string};
@@ -24,6 +25,7 @@ export type MapStackParamList = {
   ReviewListScreen: {reviewInformation: ReviewProps; filterAges?: number[]};
   WriteReviewScreen: {storeName: string; rating: number};
   WriteCompleteScreen: undefined;
+  SelectRecommendationAgeScreen: undefined;
 };
 
 const MapStackNavigator = () => {
@@ -86,6 +88,15 @@ const MapStackNavigator = () => {
         component={WriteCompleteScreen}
         options={() => ({
           headerShown: false,
+        })}
+      />
+      <Stack.Screen
+        name="SelectRecommendationAgeScreen"
+        component={SelectRecommendationAgeScreen}
+        options={({route}) => ({
+          header(props) {
+            return <CustomHeader props={props} title={'가게 추천'} />;
+          },
         })}
       />
     </Stack.Navigator>

@@ -73,6 +73,7 @@ const IC_NAVER_PLACE: ImageRequireSource = require('../../assets/icons/naver-pla
 const IC_NAVER_CAFE: ImageRequireSource = require('../../assets/icons/naver-cafe.png');
 
 const IC_FILTER: ImageRequireSource = require('../../assets/icons/filter.png');
+const IC_NO_CONTENT: ImageRequireSource = require('../../assets/icons/no-content.png');
 
 export {
   IC_AGE1,
@@ -133,4 +134,5 @@ export {
   IC_NAVER_CAFE,
   IC_NAVER_PLACE,
   IC_FILTER,
+  IC_NO_CONTENT,
 };
