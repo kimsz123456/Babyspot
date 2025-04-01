@@ -21,6 +21,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -45,6 +46,7 @@ public class Store {
 
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(columnDefinition = "jsonb")
+	@Setter
 	private List<Integer> babyAges;
 
 	@JdbcTypeCode(SqlTypes.JSON)

@@ -1,6 +1,8 @@
 package com.ssafy.babyspot.domain.store.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.babyspot.domain.reveiw.Review;
@@ -41,8 +44,10 @@ import com.ssafy.babyspot.domain.store.repository.StoreRepository;
 import com.ssafy.babyspot.exception.CustomException;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class StoreService {
 
 	@Value("${CLOUDFRONT_URL}")
@@ -54,21 +59,8 @@ public class StoreService {
 	private final StoreKeywordRepository storeKeywordRepository;
 	private final KeywordReviewRepository keywordReviewRepository;
 	private final SentimentAnalysisRepository sentimentAnalysisRepository;
-	private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
 	private final ReviewRepository reviewRepository;
-
-	public StoreService(StoreRepository storeRepository, StoreImageRepository storeImageRepository,
-		StoreMenuRepository storeMenuRepository, StoreKeywordRepository storeKeywordRepository,
-		KeywordReviewRepository keywordReviewRepository, SentimentAnalysisRepository sentimentAnalysisRepository,
-		ReviewRepository reviewRepository) {
-		this.storeRepository = storeRepository;
-		this.storeImageRepository = storeImageRepository;
-		this.storeMenuRepository = storeMenuRepository;
-		this.storeKeywordRepository = storeKeywordRepository;
-		this.keywordReviewRepository = keywordReviewRepository;
-		this.sentimentAnalysisRepository = sentimentAnalysisRepository;
-		this.reviewRepository = reviewRepository;
-	}
+	private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
 
 	@Transactional
 	public List<StoreDefaultInfoDto> getStoresInRange(Double topLeftLat, Double topLeftLong,
@@ -242,4 +234,61 @@ public class StoreService {
 			.build();
 	}
 
+	@Scheduled(cron = "0 0 0 * * *")
+	@Transactional
+	public void updateStoreRecommendedBabyAges() {
+		List<Store> stores = storeRepository.findAll();
+		if (stores.isEmpty()) {
+			return;
+		}
+
+		for (Store store : stores) {
+			Page<Review> reviewPage = reviewRepository.findAllByStore_Id(store.getId(), Pageable.unpaged());
+			List<Review> reviews = reviewPage.getContent();
+
+			if (reviews.isEmpty()) {
+				store.setBabyAges(null);
+				storeRepository.save(store);
+				continue;
+			}
+
+			Map<Integer, List<Integer>> ageToRoundedRatings = new HashMap<>();
+			Map<Integer, Integer> ageFrequency = new HashMap<>();
+
+			for (Review review : reviews) {
+				int roundedRating = Math.round(review.getRating());
+				for (Integer age : review.getBabyAges()) {
+					ageToRoundedRatings.computeIfAbsent(age, a -> new ArrayList<>()).add(roundedRating);
+					ageFrequency.put(age, ageFrequency.getOrDefault(age, 0) + 1);
+				}
+			}
+
+			Map<Integer, Integer> ageToAvg = new HashMap<>();
+			for (Map.Entry<Integer, List<Integer>> entry : ageToRoundedRatings.entrySet()) {
+				int sum = entry.getValue().stream().mapToInt(Integer::intValue).sum();
+				int count = entry.getValue().size();
+				int avg = Math.round((float)sum / count);
+				ageToAvg.put(entry.getKey(), avg);
+			}
+
+			List<Integer> recommendedAges = ageToAvg.entrySet().stream()
+				.sorted((e1, e2) -> {
+					int comp = Integer.compare(e2.getValue(), e1.getValue());
+					if (comp == 0) {
+						return Integer.compare(ageFrequency.get(e2.getKey()), ageFrequency.get(e1.getKey()));
+					}
+					return comp;
+				})
+				.limit(2)
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
+
+			if (recommendedAges.isEmpty()) {
+				store.setBabyAges(null);
+			} else {
+				store.setBabyAges(recommendedAges);
+			}
+			storeRepository.save(store);
+		}
+	}
 }
