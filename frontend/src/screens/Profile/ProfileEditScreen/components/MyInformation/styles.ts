@@ -18,7 +18,7 @@ const NicknameTitle = styled(Text)`
   padding-bottom: ${scale(8)}px;
 `;
 const Nickname = styled(Text)`
-  padding: ${scale(8)}px 0;
+  padding: ${scale(8)}px 0px;
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
 `;
