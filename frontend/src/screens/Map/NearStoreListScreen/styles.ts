@@ -24,7 +24,6 @@ export const NearStoreListScreenContainer = styled(View)`
   border-top-width: 1px;
   border-top-color: ${GrayColors[200]};
   background-color: ${GrayColors[0]};
-  elevation: 1;
 `;
 
 export const TopIcon = styled(View)`
