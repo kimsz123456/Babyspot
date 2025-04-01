@@ -16,9 +16,8 @@ const getCurrentLocation = (): Promise<Coordinate> => {
         reject(error);
       },
       {
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
         timeout: 10000,
-        maximumAge: 5000,
       },
     );
   });

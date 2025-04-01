@@ -69,6 +69,9 @@ const MapScreen = () => {
 
     try {
       const {latitude, longitude} = await getCurrentLocation();
+
+      console.log(`latitude: ${latitude}  /  longitude: ${longitude}`);
+
       moveToCamera({latitude, longitude, mapRef});
 
       setIsReadyToFirstSearch(true);
