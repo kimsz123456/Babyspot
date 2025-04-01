@@ -20,7 +20,14 @@ interface ChildrenButtonProps {
 
 const AddChildScreen = () => {
   const navigation = useOnboardingNavigation();
-  const {uploadImage} = useUploadImageToS3();
+
+  const {profileImageName, profileImageType, profileImagePath} =
+    useOnboardingStore();
+  const {uploadImage} = useUploadImageToS3({
+    imageName: profileImageName,
+    imageType: profileImageType,
+    imagePath: profileImagePath,
+  });
 
   const [childrens, setChildrens] = useState<ChildrenButtonProps[]>([]);
   const [modalVisible, setModalVisible] = useState(false);

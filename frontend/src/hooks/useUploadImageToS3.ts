@@ -1,28 +1,34 @@
 import axios from 'axios';
 
-import {useOnboardingStore} from '../stores/onboardingStore';
 import {postImgPresignedUrl} from '../services/onboardingService';
 
 import getImageBlob from '../utils/getImageBlob';
 
-const useUploadImageToS3 = () => {
-  const {profileImageName, profileImageType, profileImagePath} =
-    useOnboardingStore();
+interface useUploadImageToS3Props {
+  imageName: string | null;
+  imageType: string | null;
+  imagePath: string | null;
+}
 
+const useUploadImageToS3 = ({
+  imageName,
+  imagePath,
+  imageType,
+}: useUploadImageToS3Props) => {
   const uploadImage = async () => {
     try {
       const response = await postImgPresignedUrl({
-        profileName: profileImageName || '',
-        contentType: profileImageType || '',
+        profileName: imageName || '',
+        contentType: imageType || '',
       });
 
       const {profileImgPreSignedUrl} = response;
 
-      const blob = getImageBlob(profileImagePath || '');
+      const blob = getImageBlob(imagePath || '');
 
       await axios.put(profileImgPreSignedUrl, blob, {
         headers: {
-          'Content-Type': profileImageType,
+          'Content-Type': imageType,
         },
       });
     } catch (error) {
