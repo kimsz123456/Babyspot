@@ -8,6 +8,7 @@ import {
   getMemberProfile,
   MemberProfile,
 } from '../../../../../services/profileService';
+import Config from 'react-native-config';
 
 interface ProfileImageProps {
   onImageSelect: (imageData: {uri: string; type: string} | null) => void;
@@ -59,7 +60,7 @@ const ProfileImage = ({onImageSelect}: ProfileImageProps) => {
   };
 
   const cleanImageUrl = (url: string) => {
-    const cloudfrontPrefix = 'https://d1by7kxpz32c54.cloudfront.net/';
+    const cloudfrontPrefix = Config.CLOUDFRONT_PREFIX || '';
     // URL에 cloudfrontPrefix가 포함되어 있고, 그 뒤에 또 다른 'http'가 나오면 제거
     if (url.startsWith(cloudfrontPrefix)) {
       const potentialUrl = url.substring(cloudfrontPrefix.length);
