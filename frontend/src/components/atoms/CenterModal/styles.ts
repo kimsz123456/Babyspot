@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import scale from '../../../utils/scale';
 import {FontStyles} from '../../../constants/fonts';
 import {GrayColors, PrimaryColors} from '../../../constants/colors';
+import {WINDOW_WIDTH} from '../../../constants/constants';
 
 export const Backdrop = styled(View)`
   flex: 1;
@@ -13,7 +14,7 @@ export const Backdrop = styled(View)`
 `;
 
 export const ModalContainer = styled(View)`
-  width: 100%;
+  width: ${WINDOW_WIDTH - scale(48)}px;
   background-color: white;
   border-radius: ${scale(16)}px;
   padding: ${scale(24)}px;
@@ -23,6 +24,17 @@ export const ModalContainer = styled(View)`
 
 export const TopImageContainer = styled(View)`
   align-items: center;
+`;
+
+export const TitleContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const CloseButton = styled(Image)`
+  width: ${scale(24)}px;
+  height: ${scale(24)}px;
 `;
 
 export const Title = styled(Text)`

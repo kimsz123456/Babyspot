@@ -5,8 +5,10 @@ import {Alert} from 'react-native';
 
 import {useRoute} from '@react-navigation/native';
 import {
+  Camera,
   NaverMapMarkerOverlay,
   NaverMapViewRef,
+  Region,
 } from '@mj-studio/react-native-naver-map';
 
 import useMapViewport from '../../../hooks/useMapViewport';
@@ -27,6 +29,8 @@ import {StoreBasicInformationType} from '../NearStoreListScreen/components/Store
 import scale from '../../../utils/scale';
 import calculateMapRegion from '../../../utils/calculateMapRegion';
 import checkLocationPermission from '../../../utils/checkLocationPermission';
+import getCurrentLocation from '../../../utils/getCurrentLocation';
+import moveToCamera from '../../../utils/moveToCamera';
 import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
 
 import * as S from './styles';
@@ -36,6 +40,8 @@ const MapScreen = () => {
 
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
+
+  const [isReadyToFirstSearch, setIsReadyToFirstSearch] = useState(false);
   const [isPendingResearch, setIsPendingResearch] = useState(false);
 
   const {centerCoordinate, mapRegion, zoom, onCameraIdle} = useMapViewport();
@@ -49,14 +55,37 @@ const MapScreen = () => {
   const route = useRoute();
   const address = (route.params as any)?.address as string;
 
-  const initTracking = async () => {
+  const initMapToCurrentLocation = async () => {
     const hasPermission = await checkLocationPermission();
 
     if (!hasPermission) {
+      const {latitude, longitude} = centerCoordinate;
+      moveToCamera({latitude, longitude, mapRef});
+
+      setIsReadyToFirstSearch(true);
+
       return;
     }
 
-    mapRef.current?.setLocationTrackingMode('Follow');
+    try {
+      const {latitude, longitude} = await getCurrentLocation();
+      moveToCamera({latitude, longitude, mapRef});
+
+      setIsReadyToFirstSearch(true);
+    } catch (e) {
+      console.warn('위치 정보 가져오기 실패', e);
+    }
+  };
+
+  const handleCameraIdle = (e: Camera & {region: Region}) => {
+    onCameraIdle(e);
+
+    if (!isReadyToFirstSearch) {
+      return;
+    }
+
+    setIsReadyToFirstSearch(false);
+    setIsPendingResearch(true);
   };
 
   const handleResearchButtonPress = () => {
@@ -131,7 +160,7 @@ const MapScreen = () => {
   };
 
   useEffect(() => {
-    initTracking();
+    initMapToCurrentLocation();
   }, []);
 
   useEffect(() => {
@@ -152,13 +181,8 @@ const MapScreen = () => {
     <S.MapScreenContainer>
       <S.NaverMap
         ref={mapRef}
-        onCameraIdle={onCameraIdle}
+        onCameraIdle={handleCameraIdle}
         onTapMap={handleNaverMapTab}
-        initialCamera={{
-          latitude: centerCoordinate.latitude,
-          longitude: centerCoordinate.longitude,
-          zoom: 15,
-        }}
         isIndoorEnabled={true}
         isExtentBoundedInKorea={true}>
         {stores.map((data, idx) => (
