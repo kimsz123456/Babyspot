@@ -1,3 +1,4 @@
+import {Dimensions} from 'react-native';
 import {
   IC_AGE1,
   IC_AGE2,
@@ -15,6 +16,7 @@ import {
 } from './icons';
 
 export const FIGMA_DESIGN_WIDTH = 360;
+export const WINDOW_WIDTH = Dimensions.get('window').width;
 
 export const AGE_MARKERS = [
   IC_AGE1,

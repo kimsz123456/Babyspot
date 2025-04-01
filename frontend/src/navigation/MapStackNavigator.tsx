@@ -9,6 +9,9 @@ import KakaoPostcodeScreen from '../screens/Map/SearchScreen/KakaoPostcodeScreen
 import {StoreBasicInformationType} from '../screens/Map/NearStoreListScreen/components/StoreBasicInformation/types';
 import {KeywordProps} from '../screens/Map/StoreDetailScreen/components/Keyword';
 import KeywordReviewScreen from '../screens/Map/KeywordReviewScreen';
+import {ReviewProps} from '../screens/Map/StoreDetailScreen/components/Review';
+import ReviewListScreen from '../screens/Map/ReviewListScreen';
+import CustomHeader from './CustomHeader';
 
 export type MapStackParamList = {
   MapMain: {address: string};
@@ -16,6 +19,7 @@ export type MapStackParamList = {
   KakaoPostcode: undefined;
   StoreDetail: {storeBasicInformation: StoreBasicInformationType};
   KeywordReview: {keywordInformation: KeywordProps};
+  ReviewListScreen: {reviewInformation: ReviewProps; filterAges?: number[]};
 };
 
 const MapStackNavigator = () => {
@@ -47,6 +51,20 @@ const MapStackNavigator = () => {
         name="KeywordReview"
         component={KeywordReviewScreen}
         options={() => ({title: '키워드 리뷰'})}
+      />
+      <Stack.Screen
+        name="ReviewListScreen"
+        component={ReviewListScreen}
+        options={({route}) => ({
+          header(props) {
+            return (
+              <CustomHeader
+                props={props}
+                title={route.params.reviewInformation.storeName}
+              />
+            );
+          },
+        })}
       />
     </Stack.Navigator>
   );

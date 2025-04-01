@@ -1,6 +1,7 @@
 import React from 'react';
 import {Modal, Pressable} from 'react-native';
 import * as S from './styles';
+import {IC_CLOSE_BLACK} from '../../../constants/icons';
 
 interface CenteredModalProps {
   visible: boolean;
@@ -12,6 +13,7 @@ interface CenteredModalProps {
   onConfirm: () => void;
   confirmDisabled?: boolean;
   topImage?: React.ReactNode;
+  hasCloseButton?: boolean;
 }
 
 const CenteredModal = ({
@@ -24,6 +26,7 @@ const CenteredModal = ({
   onConfirm,
   confirmDisabled = false,
   topImage,
+  hasCloseButton,
 }: CenteredModalProps) => {
   return (
     <Modal
@@ -38,7 +41,16 @@ const CenteredModal = ({
               {topImage && (
                 <S.TopImageContainer>{topImage}</S.TopImageContainer>
               )}
-              {title && <S.Title>{title}</S.Title>}
+              {title && (
+                <S.TitleContainer>
+                  <S.Title>{title}</S.Title>
+                  {hasCloseButton && (
+                    <Pressable onPress={onCancel}>
+                      <S.CloseButton source={IC_CLOSE_BLACK} />
+                    </Pressable>
+                  )}
+                </S.TitleContainer>
+              )}
               <S.Body>{children}</S.Body>
               <S.ButtonRow
                 style={{

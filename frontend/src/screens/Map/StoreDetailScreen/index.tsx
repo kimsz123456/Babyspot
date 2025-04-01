@@ -75,6 +75,7 @@ const StoreDetailScreen = () => {
             totalRating={4.2}
             totalReviewCount={3}
             reviews={reviewMocks}
+            storeName={storeBasicInformation.title}
           />,
         ],
         <ThickDivider />,
