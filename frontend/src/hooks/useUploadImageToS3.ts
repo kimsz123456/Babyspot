@@ -1,17 +1,9 @@
 import axios from 'axios';
 
-import {postImgPresignedUrl} from '../services/onboardingService';
 import {useOnboardingStore} from '../stores/onboardingStore';
+import {postImgPresignedUrl} from '../services/onboardingService';
 
-const getImageBlob = async (uri: string): Promise<Blob> => {
-  const response = await fetch(uri);
-
-  if (!response.ok) {
-    throw new Error('이미지 불러오기 실패');
-  }
-
-  return await response.blob();
-};
+import getImageBlob from '../utils/getImageBlob';
 
 const useUploadImageToS3 = () => {
   const {profileImageName, profileImageType, profileImagePath} =
