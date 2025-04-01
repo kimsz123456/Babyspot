@@ -14,13 +14,9 @@ const ChildTitle = styled(Text)`
   padding-bottom: ${scale(8)}px;
 `;
 const ChildAgesContainer = styled(View)`
-  border-width: ${scale(1)}px;
-  border-radius: 10px;
-  border-color: ${GrayColors[200]};
-  padding: ${scale(16)}px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: ${scale(16)}px;
+  align-content: center;
 `;
 const ChildAge = styled(Text)`
   ${FontStyles.bodyMedium};
@@ -28,10 +24,11 @@ const ChildAge = styled(Text)`
 `;
 
 const AgeCountContainer = styled(View)`
+  align-self: center;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: ${scale(88)}px;
+  border-radius: 100px;
+  padding: ${scale(16)}px ${scale(16)}px;
+  gap: ${scale(8)}px;
 `;
 const AgeCountButton = styled(Image)`
   width: ${scale(24)}px;

@@ -9,16 +9,14 @@ const InformationContainer = styled(View)`
   gap: ${scale(16)}px;
 `;
 
-const NicknameContainer = styled(View)`
-  flex: 1;
-`;
+const NicknameContainer = styled(View)``;
 const NicknameTitle = styled(Text)`
   ${FontStyles.captionMedium};
   color: ${GrayColors[800]};
   padding-bottom: ${scale(8)}px;
 `;
 const Nickname = styled(Text)`
-  padding: ${scale(8)}px 0;
+  padding: ${scale(8)}px 0px;
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
 `;
