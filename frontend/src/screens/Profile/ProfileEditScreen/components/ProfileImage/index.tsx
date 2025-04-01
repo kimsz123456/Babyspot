@@ -8,7 +8,6 @@ import {
   getMemberProfile,
   MemberProfile,
 } from '../../../../../services/profileService';
-import Config from 'react-native-config';
 
 interface ProfileImageProps {
   onImageSelect: (imageData: {uri: string; type: string} | null) => void;
@@ -88,7 +87,7 @@ const ProfileImage = ({onImageSelect}: ProfileImageProps) => {
 
   return (
     <S.ProfileImageWrapper>
-      <S.ProfileImageContainer>
+      <S.ProfileImageContainer onPress={handleImageEdit}>
         <S.ProfileImage source={getImageSource()} />
         <S.ImageEditButton onPress={handleImageEdit}>
           <S.ImageEditIcon source={IC_IMAGE_EDIT} />

@@ -6,7 +6,7 @@ import {GrayColors} from '../../../../../constants/colors';
 const ProfileImageWrapper = styled(View)`
   align-items: center;
 `;
-const ProfileImageContainer = styled(View)`
+const ProfileImageContainer = styled(Pressable)`
   width: ${scale(120)}px;
   height: ${scale(120)}px;
   position: relative;
