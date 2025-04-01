@@ -1,15 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as S from './styles';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import ReviewCard from '../StoreDetailScreen/components/Review/ReviewCard';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {ThinDivider} from '../../../components/atoms/Divider';
 import MoreButtonWithDivider from '../../../components/atoms/MoreButtonWithDivider';
 import {IC_YELLOW_STAR, IC_COMMENT, IC_FILTER} from '../../../constants/icons';
 import {withDivider} from '../../../utils/withDivider';
-import {ModalContainer} from '../../../components/atoms/CenterModal/styles';
-import CenteredModal from '../../../components/atoms/CenterModal';
+import ReviewFilterModal from './ReviewFilterModal';
 
 type StoreDetailRouteProp = RouteProp<MapStackParamList, 'ReviewListScreen'>;
 
@@ -17,10 +16,18 @@ const ReviewListScreen = () => {
   const route = useRoute<StoreDetailRouteProp>();
 
   const [modalOpened, setModalOpened] = useState(false);
+  const [selectedAges, setSelectedAges] = useState<number[]>([]);
 
   const reviewInformation = route.params.reviewInformation;
+  const filteredAges = route.params.filterAges;
 
   const visibleReviews = reviewInformation.reviews.slice(0, 3);
+
+  useEffect(() => {
+    if (filteredAges) {
+      setSelectedAges(filteredAges);
+    }
+  }, [filteredAges]);
 
   const handleMoreButtonPress = () => {};
 
@@ -71,21 +78,11 @@ const ReviewListScreen = () => {
           />
         </S.ReviewContainer>
       </S.ReviewListScreenScrollView>
-      <CenteredModal
-        visible={modalOpened}
-        confirmText={'검색하기'}
-        onCancel={() => {
-          setModalOpened(false);
-        }}
-        onConfirm={() => {
-          setModalOpened(false);
-        }}
-        title="리뷰 필터"
-        children={
-          <View style={{width: '100%'}}>
-            <Text>{`아이들 나이를 바탕으로,\n리뷰를 선별해드릴게요.`}</Text>
-          </View>
-        }
+      <ReviewFilterModal
+        modalOpened={modalOpened}
+        setModalOpened={setModalOpened}
+        selectedAge={selectedAges}
+        setSelectedAge={setSelectedAges}
       />
     </>
   );
