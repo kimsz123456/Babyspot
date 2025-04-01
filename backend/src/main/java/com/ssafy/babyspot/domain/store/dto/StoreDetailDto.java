@@ -12,6 +12,7 @@ import lombok.Data;
 public class StoreDetailDto {
 
 	private int storeId;
+
 	private String storeName;
 
 	private List<StoreImageDto> images;
@@ -26,4 +27,5 @@ public class StoreDetailDto {
 
 	private List<ReviewResponseDto> latestReviews;
 
+	private List<Integer> babyAges;
 }

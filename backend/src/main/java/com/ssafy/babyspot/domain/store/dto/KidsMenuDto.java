@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class KidsMenuDto {
 	private String babyMenuName;
-	private int babyMenuPrice;
+	private Integer babyMenuPrice;
 }
