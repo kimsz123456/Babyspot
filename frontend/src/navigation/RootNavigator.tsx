@@ -41,18 +41,18 @@ const RootNavigator = () => {
     checkRefreshToken();
   }, []);
 
-  useEffect(() => {
-    const fetchMemberProfile = async () => {
-      if (isLoggedIn) {
-        try {
-          const profile = await getMemberProfile();
-          setMemberProfile(profile);
-        } catch (error) {
-          console.error('Error fetching member profile:', error);
-        }
-      }
-    };
+  const fetchMemberProfile = async () => {
+    if (!isLoggedIn) return;
 
+    try {
+      const profile = await getMemberProfile();
+      setMemberProfile(profile);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  useEffect(() => {
     fetchMemberProfile();
   }, [isLoggedIn]);
 
