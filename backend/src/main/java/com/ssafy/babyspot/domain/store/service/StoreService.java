@@ -97,7 +97,7 @@ public class StoreService {
 				dto.setParking(store.getParking());
 				dto.setOkZone(store.getOkZone());
 				dto.setCategory(store.getCategory());
-				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : List.of(1, 2, 3));
+				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : null);
 
 				ConvenienceDto convenienceDto = new ConvenienceDto();
 				convenienceDto.getConvenienceDetails().put("babyChair", store.getBabyChair());
