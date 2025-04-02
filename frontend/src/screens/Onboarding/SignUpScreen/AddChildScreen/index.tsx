@@ -8,7 +8,7 @@ import ChildrenInfromationButton from './ChildrenInfromationButton';
 import AddChildrenButton from './AddChildrenButton';
 import CenteredModal from '../../../../components/atoms/CenterModal';
 import {useOnboardingStore} from '../../../../stores/onboardingStore';
-import {signUp} from '../../../../services/onboardingService';
+import {postSignUp} from '../../../../services/onboardingService';
 import {useGlobalStore} from '../../../../stores/globalStore';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import useUploadImageToS3 from '../../../../hooks/useUploadImageToS3';
@@ -115,7 +115,7 @@ const AddChildScreen = () => {
         childBirthYears != null &&
         tempToken != null
       ) {
-        const response = await signUp({
+        const response = await postSignUp({
           params: {
             nickname,
             profileImgUrl: profileImageName,
