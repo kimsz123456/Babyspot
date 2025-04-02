@@ -4,7 +4,6 @@ import {
   ConvenienceType,
   StoreBasicInformationType,
 } from '../../../NearStoreListScreen/components/StoreBasicInformation/types';
-import {StoreDetailInformationType} from '../../types';
 
 import {
   IC_CATEGORY,
@@ -27,7 +26,6 @@ const CURRENT_DAY = new Date().getDay();
 
 interface HomeProps {
   basicInformation: StoreBasicInformationType;
-  detailInformation: StoreDetailInformationType;
 }
 
 const Home = ({basicInformation}: HomeProps) => {

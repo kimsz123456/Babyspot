@@ -65,7 +65,7 @@ export interface Image {
 
 export interface KidsMenu {
   babyMenuName: string;
-  babyMenuPrice: null;
+  babyMenuPrice: number | null;
 }
 
 export interface Sentiment {
