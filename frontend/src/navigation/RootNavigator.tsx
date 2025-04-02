@@ -6,9 +6,11 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {getTokenByRefreshToken} from '../services/onboardingService';
 import {ActivityIndicator, View} from 'react-native';
 import {useGlobalStore} from '../stores/globalStore';
+import {getMemberProfile} from '../services/profileService';
 
 const RootNavigator = () => {
-  const {isLoggedIn, setIsLoggedIn, setAccessToken} = useGlobalStore();
+  const {isLoggedIn, setIsLoggedIn, setAccessToken, setMemberProfile} =
+    useGlobalStore();
 
   const [loading, setLoading] = useState(true);
 
@@ -38,6 +40,21 @@ const RootNavigator = () => {
 
     checkRefreshToken();
   }, []);
+
+  const fetchMemberProfile = async () => {
+    if (!isLoggedIn) return;
+
+    try {
+      const profile = await getMemberProfile();
+      setMemberProfile(profile);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    fetchMemberProfile();
+  }, [isLoggedIn]);
 
   if (loading) {
     return (
