@@ -11,7 +11,7 @@ public class ReviewResponseDto {
 	private int memberId;
 	private String memberNickname;
 	private List<Integer> babyAges;
-	private int StoreId;
+	private int storeId;
 	private float rating;
 	private String content;
 	private LocalDate createdAt;

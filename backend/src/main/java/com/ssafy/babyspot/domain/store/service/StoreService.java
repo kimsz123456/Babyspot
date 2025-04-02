@@ -238,7 +238,7 @@ public class StoreService {
 		}).collect(Collectors.toList());
 
 		List<Integer> babyAges = store.getBabyAges();
-		if (babyAges.isEmpty() || babyAges == null) {
+		if (babyAges == null) {
 			babyAges = new ArrayList<>();
 		}
 
