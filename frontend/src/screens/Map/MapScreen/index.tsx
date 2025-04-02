@@ -74,13 +74,11 @@ const MapScreen = () => {
     try {
       const {latitude, longitude} = await getCurrentLocation();
 
-      console.log(`latitude: ${latitude}  /  longitude: ${longitude}`);
-
       moveToCamera({latitude, longitude, mapRef});
 
       setIsReadyToFirstSearch(true);
     } catch (e) {
-      console.warn('위치 정보 가져오기 실패', e);
+      throw new Error('위치 정보 가져오기 실패');
     }
   };
 
@@ -103,10 +101,25 @@ const MapScreen = () => {
       return;
     }
 
-    mapRef.current.animateCameraTo({
+    moveToCamera({
       latitude: centerCoordinate.latitude,
       longitude: centerCoordinate.longitude,
-      zoom: 15,
+      mapRef: mapRef,
+    });
+
+    setIsPendingResearch(true);
+  };
+
+  const decreaseZoom = () => {
+    if (!mapRef.current) {
+      return;
+    }
+
+    moveToCamera({
+      latitude: centerCoordinate.latitude,
+      longitude: centerCoordinate.longitude,
+      mapRef: mapRef,
+      zoom: 13,
     });
 
     setIsPendingResearch(true);
@@ -126,32 +139,18 @@ const MapScreen = () => {
         bottomRightLong: bottomRight.longitude,
       });
 
-      console.log('주변 가게 검색 결과');
-      console.log(response);
-
       setStores(response);
 
       updateLastSearchedCoordinate();
     } catch (e) {
-      console.error(e);
+      throw new Error('주변 가게 검색 중 문제가 발생하였습니다.');
     } finally {
       setIsPendingResearch(false);
     }
   };
 
-  const searchRecommendStores = async () => {
+  const filterStores = async () => {
     try {
-      if (!mapRef.current) {
-        return;
-      }
-
-      // 더 넓은 범위로 zoom 변경
-      mapRef.current.animateCameraTo({
-        latitude: centerCoordinate.latitude,
-        longitude: centerCoordinate.longitude,
-        zoom: 13,
-      });
-
       // 보이는 영역 다시 계산
       const {topLeft, bottomRight} = calculateMapRegion(
         centerCoordinate,
@@ -173,14 +172,13 @@ const MapScreen = () => {
         );
       });
 
-      console.log('추천 음식점 목록');
-      console.log(filteredStores);
-
       setStores(filteredStores);
 
       updateLastSearchedCoordinate();
     } catch (error) {
-      throw error;
+      throw new Error('주변 음식점 추천 중 문제가 발생하였습니다.');
+    } finally {
+      setIsPendingResearch(false);
     }
   };
 
@@ -226,11 +224,19 @@ const MapScreen = () => {
   }, [address]);
 
   useEffect(() => {
-    if (!isPendingResearch || zoom !== 15) {
+    if (!isPendingResearch) {
       return;
     }
 
-    searchStoresInRegion();
+    if (selectedAges.length > 0 && zoom === 13) {
+      filterStores();
+      return;
+    }
+
+    if (selectedAges.length === 0 && zoom === 15) {
+      searchStoresInRegion();
+      return;
+    }
   }, [isPendingResearch, zoom]);
 
   useEffect(() => {
@@ -238,7 +244,7 @@ const MapScreen = () => {
       return;
     }
 
-    searchRecommendStores();
+    decreaseZoom();
   }, [selectedAges]);
 
   return (
@@ -257,7 +263,7 @@ const MapScreen = () => {
             width={30}
             height={40}
             image={
-              selectedAges.length > 0
+              selectedAges.length > 0 && !isPendingResearch
                 ? IC_RECOMMEND_MARKER
                 : IC_RESTAURANT_MARKER
             }
