@@ -121,6 +121,8 @@ const MapScreen = () => {
         bottomRightLong: bottomRight.longitude,
       });
 
+      console.log(response);
+
       setStores(response);
 
       updateLastSearchedCoordinate();
