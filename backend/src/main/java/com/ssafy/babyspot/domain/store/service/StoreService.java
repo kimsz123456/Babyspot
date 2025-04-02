@@ -97,7 +97,7 @@ public class StoreService {
 				dto.setParking(store.getParking());
 				dto.setOkZone(store.getOkZone());
 				dto.setCategory(store.getCategory());
-				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : null);
+				dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : new ArrayList<>());
 
 				ConvenienceDto convenienceDto = new ConvenienceDto();
 				convenienceDto.getConvenienceDetails().put("babyChair", store.getBabyChair());
@@ -237,6 +237,11 @@ public class StoreService {
 			return dto;
 		}).collect(Collectors.toList());
 
+		List<Integer> babyAges = store.getBabyAges();
+		if (babyAges.isEmpty() || babyAges == null) {
+			babyAges = new ArrayList<>();
+		}
+
 		return StoreDetailDto.builder()
 			.storeId(store.getId())
 			.storeName(store.getTitle())
@@ -246,7 +251,7 @@ public class StoreService {
 			.sentiment(sentiment)
 			.kidsMenu(kidsMenus)
 			.latestReviews(latestReviews)
-			.babyAges(store.getBabyAges())
+			.babyAges(babyAges)
 			.build();
 	}
 
