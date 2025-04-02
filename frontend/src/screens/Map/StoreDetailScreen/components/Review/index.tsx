@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as S from './styles';
 import {
   IC_COMMENT,
@@ -23,14 +23,14 @@ export interface ReviewProps {
 
 const Review = (props: ReviewProps) => {
   const navigation = useMapNavigation();
-  const visibleReviews = props.reviews.slice(0, 2);
-
   const [modalOpened, setModalOpened] = useState(false);
+  const [selectedAges, setSelectedAges] = useState<number[]>([]);
 
   const handleMoreButtonPress = () => {
     navigation.navigate('ReviewListScreen', {
       reviewInformation: props,
       storeId: props.storeId,
+      filterAges: selectedAges,
     });
   };
 
@@ -62,22 +62,39 @@ const Review = (props: ReviewProps) => {
           </TouchableOpacity>
         </S.TitleHeaderContainer>
         <S.ReviewCardListContainer>
-          {withDivider(
-            [
-              ...visibleReviews.map((review, index) => {
-                return <ReviewCard key={index} {...review} />;
-              }),
-            ],
-            <ThinDivider />,
+          {props.reviews.length > 0 ? (
+            withDivider(
+              props.reviews.slice(0, 2).map((review, index) => (
+                <ReviewCard
+                  key={review.reviewId + index}
+                  reviewId={review.reviewId}
+                  memberId={review.memberId}
+                  memberNickname={review.memberNickname}
+                  profileImagePath={''} // API 응답에 없는 필드
+                  reviewCount={1} // API 응답에 없는 필드
+                  imgUrls={review.imgUrls}
+                  babyAge={review.babyAge}
+                  rating={review.rating}
+                  content={review.content}
+                  likeCount={review.likeCount}
+                  createdAt={review.createdAt}
+                />
+              )),
+              <ThinDivider />,
+            )
+          ) : (
+            <S.NoReviewText> 리뷰가 없습니다. </S.NoReviewText>
           )}
         </S.ReviewCardListContainer>
 
-        <MoreButtonWithDivider
-          onPressed={handleMoreButtonPress}
-          isOpened={false}
-          openedText={'리뷰 접기'}
-          closedText={'리뷰 더 보기'}
-        />
+        {props.reviews.length > 0 && (
+          <MoreButtonWithDivider
+            onPressed={handleMoreButtonPress}
+            isOpened={false}
+            openedText={'리뷰 접기'}
+            closedText={'리뷰 더 보기'}
+          />
+        )}
       </S.ReviewContainer>
       <ReviewFilterModal
         modalOpened={modalOpened}
