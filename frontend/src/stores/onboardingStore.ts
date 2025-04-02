@@ -18,28 +18,30 @@ interface OnboardingState {
 
   childBirthYears: number[] | null;
   setChildBirthYears: (childBirthYears: number[] | null) => void;
+
+  resetOnboardingStore: () => void;
 }
 
-export const useOnboardingStore = create<OnboardingState>(set => ({
+const initialState = {
   tempToken: null,
-  setTempToken: token => set({tempToken: token}),
-
   nickname: null,
-  setNickname: nickname => set({nickname: nickname}),
-
   profileImageName: null,
+  profileImageType: null,
+  profileImagePath: null,
+  childBirthYears: null,
+};
+
+export const useOnboardingStore = create<OnboardingState>(set => ({
+  ...initialState,
+  resetOnboardingStore: () => set({...initialState}),
+  setTempToken: token => set({tempToken: token}),
+  setNickname: nickname => set({nickname: nickname}),
   setProfileImageName: profileImageName =>
     set({profileImageName: profileImageName}),
-
-  profileImageType: null,
   setProfileImageType: profileImageType =>
     set({profileImageType: profileImageType}),
-
-  profileImagePath: null,
   setProfileImagePath: profileImagePath =>
     set({profileImagePath: profileImagePath}),
-
-  childBirthYears: null,
   setChildBirthYears: childBirthYears =>
     set({childBirthYears: childBirthYears}),
 }));

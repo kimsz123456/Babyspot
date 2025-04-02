@@ -4,14 +4,18 @@ import {IC_QUESTION, IC_RIGHT_ARROW} from '../../../../../constants/icons';
 import {ThinDivider} from '../../../../../components/atoms/Divider';
 import {useProfileNavigation} from '../../../../../hooks/useNavigationHooks';
 import VersionCheck from 'react-native-version-check';
-import {Alert, Linking, PermissionsAndroid} from 'react-native';
+import {Alert, Linking, PermissionsAndroid, Text} from 'react-native';
 import {SystemColors} from '../../../../../constants/colors';
 import {withDivider} from '../../../../../utils/withDivider';
+import CenteredModal from '../../../../../components/atoms/CenterModal';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import resetAllStores from '../../../../../utils/resetAllStores';
 
 const Setting = () => {
   const navigation = useProfileNavigation();
   const [appVersion, setAppVersion] = useState('');
   const [isGPSEnabled, setIsGPSEnabled] = useState(false);
+  const [isModalOpened, setIsModalOpened] = useState(false);
 
   const checkGPSPermission = async () => {
     try {
@@ -109,56 +113,79 @@ const Setting = () => {
     navigation.navigate('PrivacyPolicy');
   };
 
-  const handleLogoutPress = () => {};
+  const handleLogoutPress = () => {
+    setIsModalOpened(true);
+  };
+
+  const handleLogout = () => {
+    EncryptedStorage.clear();
+    resetAllStores();
+  };
 
   return (
-    <S.SettingContainer>
-      <S.SettingTitle>설정</S.SettingTitle>
-      <S.SettingItems>
-        {withDivider(
-          [
-            <S.GPSContainer>
-              <S.GPSTitle>GPS 설정</S.GPSTitle>
-              <S.GPSStateContainer onPress={handleGPSPress}>
-                <S.GPSState
-                  style={{
-                    color: isGPSEnabled
-                      ? `${SystemColors.success}`
-                      : `${SystemColors.danger}`,
-                  }}>
-                  {isGPSEnabled ? '되어있음' : '꺼져있음'}
-                </S.GPSState>
-                <S.GPSQuestion source={IC_QUESTION} />
-              </S.GPSStateContainer>
-            </S.GPSContainer>,
+    <>
+      <S.SettingContainer>
+        <S.SettingTitle>설정</S.SettingTitle>
+        <S.SettingItems>
+          {withDivider(
+            [
+              <S.GPSContainer>
+                <S.GPSTitle>GPS 설정</S.GPSTitle>
+                <S.GPSStateContainer onPress={handleGPSPress}>
+                  <S.GPSState
+                    style={{
+                      color: isGPSEnabled
+                        ? `${SystemColors.success}`
+                        : `${SystemColors.danger}`,
+                    }}>
+                    {isGPSEnabled ? '되어있음' : '꺼져있음'}
+                  </S.GPSState>
+                  <S.GPSQuestion source={IC_QUESTION} />
+                </S.GPSStateContainer>
+              </S.GPSContainer>,
 
-            <S.PrivacyTermsContainer onPress={handlePrivatePolicyPress}>
-              <S.PrivacyTermsTitle>개인정보 이용약관</S.PrivacyTermsTitle>
-              <S.RightArrowButton source={IC_RIGHT_ARROW} />
-            </S.PrivacyTermsContainer>,
+              <S.PrivacyTermsContainer onPress={handlePrivatePolicyPress}>
+                <S.PrivacyTermsTitle>개인정보 이용약관</S.PrivacyTermsTitle>
+                <S.RightArrowButton source={IC_RIGHT_ARROW} />
+              </S.PrivacyTermsContainer>,
 
-            <S.AppVersionContainer>
-              <S.AppVersionTitle>앱 버전</S.AppVersionTitle>
-              <S.AppVersionNumber>{appVersion}</S.AppVersionNumber>
-            </S.AppVersionContainer>,
+              <S.AppVersionContainer>
+                <S.AppVersionTitle>앱 버전</S.AppVersionTitle>
+                <S.AppVersionNumber>{appVersion}</S.AppVersionNumber>
+              </S.AppVersionContainer>,
 
-            <S.LogoutContainer onPress={handleLogoutPress}>
-              <S.LogoutTitle>로그아웃</S.LogoutTitle>
-              <S.RightArrowButton source={IC_RIGHT_ARROW} />
-            </S.LogoutContainer>,
+              <S.LogoutContainer onPress={handleLogoutPress}>
+                <S.LogoutTitle>로그아웃</S.LogoutTitle>
+                <S.RightArrowButton source={IC_RIGHT_ARROW} />
+              </S.LogoutContainer>,
 
-            <S.DeleteAccountContainer>
-              <S.DeleteAccount
-                onPress={() => navigation.navigate('DeleteAccount')}>
-                회원탈퇴
-              </S.DeleteAccount>
-            </S.DeleteAccountContainer>,
-          ],
+              <S.DeleteAccountContainer>
+                <S.DeleteAccount
+                  onPress={() => navigation.navigate('DeleteAccount')}>
+                  회원탈퇴
+                </S.DeleteAccount>
+              </S.DeleteAccountContainer>,
+            ],
 
-          <ThinDivider />,
-        )}
-      </S.SettingItems>
-    </S.SettingContainer>
+            <ThinDivider />,
+          )}
+        </S.SettingItems>
+      </S.SettingContainer>
+      <CenteredModal
+        visible={isModalOpened}
+        cancelText={'취소'}
+        confirmText={'로그아웃'}
+        title={'로그아웃을 진행할까요?'}
+        children={<Text>{`다시 로그인해주셔야 앱 사용이 가능합니다.`}</Text>}
+        onCancel={() => {
+          setIsModalOpened(false);
+        }}
+        onConfirm={() => {
+          setIsModalOpened(false);
+          handleLogout();
+        }}
+      />
+    </>
   );
 };
 
