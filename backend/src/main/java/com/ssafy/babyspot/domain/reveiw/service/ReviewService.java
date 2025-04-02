@@ -3,6 +3,8 @@ package com.ssafy.babyspot.domain.reveiw.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -107,6 +109,17 @@ public class ReviewService {
 
 		Page<Review> reviews = reviewRepository.findAllByStore_Id(storeId, sortedPageable);
 
+		Set<Integer> memberIds = reviews.stream()
+			.map(review -> review.getMember().getId())
+			.collect(Collectors.toSet());
+
+		List<Object[]> counts = reviewRepository.countReviewsByMemberIds(memberIds);
+		Map<Integer, Long> reviewCountMap = counts.stream()
+			.collect(Collectors.toMap(
+				arr -> (Integer)arr[0],
+				arr -> (Long)arr[1]
+			));
+
 		return reviews.map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
 			dto.setReviewId(review.getId());
@@ -117,12 +130,15 @@ public class ReviewService {
 			dto.setCreatedAt(review.getCreatedAt());
 			dto.setContent(review.getContent());
 			dto.setBabyAges(review.getBabyAges());
+			dto.setProfile(String.valueOf(memberRepository.findByProfileImg(review.getMember().getId())));
 
 			List<String> imgUrls = review.getImages().stream()
 				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
 				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
+
+			dto.setReviewCount(reviewCountMap.getOrDefault(review.getMember().getId(), 0L));
 			return dto;
 		});
 	}
@@ -141,12 +157,18 @@ public class ReviewService {
 		dto.setCreatedAt(review.getCreatedAt());
 		dto.setContent(review.getContent());
 		dto.setBabyAges(review.getBabyAges());
+		dto.setProfile(String.valueOf(
+			Optional.of(CLOUDFRONT_URL + "/" + memberRepository.findByProfileImg(review.getMember().getId()))));
 
 		List<String> imgUrls = review.getImages().stream()
 			.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
-			.toList();
+			.collect(Collectors.toList());
 		dto.setImgUrls(imgUrls);
 		dto.setLikeCount(review.getReviewLikes().size());
+
+		long myReviewCount = reviewRepository.countByMember_Id(memberId);
+		dto.setReviewCount(myReviewCount);
+
 		return dto;
 	}
 
@@ -158,7 +180,9 @@ public class ReviewService {
 			Sort.by("createdAt").descending()
 		);
 
-		Page<Review> reviews = reviewRepository.findAllByMember_id(memberId, pageable);
+		Page<Review> reviews = reviewRepository.findAllByMember_id(memberId, sortedPageable);
+
+		long myReviewCount = reviewRepository.countByMember_Id(memberId);
 
 		return reviews.map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
@@ -170,12 +194,17 @@ public class ReviewService {
 			dto.setCreatedAt(review.getCreatedAt());
 			dto.setContent(review.getContent());
 			dto.setBabyAges(review.getBabyAges());
+			dto.setProfile(String.valueOf(
+				Optional.of(CLOUDFRONT_URL + "/" + memberRepository.findByProfileImg(review.getMember().getId()))));
 
 			List<String> imgUrls = review.getImages().stream()
 				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
-				.toList();
+				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
+
+			dto.setReviewCount(myReviewCount);
+
 			return dto;
 		});
 	}

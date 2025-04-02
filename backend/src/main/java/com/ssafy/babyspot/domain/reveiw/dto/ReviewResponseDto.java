@@ -17,4 +17,6 @@ public class ReviewResponseDto {
 	private LocalDate createdAt;
 	private List<String> imgUrls;
 	private int likeCount;
+	private String profile;
+	private Long reviewCount;
 }
