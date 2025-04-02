@@ -1,5 +1,5 @@
 import {GrayColors} from './../../../constants/colors';
-import {Image, Text, View} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import scale from '../../../utils/scale';
@@ -37,7 +37,7 @@ export const ReviewListContainer = styled(View)`
   flex: 1;
 `;
 
-export const ReviewContainer = styled(View)`
+export const ReviewContainer = styled(TouchableOpacity)`
   flex-direction: row;
   gap: ${scale(8)}px;
   padding: ${scale(8)}px 0px;

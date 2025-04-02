@@ -1,11 +1,7 @@
+import {MenuType} from '../../../services/mapService';
+
 export interface storeImageType {
   storeImg: string;
-}
-
-export interface menuType {
-  name: string;
-  price: number;
-  image: string;
 }
 
 export interface keywordsAndReviewsType {
@@ -22,7 +18,7 @@ export interface StoreDetailInformationType {
   storeId: number;
   storeName: string;
   images: storeImageType[];
-  menus: menuType[];
+  menus: MenuType[];
   keywordsAndReviews: keywordsAndReviewsType[];
   sentiment: sentimentType;
 }
