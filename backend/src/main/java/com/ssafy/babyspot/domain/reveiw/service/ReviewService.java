@@ -129,6 +129,7 @@ public class ReviewService {
 			dto.setRating(review.getRating());
 			dto.setCreatedAt(review.getCreatedAt());
 			dto.setContent(review.getContent());
+			dto.setStoreName(review.getStore().getTitle());
 			dto.setBabyAges(review.getBabyAges());
 			dto.setProfile(String.valueOf(memberRepository.findByProfileImg(review.getMember().getId())));
 
@@ -156,6 +157,7 @@ public class ReviewService {
 		dto.setRating(review.getRating());
 		dto.setCreatedAt(review.getCreatedAt());
 		dto.setContent(review.getContent());
+		dto.setStoreName(review.getStore().getTitle());
 		dto.setBabyAges(review.getBabyAges());
 		dto.setProfile(String.valueOf(
 			Optional.of(CLOUDFRONT_URL + "/" + memberRepository.findByProfileImg(review.getMember().getId()))));
@@ -193,6 +195,7 @@ public class ReviewService {
 			dto.setRating(review.getRating());
 			dto.setCreatedAt(review.getCreatedAt());
 			dto.setContent(review.getContent());
+			dto.setStoreName(review.getStore().getTitle());
 			dto.setBabyAges(review.getBabyAges());
 			dto.setProfile(String.valueOf(
 				Optional.of(CLOUDFRONT_URL + "/" + memberRepository.findByProfileImg(review.getMember().getId()))));
@@ -202,7 +205,6 @@ public class ReviewService {
 				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
-
 			dto.setReviewCount(myReviewCount);
 
 			return dto;

@@ -19,4 +19,5 @@ public class ReviewResponseDto {
 	private int likeCount;
 	private String profile;
 	private Long reviewCount;
+	private String storeName;
 }

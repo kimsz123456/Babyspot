@@ -185,7 +185,11 @@ public class StoreService {
 			))
 			.collect(Collectors.toList());
 
-		return new KeywordSectionDto(keywordDto, totalCount);
+		KeywordSectionDto result = new KeywordSectionDto(keywordDto, totalCount);
+
+		logger.info("KeywordSectionDto 결과: {}", result);
+
+		return result;
 	}
 
 	@Transactional
