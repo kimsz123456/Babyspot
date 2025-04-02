@@ -85,7 +85,7 @@ export const getRangeInfo = async (data: RangeInfoParameterType) => {
   }
 };
 
-export const geocoding = async (
+export const getGeocoding = async (
   address: string,
 ): Promise<GeocodingResponse> => {
   try {

@@ -3,30 +3,30 @@ import {TouchableOpacity} from 'react-native';
 import {IC_MINUS, IC_PLUS} from '../../../../../constants/icons';
 import * as S from './styles';
 
-interface ChildrenInfromationButtonProps {
+interface ChildrenInformationButtonProps {
   year: number;
   currentCount: number;
   onMinusPressed: () => void;
   onPlusPressed: () => void;
 }
 
-const ChildrenInfromationButton = (props: ChildrenInfromationButtonProps) => {
+const ChildrenInformationButton = (props: ChildrenInformationButtonProps) => {
   return (
-    <S.ChildrenInfromationButtonContainer>
-      <S.ChildrenInfromationButtonText>{`${props.year}년생`}</S.ChildrenInfromationButtonText>
+    <S.ChildrenInformationButtonContainer>
+      <S.ChildrenInformationButtonText>{`${props.year}년생`}</S.ChildrenInformationButtonText>
       <S.IconContainer>
         <TouchableOpacity onPress={props.onMinusPressed}>
           <S.IconImage source={IC_MINUS} />
         </TouchableOpacity>
-        <S.ChildrenInfromationButtonText>
+        <S.ChildrenInformationButtonText>
           {props.currentCount}
-        </S.ChildrenInfromationButtonText>
+        </S.ChildrenInformationButtonText>
         <TouchableOpacity onPress={props.onPlusPressed}>
           <S.IconImage source={IC_PLUS} />
         </TouchableOpacity>
       </S.IconContainer>
-    </S.ChildrenInfromationButtonContainer>
+    </S.ChildrenInformationButtonContainer>
   );
 };
 
-export default ChildrenInfromationButton;
+export default ChildrenInformationButton;

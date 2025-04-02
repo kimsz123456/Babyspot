@@ -4,7 +4,7 @@ import AddChildrenButton from '../../../../Onboarding/SignUpScreen/AddChildScree
 import CenteredModal from '../../../../../components/atoms/CenterModal';
 import {Alert} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import ChildrenInfromationButton from '../../../../Onboarding/SignUpScreen/AddChildScreen/ChildrenInfromationButton';
+import ChildrenInformationButton from '../../../../Onboarding/SignUpScreen/AddChildScreen/ChildrenInformationButton';
 import {
   getMemberProfile,
   MemberProfile,
@@ -109,7 +109,7 @@ const ChildAge = () => {
         {[...children]
           .sort((a, b) => b.year - a.year)
           .map((item, index) => (
-            <ChildrenInfromationButton
+            <ChildrenInformationButton
               key={`${item.year}-${index}`}
               year={item.year}
               currentCount={item.count}

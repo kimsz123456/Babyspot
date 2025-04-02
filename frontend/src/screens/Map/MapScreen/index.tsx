@@ -22,7 +22,7 @@ import Chip from './components/Chip';
 import ResearchButton from './components/ResearchButton';
 import StoreBasicScreen from '../StoreBasicScreen';
 import {getRangeInfo} from '../../../services/mapService';
-import {geocoding} from '../../../services/mapService';
+import {getGeocoding} from '../../../services/mapService';
 import {useMapStore} from '../../../stores/mapStore';
 import {StoreBasicInformationType} from '../NearStoreListScreen/components/StoreBasicInformation/types';
 
@@ -141,7 +141,7 @@ const MapScreen = () => {
 
   const moveToAddress = async (address: string) => {
     try {
-      const response = await geocoding(address);
+      const response = await getGeocoding(address);
 
       if (!response) {
         Alert.alert('주소를 찾을 수 없습니다.');

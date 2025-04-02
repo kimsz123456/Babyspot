@@ -44,6 +44,7 @@ const IC_BABY: ImageRequireSource = require('../../assets/icons/baby.png');
 const IC_SEARCH: ImageRequireSource = require('../../assets/icons/search.png');
 const IC_CLOSE: ImageRequireSource = require('../../assets/icons/close.png');
 const IC_CLOSE_BLACK: ImageRequireSource = require('../../assets/icons/close-black.png');
+const IC_DELETE_IMAGE: ImageRequireSource = require('../../assets/icons/delete-image.png');
 
 const IC_RETRY: ImageRequireSource = require('../../assets/icons/retry.png');
 
@@ -113,6 +114,7 @@ export {
   IC_SEARCH,
   IC_CLOSE,
   IC_CLOSE_BLACK,
+  IC_DELETE_IMAGE,
   IC_RETRY,
   IC_IMAGE_EDIT,
   IC_APP_LOGO,
