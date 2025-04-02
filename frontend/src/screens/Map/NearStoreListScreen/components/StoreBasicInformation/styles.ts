@@ -4,11 +4,7 @@ import styled from 'styled-components/native';
 
 import scale from '../../../../../utils/scale';
 import {FontStyles} from '../../../../../constants/fonts';
-import {
-  GrayColors,
-  PrimaryColors,
-  SecondaryColors,
-} from '../../../../../constants/colors';
+import {GrayColors, PrimaryColors} from '../../../../../constants/colors';
 
 export const StoreBasicInformationContainer = styled(View)`
   display: flex;
@@ -29,7 +25,7 @@ export const ImageContainer = styled(View)`
 
 export const StoreImage = styled(Image)`
   height: 100%;
-  object-fit: cover;
+  width: 100%;
 `;
 
 export const ImageIndicatorContainer = styled(View)`
@@ -62,9 +58,15 @@ export const FirstRowContainer = styled(View)`
   flex-direction: row;
   align-items: center;
   gap: ${scale(4)}px;
+  width: 100%;
+  overflow: hidden;
 `;
 
-export const StoreName = styled(Text)`
+export const StoreName = styled(Text).attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail',
+})`
+  max-width: 50%;
   ${FontStyles.bodyMedium}
   color: ${GrayColors[800]};
 `;
