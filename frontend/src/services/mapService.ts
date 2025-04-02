@@ -51,7 +51,7 @@ export interface StoreDetailResponse {
   storeId: number;
   storeName: string;
   images: Image[];
-  menus: any[];
+  menus: MenuType[];
   keywordsAndReviews: any[];
   sentiment: Sentiment;
   kidsMenu: KidsMenu[];
@@ -61,6 +61,12 @@ export interface StoreDetailResponse {
 
 export interface Image {
   storeImg: string;
+}
+
+export interface MenuType {
+  name: string;
+  price: number;
+  image: string;
 }
 
 export interface KidsMenu {

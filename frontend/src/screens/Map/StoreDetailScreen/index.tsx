@@ -90,7 +90,7 @@ const StoreDetailScreen = () => {
           [
             <Home basicInformation={storeBasicInformation} />,
             <KidMenu menus={storeDetail.kidsMenu} />,
-            <Menu menus={MOCK.menus} />,
+            <Menu menus={storeDetail.menus} />,
             <KeywordSection
               keywords={keywordSectionMock.keywords}
               totalCount={keywordSectionMock.totalCount}
