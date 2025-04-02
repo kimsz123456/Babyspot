@@ -1,15 +1,24 @@
 import React, {useState} from 'react';
-import * as S from './styles';
+import {Image, Text, View} from 'react-native';
+
+import {
+  useOnboardingNavigation,
+  useProfileNavigation,
+} from '../../../hooks/useNavigationHooks';
+
 import MainButton from '../../../components/atoms/Button/MainButton';
 import SubButton from '../../../components/atoms/Button/SubButton';
 import CenteredModal from '../../../components/atoms/CenterModal';
-import {Image, Text, View} from 'react-native';
 import LinedTextInput from '../../../components/atoms/Button/LinedTextInput';
+import {deleteMember} from '../../../services/profileService';
+
 import {IC_COMPLETE} from '../../../constants/icons';
-import {useProfileNavigation} from '../../../hooks/useNavigationHooks';
+
+import * as S from './styles';
 
 const DeleteAccountScreen = () => {
-  const navigation = useProfileNavigation();
+  const profileNavigation = useProfileNavigation();
+  const onboardingNavigation = useOnboardingNavigation();
   const [firstModalVisible, setFirstModalVisible] = useState(false);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
   const [matchingText, setMatchingText] = useState(false);
@@ -25,8 +34,11 @@ const DeleteAccountScreen = () => {
     setFirstModalVisible(true);
   };
 
-  const handleFirstConfirm = () => {
+  const handleFirstConfirm = async () => {
     setFirstModalVisible(false);
+
+    await deleteMember();
+
     setSecondModalVisible(true);
   };
 
@@ -36,6 +48,8 @@ const DeleteAccountScreen = () => {
 
   const handleSecondConfirm = () => {
     setSecondModalVisible(false);
+
+    onboardingNavigation.navigate('SignIn');
   };
 
   const handleSecondCancel = () => {
@@ -48,7 +62,7 @@ const DeleteAccountScreen = () => {
         <S.DeleteAccountTitle>탈퇴 약관</S.DeleteAccountTitle>
 
         {contentTexts.map((item, idx) => (
-          <S.ContentContainer>
+          <S.ContentContainer key={idx}>
             <S.ContentsNumber>{idx + 1}. </S.ContentsNumber>
             <S.Contents>{item}</S.Contents>
           </S.ContentContainer>
@@ -63,13 +77,13 @@ const DeleteAccountScreen = () => {
           />
           <MainButton
             text="취소하기"
-            onPress={() => navigation.navigate('ProfileMain')}
+            onPress={() => profileNavigation.navigate('ProfileMain')}
           />
         </S.ButtonWrapper>
       </S.DeleteAccountContainer>
       <CenteredModal
         visible={firstModalVisible}
-        title={`데이터가 남습니다.\n동의하십니까?`}
+        title={'데이터가 남습니다.\n동의하십니까?'}
         onCancel={handleFirstCancel}
         onConfirm={handleFirstConfirm}
         cancelText={'취소하기'}
@@ -77,7 +91,7 @@ const DeleteAccountScreen = () => {
         confirmDisabled={!matchingText}>
         <View>
           <Text>탈퇴처리 진행을 원하시는 경우, 아래에</Text>
-          <Text>“탈퇴처리에 동의합니다”</Text>
+          <Text>“탈퇴처리에 동의합니다.”</Text>
           <Text>라는 문구를 입력한 뒤, 탈퇴하기 버튼을 클릭해</Text>
           <Text>주세요.</Text>
           <LinedTextInput
@@ -95,13 +109,14 @@ const DeleteAccountScreen = () => {
 
       <CenteredModal
         visible={secondModalVisible}
-        title={`탈퇴가 완료되었습니다.`}
+        title={'탈퇴가 완료되었습니다.'}
         onCancel={handleSecondCancel}
         onConfirm={handleSecondConfirm}
         confirmText={'처음 화면으로'}
         topImage={
           <Image source={IC_COMPLETE} style={{width: 50, height: 50}} />
-        }></CenteredModal>
+        }
+      />
     </S.BackGround>
   );
 };
