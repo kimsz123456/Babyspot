@@ -21,7 +21,6 @@ export const getMemberProfile = async (): Promise<MemberProfile> => {
 export const deleteMember = async () => {
   try {
     const result = await api.delete('members/delete');
-
     return result.data;
   } catch (error) {
     throw error;
