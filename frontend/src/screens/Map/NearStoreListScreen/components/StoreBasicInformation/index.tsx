@@ -1,22 +1,26 @@
 import React, {RefObject, useState} from 'react';
-
 import {
   Dimensions,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
+
 import {ScrollView} from 'react-native-gesture-handler';
+import Config from 'react-native-config';
+
+import OKZoneMarker from '../../../../../components/atoms/OKZoneMarker';
 
 import {StoreBasicInformationType} from './types';
 import {AGE_MARKERS, DAY} from '../../../../../constants/constants';
 import {IC_COMMENT, IC_YELLOW_STAR} from '../../../../../constants/icons';
 
 import * as S from './styles';
-import OKZoneMarker from '../../../../../components/atoms/OKZoneMarker';
+import {IMG_DEFAULT_STORE} from '../../../../../constants/images';
 
 const {width} = Dimensions.get('window');
 
 const CURRENT_DAY = new Date().getDay();
+const CLOUDFRONT_PREFIX = Config.CLOUDFRONT_PREFIX;
 
 interface StoreBasicInformationProps {
   store: StoreBasicInformationType;
@@ -48,18 +52,28 @@ const StoreBasicInformation = ({
           showsHorizontalScrollIndicator={false}
           onScroll={handleScroll}
           scrollEventThrottle={16}>
-          {store.images.map((image, idx) => (
-            <S.ImageContainer key={idx}>
-              <S.StoreImage source={{uri: image.storeImg}} />
+          {store.images.length > 0 ? (
+            store.images.map((image, idx) => (
+              <S.ImageContainer key={idx}>
+                <S.StoreImage
+                  source={{uri: `${CLOUDFRONT_PREFIX}${image.storeImg}`}}
+                />
+              </S.ImageContainer>
+            ))
+          ) : (
+            <S.ImageContainer>
+              <S.StoreImage source={IMG_DEFAULT_STORE} />
             </S.ImageContainer>
-          ))}
+          )}
         </ScrollView>
-        <S.ImageIndicatorContainer>
-          <S.ImageIndicator>
-            <S.ImageCurrentIndex>{currentIndex + 1}</S.ImageCurrentIndex>/
-            {store.images.length}
-          </S.ImageIndicator>
-        </S.ImageIndicatorContainer>
+        {store.images.length > 0 && (
+          <S.ImageIndicatorContainer>
+            <S.ImageIndicator>
+              <S.ImageCurrentIndex>{currentIndex + 1}</S.ImageCurrentIndex>/
+              {store.images.length}
+            </S.ImageIndicator>
+          </S.ImageIndicatorContainer>
+        )}
       </S.CarouselContainer>
 
       <S.DetailContainer>
