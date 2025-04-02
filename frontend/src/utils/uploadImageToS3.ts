@@ -1,28 +1,20 @@
-import {postImgPresignedUrl} from '../services/onboardingService';
 import getImageBlob from './getImageBlob';
 
 interface uploadImageToS3Props {
-  imageName: string | null;
   imageType: string | null;
   imagePath: string | null;
+  preSignedUrl: string;
 }
 
 const uploadImageToS3 = async ({
-  imageName,
   imagePath,
   imageType,
+  preSignedUrl,
 }: uploadImageToS3Props) => {
   try {
-    const response = await postImgPresignedUrl({
-      profileName: imageName || '',
-      contentType: imageType || '',
-    });
-
-    const {profileImgPreSignedUrl} = response;
-
     const blob = await getImageBlob(imagePath || '');
 
-    await fetch(profileImgPreSignedUrl, {
+    await fetch(preSignedUrl, {
       method: 'PUT',
       body: blob,
       headers: {

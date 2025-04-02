@@ -12,7 +12,10 @@ import MainButton from '../../../../components/atoms/Button/MainButton';
 import ChildrenInfromationButton from './ChildrenInfromationButton';
 import AddChildrenButton from './AddChildrenButton';
 import CenteredModal from '../../../../components/atoms/CenterModal';
-import {signUp} from '../../../../services/onboardingService';
+import {
+  postImgPresignedUrl,
+  signUp,
+} from '../../../../services/onboardingService';
 
 import uploadImageToS3 from '../../../../utils/uploadImageToS3';
 
@@ -127,10 +130,19 @@ const AddChildScreen = () => {
           useGlobalStore.getState().setAccessToken(response.accessToken);
           await EncryptedStorage.setItem('refreshToken', response.refreshToken);
 
+          // pre-signed url 요청
+          const preSignedUrlData = await postImgPresignedUrl({
+            profileName: profileImageName || '',
+            contentType: profileImageType || '',
+          });
+
+          const {profileImgPreSignedUrl} = preSignedUrlData;
+
+          // S3 업로드
           await uploadImageToS3({
-            imageName: profileImageName,
             imageType: profileImageType,
             imagePath: profileImagePath,
+            preSignedUrl: profileImgPreSignedUrl,
           });
 
           navigation.navigate('SignUpComplete');
