@@ -9,7 +9,7 @@ import {useOnboardingStore} from '../../../../stores/onboardingStore';
 import {useGlobalStore} from '../../../../stores/globalStore';
 
 import MainButton from '../../../../components/atoms/Button/MainButton';
-import ChildrenInfromationButton from './ChildrenInfromationButton';
+import ChildrenInformationButton from './ChildrenInformationButton';
 import AddChildrenButton from './AddChildrenButton';
 import CenteredModal from '../../../../components/atoms/CenterModal';
 import {
@@ -31,17 +31,17 @@ const AddChildScreen = () => {
   const {profileImageName, profileImageType, profileImagePath} =
     useOnboardingStore();
 
-  const [childrens, setChildrens] = useState<ChildrenButtonProps[]>([]);
+  const [children, setChildren] = useState<ChildrenButtonProps[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  const totalChildrenCount = childrens.reduce(
+  const totalChildrenCount = children.reduce(
     (sum, child) => sum + child.count,
     0,
   );
 
   const handleMinus = (index: number) => {
-    setChildrens(prev => {
+    setChildren(prev => {
       const target = prev[index];
       if (target.count <= 1) {
         return prev.filter((_, i) => i !== index);
@@ -58,7 +58,7 @@ const AddChildScreen = () => {
       Alert.alert('최대 10명까지만 입력할 수 있습니다.');
       return;
     }
-    setChildrens(prev =>
+    setChildren(prev =>
       prev.map((child, i) =>
         i === index ? {...child, count: child.count + 1} : child,
       ),
@@ -75,7 +75,7 @@ const AddChildScreen = () => {
   };
 
   const handleConfirm = () => {
-    setChildrens(prev => {
+    setChildren(prev => {
       const existingIndex = prev.findIndex(
         child => child.year === selectedYear,
       );
@@ -95,7 +95,7 @@ const AddChildScreen = () => {
   const handleSignUp = async () => {
     let childrenArray: number[] = [];
 
-    childrens
+    children
       .sort((a, b) => b.year - a.year)
       .map(item => {
         for (let i = 0; i < item.count; i++) {
@@ -164,10 +164,10 @@ const AddChildScreen = () => {
             <View>
               <S.AddChildrenSectionTitle>자녀 정보</S.AddChildrenSectionTitle>
               <S.ChildrenInformationSection>
-                {[...childrens]
+                {[...children]
                   .sort((a, b) => b.year - a.year)
                   .map((item, index) => (
-                    <ChildrenInfromationButton
+                    <ChildrenInformationButton
                       key={`${item.year}-${index}`}
                       year={item.year}
                       currentCount={item.count}

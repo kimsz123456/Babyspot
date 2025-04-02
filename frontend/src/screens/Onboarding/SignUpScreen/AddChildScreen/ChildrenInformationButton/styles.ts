@@ -4,7 +4,7 @@ import {GrayColors} from '../../../../../constants/colors';
 import scale from '../../../../../utils/scale';
 import {FontStyles} from '../../../../../constants/fonts';
 
-export const ChildrenInfromationButtonContainer = styled(View)`
+export const ChildrenInformationButtonContainer = styled(View)`
   flex-direction: row;
   width: 100%;
   border: 1px solid ${GrayColors[200]};
@@ -13,7 +13,7 @@ export const ChildrenInfromationButtonContainer = styled(View)`
   border-radius: 10px;
 `;
 
-export const ChildrenInfromationButtonText = styled(Text)`
+export const ChildrenInformationButtonText = styled(Text)`
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
 `;
