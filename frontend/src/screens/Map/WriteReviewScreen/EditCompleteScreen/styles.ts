@@ -4,7 +4,7 @@ import scale from '../../../../utils/scale';
 import {FontStyles} from '../../../../constants/fonts';
 import {GrayColors} from '../../../../constants/colors';
 
-export const WriteCompleteScreenContainer = styled(View)`
+export const EditCompleteScreenContainer = styled(View)`
   flex: 1;
   background-color: ${GrayColors[0]};
   padding: ${scale(16)}px ${scale(24)}px;

@@ -10,13 +10,16 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Text,
   TouchableNativeFeedback,
 } from 'react-native';
 import MainButton from '../../../components/atoms/Button/MainButton';
 import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 import {launchImageLibrary} from 'react-native-image-picker';
 import scale from '../../../utils/scale';
-import {GrayColors} from '../../../constants/colors';
+import {GrayColors, SystemColors} from '../../../constants/colors';
+import SubButton from '../../../components/atoms/Button/SubButton';
+import CenteredModal from '../../../components/atoms/CenterModal';
 
 const MAX_IMAGE_COUNT = 10;
 
@@ -31,9 +34,12 @@ const WriteReviewScreen = () => {
   const route = useRoute<StoreDetailRouteProp>();
   const navigation = useMapNavigation();
   const {rating} = route.params;
+  const isWriteScreen = false;
 
   const [imagePaths, setImagePaths] = useState<ImageProps[]>([]);
   const [content, setContent] = useState('');
+  const [starRating, setStarRating] = useState(rating);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const handleAddImage = async () => {
     try {
@@ -76,8 +82,15 @@ const WriteReviewScreen = () => {
           contentContainerStyle={{flexGrow: 1}}
           keyboardShouldPersistTaps="handled">
           <S.WriteReviewScreenContainer>
-            <S.ReviewContainer>
-              <StarRating rating={rating} starSize={51} />
+            <S.ReviewContainer $isWriteScreen={isWriteScreen}>
+              <StarRating
+                rating={starRating}
+                starSize={51}
+                ratingPressed={rating => {
+                  setStarRating(rating);
+                }}
+              />
+
               {imagePaths.length == 0 ? (
                 <S.AddImageButtonContainer
                   onPress={() => {
@@ -127,6 +140,7 @@ const WriteReviewScreen = () => {
                   })}
                 </S.ImageListContainer>
               )}
+
               <MultilineTextInput
                 textEdited={text => {
                   setContent(text);
@@ -136,17 +150,58 @@ const WriteReviewScreen = () => {
                 }
               />
             </S.ReviewContainer>
-            <MainButton
-              disabled={content.length == 0}
-              text={'작성 완료'}
-              onPress={() => {
-                Keyboard.dismiss();
-                navigation.navigate('WriteCompleteScreen');
-              }}
-            />
+
+            {isWriteScreen ? (
+              <MainButton
+                disabled={content.length == 0}
+                text={'작성 완료'}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  navigation.navigate('CompleteScreen', {
+                    completeType: 'create',
+                  });
+                }}
+              />
+            ) : (
+              <S.ButtonContainer>
+                <MainButton
+                  disabled={content.length == 0}
+                  text={'수정하기'}
+                  onPress={() => {
+                    Keyboard.dismiss();
+                    navigation.navigate('CompleteScreen', {
+                      completeType: 'update',
+                    });
+                  }}
+                />
+                <SubButton
+                  text={'삭제하기'}
+                  color={SystemColors['danger']}
+                  onPress={() => {
+                    Keyboard.dismiss();
+                    setDeleteModalVisible(true);
+                  }}
+                />
+              </S.ButtonContainer>
+            )}
           </S.WriteReviewScreenContainer>
         </ScrollView>
       </TouchableNativeFeedback>
+      <CenteredModal
+        visible={deleteModalVisible}
+        confirmText={'삭제하기'}
+        title="정말 리뷰를 삭제할까요?"
+        children={<Text>{`리뷰가 사라지며, 복구할 수 없습니다.`}</Text>}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+        }}
+        onConfirm={() => {
+          setDeleteModalVisible(false);
+          navigation.navigate('CompleteScreen', {
+            completeType: 'delete',
+          });
+        }}
+      />
     </KeyboardAvoidingView>
   );
 };

@@ -1,7 +1,6 @@
 import {
   Image,
   ImageBackground,
-  Pressable,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -21,11 +20,12 @@ export const WriteReviewScreenContainer = styled(View)`
   padding: ${scale(24)}px ${scale(24)}px ${scale(16)}px ${scale(24)}px;
 `;
 
-export const ReviewContainer = styled(View)`
+export const ReviewContainer = styled(View)<{$isWriteScreen: boolean}>`
   width: 100%;
   gap: ${scale(24)}px;
   align-items: center;
-  margin-bottom: ${scale(75)}px;
+  margin-bottom: ${({$isWriteScreen}) =>
+    $isWriteScreen ? scale(75) : scale(12)}px;
 `;
 
 export const AddImageButtonContainer = styled(TouchableOpacity)`
@@ -89,4 +89,9 @@ export const DeleteImageIcon = styled(Image)`
   height: ${scale(12)}px;
   background-color: ${GrayColors[900]};
   border-radius: 1000px;
+`;
+
+export const ButtonContainer = styled(View)`
+  gap: ${scale(8)}px;
+  width: 100%;
 `;
