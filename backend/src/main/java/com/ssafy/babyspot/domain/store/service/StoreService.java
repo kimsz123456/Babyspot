@@ -167,9 +167,8 @@ public class StoreService {
 		Map<Integer, List<KeywordReviewDto>> keywordReviewMap = allReviews.stream()
 			.collect(Collectors.groupingBy(
 				r -> r.getStoreKeyword().getId(),
-				Collectors.flatMapping(
-					r -> r.getReview().stream()
-						.map(content -> new KeywordReviewDto(r.getSource(), content)),
+				Collectors.mapping(
+					r -> new KeywordReviewDto(r.getSource(), r.getReview()),
 					Collectors.toList()
 				)
 			));
@@ -178,7 +177,7 @@ public class StoreService {
 			.mapToInt(StoreKeyword::getCount)
 			.sum();
 
-		List<KeywordDto> keywordDtos = keywords.stream()
+		List<KeywordDto> keywordDto = keywords.stream()
 			.map(k -> new KeywordDto(
 				k.getKeyword(),
 				k.getCount(),
@@ -186,7 +185,7 @@ public class StoreService {
 			))
 			.collect(Collectors.toList());
 
-		return new KeywordSectionDto(keywordDtos, totalCount);
+		return new KeywordSectionDto(keywordDto, totalCount);
 	}
 
 	@Transactional
