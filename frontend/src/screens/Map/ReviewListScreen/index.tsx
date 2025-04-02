@@ -9,19 +9,62 @@ import MoreButtonWithDivider from '../../../components/atoms/MoreButtonWithDivid
 import {IC_YELLOW_STAR, IC_COMMENT, IC_FILTER} from '../../../constants/icons';
 import {withDivider} from '../../../utils/withDivider';
 import ReviewFilterModal from './ReviewFilterModal';
+import {
+  getStoreReviews,
+  ReviewResponseType,
+} from '../../../services/reviewService';
 
 type StoreDetailRouteProp = RouteProp<MapStackParamList, 'ReviewListScreen'>;
 
 const ReviewListScreen = () => {
   const route = useRoute<StoreDetailRouteProp>();
-
+  const {storeId} = route.params;
   const [modalOpened, setModalOpened] = useState(false);
   const [selectedAges, setSelectedAges] = useState<number[]>([]);
+  const [reviews, setReviews] = useState<ReviewResponseType['content']>([]);
+  const [totalElements, setTotalElements] = useState(0);
+  const [displayedReviews, setDisplayedReviews] = useState<
+    ReviewResponseType['content']
+  >([]);
+  const [filteredReviews, setFilteredReviews] = useState<
+    ReviewResponseType['content']
+  >([]);
 
   const reviewInformation = route.params.reviewInformation;
   const filteredAges = route.params.filterAges;
+  const PAGE_SIZE = 4;
 
-  const visibleReviews = reviewInformation.reviews.slice(0, 3);
+  const calculateFilteredReviews = (
+    reviews: ReviewResponseType['content'],
+    ages: number[],
+  ) => {
+    if (ages.length === 0) return reviews;
+    return reviews.filter(review =>
+      review.babyAge.some(age => ages.includes(age)),
+    );
+  };
+
+  const calculateAverageRating = () => {
+    if (reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return (sum / reviews.length).toFixed(1);
+  };
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await getStoreReviews(storeId);
+        setReviews(response.content);
+        setTotalElements(response.totalElements);
+        setDisplayedReviews(response.content.slice(0, PAGE_SIZE));
+        setFilteredReviews(response.content);
+      } catch (error) {
+        throw error;
+      }
+    };
+
+    fetchReviews();
+  }, [storeId]);
 
   useEffect(() => {
     if (filteredAges) {
@@ -29,7 +72,20 @@ const ReviewListScreen = () => {
     }
   }, [filteredAges]);
 
-  const handleMoreButtonPress = () => {};
+  useEffect(() => {
+    const filtered = calculateFilteredReviews(reviews, selectedAges);
+    setFilteredReviews(filtered);
+    setDisplayedReviews(filtered.slice(0, PAGE_SIZE));
+  }, [selectedAges, reviews]);
+
+  const handleMoreButtonPress = () => {
+    const currentLength = displayedReviews.length;
+    const nextReviews = filteredReviews.slice(
+      currentLength,
+      currentLength + PAGE_SIZE,
+    );
+    setDisplayedReviews([...displayedReviews, ...nextReviews]);
+  };
 
   return (
     <>
@@ -42,12 +98,12 @@ const ReviewListScreen = () => {
                 <S.InformationContainer>
                   <S.InformationIconImage source={IC_YELLOW_STAR} />
                   <S.InformationText
-                    $isStar>{`별점 ${reviewInformation.totalRating}`}</S.InformationText>
+                    $isStar>{`별점 ${calculateAverageRating()}`}</S.InformationText>
                 </S.InformationContainer>
                 <S.InformationContainer>
                   <S.InformationIconImage source={IC_COMMENT} />
                   <S.InformationText $isStar={false}>
-                    {`리뷰 ${reviewInformation.totalReviewCount}개`}
+                    {`리뷰 ${totalElements}개`}
                   </S.InformationText>
                 </S.InformationContainer>
               </S.InformationListContainer>
@@ -60,22 +116,40 @@ const ReviewListScreen = () => {
             </TouchableOpacity>
           </S.TitleHeaderContainer>
           <S.ReviewCardListContainer>
-            {withDivider(
-              [
-                ...visibleReviews.map((review, index) => {
-                  return <ReviewCard key={index} {...review} />;
-                }),
-              ],
-              <ThinDivider />,
+            {filteredReviews.length > 0 ? (
+              withDivider(
+                displayedReviews.map((review, index) => (
+                  <ReviewCard
+                    key={review.reviewId + index}
+                    reviewId={review.reviewId}
+                    memberId={review.memberId}
+                    memberNickname={review.memberNickname}
+                    profileImagePath={''} // API 응답에 없는 필드
+                    reviewCount={1} // API 응답에 없는 필드
+                    imgUrls={review.imgUrls}
+                    babyAge={review.babyAge}
+                    rating={review.rating}
+                    content={review.content}
+                    likeCount={review.likeCount}
+                    createdAt={review.createdAt}
+                  />
+                )),
+                <ThinDivider />,
+              )
+            ) : (
+              <S.NoReviewText> 리뷰가 없습니다. </S.NoReviewText>
             )}
           </S.ReviewCardListContainer>
 
-          <MoreButtonWithDivider
-            onPressed={handleMoreButtonPress}
-            isOpened={false}
-            openedText={'리뷰 접기'}
-            closedText={'리뷰 더 보기'}
-          />
+          {filteredReviews.length > PAGE_SIZE &&
+            displayedReviews.length < filteredReviews.length && (
+              <MoreButtonWithDivider
+                onPressed={handleMoreButtonPress}
+                isOpened={false}
+                openedText={'리뷰 접기'}
+                closedText={'리뷰 더 보기'}
+              />
+            )}
         </S.ReviewContainer>
       </S.ReviewListScreenScrollView>
       <ReviewFilterModal

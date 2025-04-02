@@ -24,7 +24,11 @@ export type MapStackParamList = {
   KakaoPostcode: undefined;
   StoreDetail: {storeBasicInformation: StoreBasicInformationType};
   KeywordReview: {keywordInformation: KeywordProps};
-  ReviewListScreen: {reviewInformation: ReviewProps; filterAges?: number[]};
+  ReviewListScreen: {
+    reviewInformation: ReviewProps;
+    filterAges?: number[];
+    storeId: number;
+  };
   WriteReviewScreen: {storeName: string; rating: number};
   CompleteScreen: {completeType: CompleteTypes};
   SelectRecommendationAgeScreen: undefined;

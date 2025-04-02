@@ -6,20 +6,22 @@ import scale from '../../../../../../utils/scale';
 import StarRating from '../../../../../../components/atoms/StarRating';
 
 export interface ReviewCardProps {
-  isMine?: boolean;
-  name: string;
-  profileImagePath: string;
-  reviewCount: number;
-  imageUrls: string[];
-  ages: number[];
+  reviewId: number;
+  memberId: number;
+  memberNickname: string;
+  profileImagePath: string; // 임시
+  reviewCount: number; // 임시
+  babyAge: number[];
   rating: number;
-  review: string;
-  likes: number;
-  date: string;
+  content: string;
+  createdAt: string;
+  imgUrls: string[];
+  likeCount: number;
 }
 
 const ReviewCard = (props: ReviewCardProps) => {
-  const totalImages = props.imageUrls.length;
+  const totalImages = props.imgUrls?.length || 0;
+  const babyAges = props.babyAge || [];
 
   return (
     <S.ReviewCardContainer>
@@ -31,12 +33,12 @@ const ReviewCard = (props: ReviewCardProps) => {
         <S.InformationAndAgeContainer>
           <S.NameAndReviewContainer>
             <S.ProfileNameText numberOfLines={1} ellipsizeMode="tail">
-              {props.name}
+              {props.memberNickname}
             </S.ProfileNameText>
             <S.ProfileReviewText>{`리뷰 ${props.reviewCount}`}</S.ProfileReviewText>
           </S.NameAndReviewContainer>
           <S.AgeMarkerContainer>
-            {props.ages.map((age, idx) => (
+            {babyAges.map((age, idx) => (
               <S.AgeMarker
                 key={idx}
                 source={AGE_MARKERS[age]}
@@ -52,26 +54,26 @@ const ReviewCard = (props: ReviewCardProps) => {
         <S.RatingText>{props.rating.toFixed(1)}</S.RatingText>
       </S.RatingContainer>
 
-      <S.ReviewText>{props.review}</S.ReviewText>
+      <S.ReviewText>{props.content}</S.ReviewText>
 
       <S.ImageContainer>
         {totalImages > 4 ? (
           <>
-            {props.imageUrls.slice(0, 3).map((imageUrl, idx) => (
+            {props.imgUrls?.slice(0, 3).map((imageUrl, idx) => (
               <S.Images key={idx} source={{uri: imageUrl}} />
             ))}
             <S.OverlayWrapper key="overlay">
-              <S.Images source={{uri: props.imageUrls[3]}} />
+              <S.Images source={{uri: props.imgUrls?.[3]}} />
               <S.OverlayText>+{totalImages - 4}</S.OverlayText>
             </S.OverlayWrapper>
           </>
         ) : (
           <>
-            {props.imageUrls.map((imageUrl, idx) => (
+            {props.imgUrls?.map((imageUrl, idx) => (
               <S.Images key={idx} source={{uri: imageUrl}} />
             ))}
-            {props.imageUrls.length != 0 &&
-              Array.from({length: 4 - props.imageUrls.length}).map(
+            {props.imgUrls?.length != 0 &&
+              Array.from({length: 4 - (props.imgUrls?.length || 0)}).map(
                 (_, index) => <S.EmptyBox key={index} />,
               )}
           </>
@@ -81,9 +83,9 @@ const ReviewCard = (props: ReviewCardProps) => {
       <S.LastRowContainer>
         <S.LikesContainer>
           <S.LikeIcon source={IC_HEART} />
-          <S.Likes>{props.likes}</S.Likes>
+          <S.Likes>{props.likeCount}</S.Likes>
         </S.LikesContainer>
-        <S.Date>{props.date}</S.Date>
+        <S.Date>{props.createdAt}</S.Date>
       </S.LastRowContainer>
     </S.ReviewCardContainer>
   );
