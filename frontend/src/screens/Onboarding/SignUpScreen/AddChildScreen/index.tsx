@@ -1,17 +1,22 @@
 import React, {useState} from 'react';
 import {View, Alert, ScrollView} from 'react-native';
+
 import {Picker} from '@react-native-picker/picker';
-import * as S from './styles';
-import MainButton from '../../../../components/atoms/Button/MainButton';
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import {useOnboardingNavigation} from '../../../../hooks/useNavigationHooks';
+import {useOnboardingStore} from '../../../../stores/onboardingStore';
+import {useGlobalStore} from '../../../../stores/globalStore';
+
+import MainButton from '../../../../components/atoms/Button/MainButton';
 import ChildrenInfromationButton from './ChildrenInfromationButton';
 import AddChildrenButton from './AddChildrenButton';
 import CenteredModal from '../../../../components/atoms/CenterModal';
-import {useOnboardingStore} from '../../../../stores/onboardingStore';
 import {signUp} from '../../../../services/onboardingService';
-import {useGlobalStore} from '../../../../stores/globalStore';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import useUploadImageToS3 from '../../../../hooks/useUploadImageToS3';
+
+import uploadImageToS3 from '../../../../utils/uploadImageToS3';
+
+import * as S from './styles';
 
 interface ChildrenButtonProps {
   year: number;
@@ -23,11 +28,6 @@ const AddChildScreen = () => {
 
   const {profileImageName, profileImageType, profileImagePath} =
     useOnboardingStore();
-  const {uploadImage} = useUploadImageToS3({
-    imageName: profileImageName,
-    imageType: profileImageType,
-    imagePath: profileImagePath,
-  });
 
   const [childrens, setChildrens] = useState<ChildrenButtonProps[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -104,7 +104,6 @@ const AddChildScreen = () => {
 
     const tempToken = useOnboardingStore.getState().tempToken;
     const nickname = useOnboardingStore.getState().nickname;
-    const profileImageName = useOnboardingStore.getState().profileImageName;
     const childBirthYears = useOnboardingStore.getState().childBirthYears;
 
     try {
@@ -128,7 +127,11 @@ const AddChildScreen = () => {
           useGlobalStore.getState().setAccessToken(response.accessToken);
           await EncryptedStorage.setItem('refreshToken', response.refreshToken);
 
-          await uploadImage();
+          await uploadImageToS3({
+            imageName: profileImageName,
+            imageType: profileImageType,
+            imagePath: profileImagePath,
+          });
 
           navigation.navigate('SignUpComplete');
         }
