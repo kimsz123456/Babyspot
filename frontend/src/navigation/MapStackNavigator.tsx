@@ -57,7 +57,16 @@ const MapStackNavigator = () => {
       <Stack.Screen
         name="StoreDetail"
         component={StoreDetailScreen}
-        options={{headerShown: false}}
+        options={({route}) => ({
+          header(props) {
+            return (
+              <CustomHeader
+                props={props}
+                title={route.params.storeBasicInformation.title}
+              />
+            );
+          },
+        })}
       />
       <Stack.Screen
         name="KeywordReview"
