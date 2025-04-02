@@ -3,6 +3,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import Config from 'react-native-config';
 import {getTokenByRefreshToken} from './onboardingService';
 import {useGlobalStore} from '../stores/globalStore';
+import {getMemberProfile} from './profileService';
 
 const baseURL = Config.BASE_URL;
 
@@ -80,6 +81,9 @@ api.interceptors.response.use(
 
         useGlobalStore.getState().setAccessToken(response.accessToken);
         await EncryptedStorage.setItem('refreshToken', response.refreshToken);
+
+        const memberProfile = await getMemberProfile();
+        useGlobalStore.getState().setMemberProfile(memberProfile);
 
         originalRequest.headers.Authorization = response.accessToken;
 
