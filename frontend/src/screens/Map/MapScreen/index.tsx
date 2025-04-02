@@ -31,7 +31,10 @@ import calculateMapRegion from '../../../utils/calculateMapRegion';
 import checkLocationPermission from '../../../utils/checkLocationPermission';
 import getCurrentLocation from '../../../utils/getCurrentLocation';
 import moveToCamera from '../../../utils/moveToCamera';
-import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
+import {
+  IC_RECOMMEND_MARKER,
+  IC_RESTAURANT_MARKER,
+} from '../../../constants/icons';
 
 import * as S from './styles';
 
@@ -49,6 +52,7 @@ const MapScreen = () => {
     {centerCoordinate, zoom},
   );
   const {chips, handleChipPressed} = useChips();
+  const {selectedAges, setSelectedAges} = useMapStore();
 
   const clearAddress = useMapStore(state => state.clearAddress);
 
@@ -93,6 +97,7 @@ const MapScreen = () => {
 
   const handleResearchButtonPress = () => {
     clearAddress();
+    setSelectedAges([]);
 
     if (!mapRef.current) {
       return;
@@ -121,6 +126,7 @@ const MapScreen = () => {
         bottomRightLong: bottomRight.longitude,
       });
 
+      console.log('주변 가게 검색 결과');
       console.log(response);
 
       setStores(response);
@@ -130,6 +136,51 @@ const MapScreen = () => {
       console.error(e);
     } finally {
       setIsPendingResearch(false);
+    }
+  };
+
+  const searchRecommendStores = async () => {
+    try {
+      if (!mapRef.current) {
+        return;
+      }
+
+      // 더 넓은 범위로 zoom 변경
+      mapRef.current.animateCameraTo({
+        latitude: centerCoordinate.latitude,
+        longitude: centerCoordinate.longitude,
+        zoom: 13,
+      });
+
+      // 보이는 영역 다시 계산
+      const {topLeft, bottomRight} = calculateMapRegion(
+        centerCoordinate,
+        mapRegion,
+      );
+
+      // 주변 음식점 검색
+      const response = await getRangeInfo({
+        topLeftLat: topLeft.latitude,
+        topLeftLong: topLeft.longitude,
+        bottomRightLat: bottomRight.latitude,
+        bottomRightLong: bottomRight.longitude,
+      });
+
+      // 음식점 필터링
+      const filteredStores = response.filter(store => {
+        return store.babyAges?.some((age: number) =>
+          selectedAges.includes(age),
+        );
+      });
+
+      console.log('추천 음식점 목록');
+      console.log(filteredStores);
+
+      setStores(filteredStores);
+
+      updateLastSearchedCoordinate();
+    } catch (error) {
+      throw error;
     }
   };
 
@@ -182,6 +233,14 @@ const MapScreen = () => {
     searchStoresInRegion();
   }, [isPendingResearch, zoom]);
 
+  useEffect(() => {
+    if (selectedAges.length === 0) {
+      return;
+    }
+
+    searchRecommendStores();
+  }, [selectedAges]);
+
   return (
     <S.MapScreenContainer>
       <S.NaverMap
@@ -197,7 +256,11 @@ const MapScreen = () => {
             longitude={data.longitude}
             width={30}
             height={40}
-            image={IC_RESTAURANT_MARKER}
+            image={
+              selectedAges.length > 0
+                ? IC_RECOMMEND_MARKER
+                : IC_RESTAURANT_MARKER
+            }
             onTap={() => handleMarkerTab(idx)}
           />
         ))}

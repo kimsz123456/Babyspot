@@ -1,6 +1,7 @@
 import {api} from './api';
 import axios from 'axios';
 import Config from 'react-native-config';
+import {StoreBasicInformationType} from '../screens/Map/NearStoreListScreen/components/StoreBasicInformation/types';
 
 interface RangeInfoParameterType {
   topLeftLat: number;
@@ -73,7 +74,9 @@ export interface Sentiment {
   negative: any[];
 }
 
-export const getRangeInfo = async (data: RangeInfoParameterType) => {
+export const getRangeInfo = async (
+  data: RangeInfoParameterType,
+): Promise<StoreBasicInformationType[]> => {
   try {
     const result = await api.get(
       `/store/rangeinfo?topLeftLat=${data.topLeftLat}&topLeftLong=${data.topLeftLong}&bottomRightLat=${data.bottomRightLat}&bottomRightLong=${data.bottomRightLong}`,

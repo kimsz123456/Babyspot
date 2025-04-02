@@ -13,16 +13,20 @@ import scale from '../../../utils/scale';
 import * as S from './styles';
 
 const MAX_SELECT_COUNT = 3;
-const INITIAL_AGES: AgeProps[] = Array.from({length: 7}, (_, index) => ({
-  age: index + 1,
-  isSelected: false,
-}));
 
 const SelectRecommendationAgeScreen = () => {
-  const [ages, setAges] = useState(INITIAL_AGES);
-
-  const {setSelectedAges} = useMapStore();
   const navigation = useMapNavigation();
+  const {selectedAges, setSelectedAges} = useMapStore();
+
+  const initialAges: AgeProps[] = Array.from({length: 7}, (_, index) => {
+    const age = index + 1;
+    return {
+      age,
+      isSelected: selectedAges.includes(age),
+    };
+  });
+
+  const [ages, setAges] = useState(initialAges);
 
   const selectedCount = ages.filter(age => age.isSelected).length;
 
