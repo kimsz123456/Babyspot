@@ -45,7 +45,7 @@ const GPSQuestion = styled(Image)`
   height: ${scale(24)}px;
 `;
 
-const PrivacyTermsContainer = styled(View)`
+const PrivacyTermsContainer = styled(Pressable)`
   padding: ${scale(8)}px 0px;
   flex-direction: row;
   align-items: center;
@@ -71,7 +71,7 @@ const AppVersionNumber = styled(Text)`
   color: ${SecondaryColors[500]};
 `;
 
-const LogoutContainer = styled(View)`
+const LogoutContainer = styled(Pressable)`
   padding: ${scale(8)}px 0px;
   flex-direction: row;
   align-items: center;
@@ -81,7 +81,7 @@ const LogoutTitle = styled(Text)`
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
 `;
-const LogoutButton = styled(Image)`
+const RightArrowButton = styled(Image)`
   width: ${scale(24)}px;
   height: ${scale(24)}px;
 `;
@@ -113,7 +113,7 @@ export {
   AppVersionNumber,
   LogoutContainer,
   LogoutTitle,
-  LogoutButton,
+  RightArrowButton,
   DeleteAccountContainer,
   DeleteAccount,
 };
