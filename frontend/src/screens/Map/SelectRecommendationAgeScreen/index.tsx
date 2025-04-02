@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {ToastAndroid, View} from 'react-native';
 
 import {useMapNavigation} from '../../../hooks/useNavigationHooks';
@@ -39,10 +39,6 @@ const SelectRecommendationAgeScreen = () => {
       });
     });
   };
-
-  useEffect(() => {
-    console.log(ages);
-  }, [ages]);
 
   return (
     <S.SelectRecommendationAgeScreenContainer>
