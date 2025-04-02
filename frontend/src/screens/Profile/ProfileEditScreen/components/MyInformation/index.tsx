@@ -1,29 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import * as S from './styles';
 import LinedTextInput from '../../../../../components/atoms/Button/LinedTextInput';
-import {getMemberProfile} from '../../../../../services/profileService';
+import {useGlobalStore} from '../../../../../stores/globalStore';
 
 interface MyInformationProps {
   onNicknameChange: (nickname: string) => void;
 }
 
 const MyInformation = ({onNicknameChange}: MyInformationProps) => {
+  const {memberProfile} = useGlobalStore();
   const [nickname, setNickname] = useState('');
   const [placeholder, setPlaceholder] = useState('');
 
   useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
-  const fetchUserProfile = async () => {
-    try {
-      const data = await getMemberProfile();
-      setPlaceholder(data.nickname);
-      setNickname(data.nickname);
-    } catch (error) {
-      console.error('프로필 정보 조회 실패:', error);
+    if (memberProfile) {
+      setPlaceholder(memberProfile.nickname);
+      setNickname(memberProfile.nickname);
     }
-  };
+  }, [memberProfile]);
 
   return (
     <S.InformationContainer>
