@@ -1,6 +1,5 @@
 import {FamilyReviewProps} from './components/FamilyReview';
-import {KeywordSectionProps} from './components/Keyword';
-import {ReviewCardProps} from './components/Review/ReviewCard';
+import {KeywordSectionProps, ReviewFromTypes} from './components/Keyword';
 import {StoreDetailInformationType} from './types';
 
 export const keywordSectionMock: KeywordSectionProps = {
@@ -11,11 +10,11 @@ export const keywordSectionMock: KeywordSectionProps = {
       count: 12,
       keywordReviews: [
         {
-          reviewFrom: 'blog',
+          reviewFrom: ReviewFromTypes.Blog,
           content: '아이와 함께 방문했는데 화장실도 깨끗하고 위생적이었어요.',
         },
         {
-          reviewFrom: 'place',
+          reviewFrom: ReviewFromTypes.Place,
           content: '테이블 정리가 잘 되어 있어 쾌적했어요.',
         },
       ],
@@ -25,11 +24,11 @@ export const keywordSectionMock: KeywordSectionProps = {
       count: 8,
       keywordReviews: [
         {
-          reviewFrom: 'cafe',
+          reviewFrom: ReviewFromTypes.Blog,
           content: '사장님이 너무 친절해서 기분 좋게 식사했어요.',
         },
         {
-          reviewFrom: 'place',
+          reviewFrom: ReviewFromTypes.Place,
           content: '직원분들이 아이에게도 친절하게 대해주셔서 좋았어요.',
         },
       ],
@@ -39,11 +38,11 @@ export const keywordSectionMock: KeywordSectionProps = {
       count: 10,
       keywordReviews: [
         {
-          reviewFrom: 'blog',
+          reviewFrom: ReviewFromTypes.Blog,
           content: '놀이 공간도 있어서 아이가 심심해하지 않았어요.',
         },
         {
-          reviewFrom: 'cafe',
+          reviewFrom: ReviewFromTypes.Blog,
           content: '유아식 의자가 준비돼 있어 편했어요.',
         },
       ],
@@ -65,79 +64,6 @@ export const familyReviewMocks: FamilyReviewProps = {
     '구이가 불친절하고 귤이 맛없어요...',
   ],
 };
-
-export const reviewMocks: ReviewCardProps[] = [
-  {
-    name: 'Soshy',
-    profileImagePath:
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-
-    reviewCount: 12,
-    imageUrls: [],
-    ages: [1, 3],
-    rating: 2.5,
-    review:
-      '나의 고향... 제주도의 맛이 나는 감귤 집입니다... 감귤은 촉촉했고, 귤밥은 쫀득하니 아주 맛있었습니다. 앞으로 자주 찾을 것 같아요.',
-    likes: 13,
-    date: '25.03.19',
-  },
-  {
-    name: 'Soshy',
-    profileImagePath:
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-
-    reviewCount: 12,
-    imageUrls: [
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-    ],
-    ages: [1],
-    rating: 2.5,
-    review:
-      '나의 고향... 제주도의 맛이 나는 감귤 집입니다... 감귤은 촉촉했고, 귤밥은 쫀득하니 아주 맛있었습니다. 앞으로 자주 찾을 것 같아요.',
-    likes: 13,
-    date: '25.03.19',
-  },
-  {
-    name: 'Soshy',
-    profileImagePath:
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-
-    reviewCount: 12,
-    imageUrls: [
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-    ],
-    ages: [1, 3],
-    rating: 2.5,
-    review:
-      '나의 고향... 제주도의 맛이 나는 감귤 집입니다... 감귤은 촉촉했고, 귤밥은 쫀득하니 아주 맛있었습니다. 앞으로 자주 찾을 것 같아요.',
-    likes: 13,
-    date: '25.03.19',
-  },
-  {
-    name: 'Soshy',
-    profileImagePath:
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-
-    reviewCount: 12,
-    imageUrls: [
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-      'https://img.mbn.co.kr/filewww/news/other/2020/07/16/002622210002.jpg',
-    ],
-    ages: [1, 3],
-    rating: 2.5,
-    review:
-      '나의 고향... 제주도의 맛이 나는 감귤 집입니다... 감귤은 촉촉했고, 귤밥은 쫀득하니 아주 맛있었습니다. 앞으로 자주 찾을 것 같아요.',
-    likes: 13,
-    date: '25.03.19',
-  },
-];
 
 const MOCK: StoreDetailInformationType = {
   storeId: 1,

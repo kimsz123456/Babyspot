@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import * as S from './styles';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
-import {
-  IC_NAVER_BLOG,
-  IC_NAVER_CAFE,
-  IC_NAVER_PLACE,
-} from '../../../constants/icons';
+import {IC_NAVER_BLOG, IC_NAVER_PLACE} from '../../../constants/icons';
+import {ReviewFromTypes} from '../StoreDetailScreen/components/Keyword';
+import {TouchableOpacity} from 'react-native';
+import {withDivider} from '../../../utils/withDivider';
+import {ThinDivider} from '../../../components/atoms/Divider';
 
 type KeywordReviewScreenRouteProp = RouteProp<
   MapStackParamList,
@@ -26,30 +26,40 @@ const KeywordReviewScreen = () => {
         </S.TextContainer>
 
         <S.ReviewListContainer>
-          {keywordInformation.keywordReviews.map((review, index) => {
-            let iconImage;
-            switch (review.reviewFrom) {
-              case 'blog':
-                iconImage = IC_NAVER_BLOG;
-                break;
+          {withDivider(
+            [
+              ...keywordInformation.keywordReviews.map((review, index) => {
+                const [isFold, setIsFold] = useState(true);
 
-              case 'place':
-                iconImage = IC_NAVER_PLACE;
-                break;
+                let iconImage;
+                switch (review.reviewFrom) {
+                  case ReviewFromTypes.Blog:
+                    iconImage = IC_NAVER_BLOG;
+                    break;
 
-              case 'cafe':
-                iconImage = IC_NAVER_CAFE;
+                  case ReviewFromTypes.Place:
+                    iconImage = IC_NAVER_PLACE;
+                    break;
+                }
 
-                break;
-            }
-
-            return (
-              <S.ReviewContainer key={index}>
-                <S.IconImage source={iconImage} resizeMode="contain" />
-                <S.ContentText>{review.content}</S.ContentText>
-              </S.ReviewContainer>
-            );
-          })}
+                return (
+                  <S.ReviewContainer
+                    key={index}
+                    onPress={() => {
+                      setIsFold(!isFold);
+                    }}>
+                    <S.IconImage source={iconImage} resizeMode="contain" />
+                    <S.ContentText
+                      numberOfLines={isFold ? 2 : undefined}
+                      ellipsizeMode="tail">
+                      {review.content}
+                    </S.ContentText>
+                  </S.ReviewContainer>
+                );
+              }),
+            ],
+            <ThinDivider />,
+          )}
         </S.ReviewListContainer>
       </S.KeywordReviewContainer>
     </S.ScrollViewContainer>

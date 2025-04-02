@@ -1,6 +1,8 @@
 import {api} from './api';
 import axios from 'axios';
 import Config from 'react-native-config';
+import {KeywordSectionProps} from '../screens/Map/StoreDetailScreen/components/Keyword';
+import {ReviewType} from './reviewService';
 
 interface RangeInfoParameterType {
   topLeftLat: number;
@@ -52,11 +54,11 @@ export interface StoreDetailResponse {
   storeName: string;
   images: Image[];
   menus: MenuType[];
-  keywordsAndReviews: any[];
+  keywordSection: KeywordSectionProps;
   sentiment: Sentiment;
   kidsMenu: KidsMenu[];
-  latestReviews: any[];
-  babyAges: null;
+  latestReviews: ReviewType[];
+  babyAges: number[];
 }
 
 export interface Image {
