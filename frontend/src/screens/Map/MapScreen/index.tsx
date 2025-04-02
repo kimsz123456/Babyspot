@@ -70,8 +70,6 @@ const MapScreen = () => {
     try {
       const {latitude, longitude} = await getCurrentLocation();
 
-      console.log(`latitude: ${latitude}  /  longitude: ${longitude}`);
-
       moveToCamera({latitude, longitude, mapRef});
 
       setIsReadyToFirstSearch(true);
@@ -120,8 +118,6 @@ const MapScreen = () => {
         bottomRightLat: bottomRight.latitude,
         bottomRightLong: bottomRight.longitude,
       });
-
-      console.log(response);
 
       setStores(response);
 

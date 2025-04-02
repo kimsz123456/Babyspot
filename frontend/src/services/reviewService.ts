@@ -42,7 +42,7 @@ export interface ReviewType {
 export const getStoreReviews = async (storeId: number) => {
   try {
     const response = await api.get(`/reviews/${storeId}/list`);
-    console.log('리뷰 목록 응답:', response.data);
+
     return response.data as ReviewResponseType;
   } catch (error) {
     console.error('리뷰 목록 조회 실패:', error);
