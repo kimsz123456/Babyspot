@@ -134,7 +134,6 @@ public class MemberService {
 
 			List<Baby> newBabies = new ArrayList<>();
 			for (Integer birthYear : request.getBabyAges()) {
-				// 해당 출생년도에 대한 Baby가 없다면 새로 생성
 				if (!existingBirthYears.contains(birthYear)) {
 					Baby baby = Baby.builder()
 						.member(member)

@@ -34,4 +34,6 @@ public class KeywordReview {
 	@Column(name = "review", columnDefinition = "json")
 	@Convert(converter = ListToJsonConverter.class)
 	private List<String> review;
+
+	private String source;
 }

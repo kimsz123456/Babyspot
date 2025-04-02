@@ -7,8 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class KeywordDto {
-	private String keyword;
-	private int count;
-	private List<KeywordReviewDto> keywordReviews;
+public class KeywordReviewDto {
+	private String reviewFrom;
+	private String content;
 }

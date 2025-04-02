@@ -19,7 +19,7 @@ public class StoreDetailDto {
 
 	private List<StoreMenuDto> menus;
 
-	private List<KeywordDto> keywordsAndReviews;
+	private KeywordSectionDto keywordSection;
 
 	private SentimentAnalysisDto sentiment;
 

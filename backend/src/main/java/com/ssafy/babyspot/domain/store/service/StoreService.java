@@ -31,6 +31,8 @@ import com.ssafy.babyspot.domain.store.StoreKeyword;
 import com.ssafy.babyspot.domain.store.StoreMenu;
 import com.ssafy.babyspot.domain.store.dto.ConvenienceDto;
 import com.ssafy.babyspot.domain.store.dto.KeywordDto;
+import com.ssafy.babyspot.domain.store.dto.KeywordReviewDto;
+import com.ssafy.babyspot.domain.store.dto.KeywordSectionDto;
 import com.ssafy.babyspot.domain.store.dto.KidsMenuDto;
 import com.ssafy.babyspot.domain.store.dto.SentimentAnalysisDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDefaultInfoDto;
@@ -158,22 +160,33 @@ public class StoreService {
 	}
 
 	@Transactional
-	public List<KeywordDto> getKeywordsAndReviews(int storeId) {
+	public KeywordSectionDto getKeywordsAndReviews(int storeId) {
 		List<StoreKeyword> keywords = storeKeywordRepository.findAllByStore_Id(storeId);
 		List<KeywordReview> allReviews = keywordReviewRepository.findAllByStoreKeyword_Store_Id(storeId);
 
-		Map<Integer, List<String>> reviewsMap = allReviews.stream()
+		Map<Integer, List<KeywordReviewDto>> keywordReviewMap = allReviews.stream()
 			.collect(Collectors.groupingBy(
 				r -> r.getStoreKeyword().getId(),
-				Collectors.flatMapping(r -> r.getReview().stream(), Collectors.toList())
+				Collectors.flatMapping(
+					r -> r.getReview().stream()
+						.map(content -> new KeywordReviewDto(r.getSource(), content)),
+					Collectors.toList()
+				)
 			));
 
-		return keywords.stream()
+		int totalCount = keywords.stream()
+			.mapToInt(StoreKeyword::getCount)
+			.sum();
+
+		List<KeywordDto> keywordDtos = keywords.stream()
 			.map(k -> new KeywordDto(
 				k.getKeyword(),
-				reviewsMap.getOrDefault(k.getId(), Collections.emptyList())
+				k.getCount(),
+				keywordReviewMap.getOrDefault(k.getId(), Collections.emptyList())
 			))
 			.collect(Collectors.toList());
+
+		return new KeywordSectionDto(keywordDtos, totalCount);
 	}
 
 	@Transactional
@@ -200,7 +213,7 @@ public class StoreService {
 
 		List<StoreImageDto> storeImages = getStoreImages(storeId);
 		List<StoreMenuDto> storeMenus = getStoreMenus(storeId);
-		List<KeywordDto> keywords = getKeywordsAndReviews(storeId);
+		KeywordSectionDto keywordSection = getKeywordsAndReviews(storeId);
 		SentimentAnalysisDto sentiment = getSentimentAnalysis(storeId);
 		List<KidsMenuDto> kidsMenus = getKidsMenu(storeId);
 
@@ -230,7 +243,7 @@ public class StoreService {
 			.storeName(store.getTitle())
 			.images(storeImages)
 			.menus(storeMenus)
-			.keywordsAndReviews(keywords)
+			.keywordSection(keywordSection)
 			.sentiment(sentiment)
 			.kidsMenu(kidsMenus)
 			.latestReviews(latestReviews)
