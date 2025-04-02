@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {ToastAndroid, View} from 'react-native';
 
+import {useMapStore} from '../../../stores/mapStore';
 import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 
 import AgeButton from '../../../components/atoms/AgeButton';
@@ -20,6 +21,7 @@ const INITIAL_AGES: AgeProps[] = Array.from({length: 7}, (_, index) => ({
 const SelectRecommendationAgeScreen = () => {
   const [ages, setAges] = useState(INITIAL_AGES);
 
+  const {setSelectedAges} = useMapStore();
   const navigation = useMapNavigation();
 
   const selectedCount = ages.filter(age => age.isSelected).length;
@@ -38,6 +40,14 @@ const SelectRecommendationAgeScreen = () => {
           : age;
       });
     });
+  };
+
+  const handleMainButtonPress = () => {
+    const selectedAges = ages.filter(age => age.isSelected).map(age => age.age);
+
+    setSelectedAges(selectedAges);
+
+    navigation.pop();
   };
 
   return (
@@ -74,9 +84,7 @@ const SelectRecommendationAgeScreen = () => {
       <MainButton
         disabled={selectedCount === 0}
         text={'추천 받기'}
-        onPress={() => {
-          navigation.pop();
-        }}
+        onPress={handleMainButtonPress}
       />
     </S.SelectRecommendationAgeScreenContainer>
   );
