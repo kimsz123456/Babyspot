@@ -35,6 +35,8 @@ const StoreBasicInformation = ({
 }: StoreBasicInformationProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const haveBabyAges = store.babyAges && store.babyAges.length > 0;
+
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const index = Math.round(contentOffsetX / width);
@@ -80,15 +82,17 @@ const StoreBasicInformation = ({
         <S.FirstRowContainer>
           <S.StoreName>{store.title}</S.StoreName>
           <S.StoreCategory>{store.category}</S.StoreCategory>
-          <S.AgeMarkerContainer>
-            {store.babyAges.map((age, idx) => (
-              <S.AgeMarker
-                key={idx}
-                source={AGE_MARKERS[age]}
-                $ageIndex={idx}
-              />
-            ))}
-          </S.AgeMarkerContainer>
+          {haveBabyAges && (
+            <S.AgeMarkerContainer>
+              {store.babyAges.map((age, idx) => (
+                <S.AgeMarker
+                  key={idx}
+                  source={AGE_MARKERS[age]}
+                  $ageIndex={idx}
+                />
+              ))}
+            </S.AgeMarkerContainer>
+          )}
           {store.okZone && <OKZoneMarker />}
         </S.FirstRowContainer>
 
