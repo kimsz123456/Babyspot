@@ -1,20 +1,20 @@
 import {Text, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
-import {GrayColors, PrimaryColors} from '../../../../constants/colors';
+import {GrayColors} from '../../../../constants/colors';
 import {FontStyles} from '../../../../constants/fonts';
 import scale from '../../../../utils/scale';
 
-const SubButtonContainer = styled(TouchableOpacity)`
+const SubButtonContainer = styled(TouchableOpacity)<{$color: string}>`
   width: 100%;
   border-radius: 10px;
-  border-color: ${PrimaryColors[500]};
+  border-color: ${({$color}) => $color};
   border-width: ${scale(1)}px;
   background-color: ${GrayColors[0]};
   align-items: center;
 `;
-const SubButtonText = styled(Text)`
+const SubButtonText = styled(Text)<{$color: string}>`
   ${FontStyles.bodyMedium};
-  color: ${PrimaryColors[500]};
+  color: ${({$color}) => $color};
   padding: ${scale(16)}px 0;
 `;
 

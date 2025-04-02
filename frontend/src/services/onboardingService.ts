@@ -58,7 +58,7 @@ export const getTokenByRefreshToken =
     }
   };
 
-export const signUp = async ({
+export const postSignUp = async ({
   params,
   tempToken,
 }: {

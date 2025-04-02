@@ -4,22 +4,22 @@ import MainButton from '../../../../components/atoms/Button/MainButton';
 import {IC_COMPLETE} from '../../../../constants/icons';
 import {useMapNavigation} from '../../../../hooks/useNavigationHooks';
 
-const WriteCompleteScreen = () => {
+const EditCompleteScreen = () => {
   const navigation = useMapNavigation();
 
   return (
-    <S.WriteCompleteScreenContainer>
+    <S.EditCompleteScreenContainer>
       <S.CompleteContainer>
         <S.CompleteIcon source={IC_COMPLETE} />
-        <S.CompleteText>{`작성이 완료되었습니다.`}</S.CompleteText>
+        <S.CompleteText>{`수정이 완료되었습니다.`}</S.CompleteText>
       </S.CompleteContainer>
       <MainButton
-        text={'작성 완료'}
+        text={'수정 완료'}
         onPress={() => {
           navigation.pop(2);
         }}
       />
-    </S.WriteCompleteScreenContainer>
+    </S.EditCompleteScreenContainer>
   );
 };
-export default WriteCompleteScreen;
+export default EditCompleteScreen;
