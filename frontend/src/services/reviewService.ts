@@ -30,13 +30,16 @@ export interface ReviewType {
   reviewId: number;
   memberId: number;
   memberNickname: string;
-  babyAge: number[];
+  babyAges: number[];
+  storeId: number;
+  storeName: string;
+  profile: string;
+  reviewCount: number;
   rating: number;
   content: string;
   createdAt: string;
   imgUrls: string[];
   likeCount: number;
-  storeId: number;
 }
 
 export const getStoreReviews = async (storeId: number) => {

@@ -4,7 +4,6 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import {IC_NAVER_BLOG, IC_NAVER_PLACE} from '../../../constants/icons';
 import {ReviewFromTypes} from '../StoreDetailScreen/components/Keyword';
-import {TouchableOpacity} from 'react-native';
 import {withDivider} from '../../../utils/withDivider';
 import {ThinDivider} from '../../../components/atoms/Divider';
 

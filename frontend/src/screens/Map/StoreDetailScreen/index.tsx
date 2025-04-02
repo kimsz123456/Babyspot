@@ -7,7 +7,7 @@ import Home from './components/Home';
 import Menu from './components/Menu';
 import {ThickDivider} from '../../../components/atoms/Divider';
 
-import MOCK, {familyReviewMocks, keywordSectionMock, reviewMocks} from './mock';
+import {familyReviewMocks} from './mock';
 
 import * as S from './styles';
 import KidMenu from './components/KidMenu';
@@ -32,8 +32,6 @@ type StoreDetailRouteProp = RouteProp<MapStackParamList, 'StoreDetail'>;
 
 const StoreDetailScreen = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [reviews, setReviews] = useState<ReviewResponseType['content']>([]);
-  const [totalElements, setTotalElements] = useState(0);
   const [storeDetail, setStoreDetail] = useState<StoreDetailResponse>();
 
   const route = useRoute<StoreDetailRouteProp>();
@@ -45,18 +43,11 @@ const StoreDetailScreen = () => {
 
   const fetchStoreDetail = async () => {
     try {
-      // const response = await getStoreDetail(storeBasicInformation.storeId);
-      const response = await getStoreDetail(3);
+      // TODO: 가게 돌리기, 콘솔 삭제, 데이터 없을 때 처리
+      const response = await getStoreDetail(storeBasicInformation.storeId);
       console.log(response);
 
-      const reviewResponse = await getStoreReviews(
-        storeBasicInformation.storeId,
-      );
-
       setStoreDetail(response);
-
-      setReviews(reviewResponse.content);
-      setTotalElements(reviewResponse.totalElements);
     } catch (error) {
       console.error('리뷰 목록 조회 실패:', error);
     }
@@ -91,10 +82,7 @@ const StoreDetailScreen = () => {
             <Home basicInformation={storeBasicInformation} />,
             <KidMenu menus={storeDetail.kidsMenu} />,
             <Menu menus={storeDetail.menus} />,
-            <KeywordSection
-              keywords={keywordSectionMock.keywords}
-              totalCount={keywordSectionMock.totalCount}
-            />,
+            <KeywordSection {...storeDetail.keywordSection} />,
             <FamilyReview
               positiveSummary={familyReviewMocks.positiveSummary}
               positiveReviews={familyReviewMocks.positiveReviews}
@@ -103,24 +91,9 @@ const StoreDetailScreen = () => {
             />,
             <MyReview storeName={storeBasicInformation.title} review={null} />,
             <Review
-              totalRating={
-                reviews.length > 0
-                  ? Number(
-                      (
-                        reviews.reduce(
-                          (acc, review) => acc + review.rating,
-                          0,
-                        ) / reviews.length
-                      ).toFixed(1),
-                    )
-                  : 0
-              }
-              totalReviewCount={totalElements} // TODO: 총 리뷰 개수 표시
-              reviews={reviews.slice(0, 2).map(review => ({
-                ...review,
-                profileImagePath: '', // 임시
-                reviewCount: 1, // 임시
-              }))}
+              totalRating={storeBasicInformation.rating}
+              totalReviewCount={storeBasicInformation.reviewCount}
+              reviews={storeDetail.latestReviews}
               storeName={storeBasicInformation.title}
               storeId={storeBasicInformation.storeId}
             />,

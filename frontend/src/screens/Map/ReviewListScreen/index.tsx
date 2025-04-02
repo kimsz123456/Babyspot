@@ -40,7 +40,7 @@ const ReviewListScreen = () => {
   ) => {
     if (ages.length === 0) return reviews;
     return reviews.filter(review =>
-      review.babyAge.some(age => ages.includes(age)),
+      review.babyAges.some(age => ages.includes(age)),
     );
   };
 
@@ -119,20 +119,7 @@ const ReviewListScreen = () => {
             {filteredReviews.length > 0 ? (
               withDivider(
                 displayedReviews.map((review, index) => (
-                  <ReviewCard
-                    key={review.reviewId + index}
-                    reviewId={review.reviewId}
-                    memberId={review.memberId}
-                    memberNickname={review.memberNickname}
-                    profileImagePath={''} // API 응답에 없는 필드
-                    reviewCount={1} // API 응답에 없는 필드
-                    imgUrls={review.imgUrls}
-                    babyAge={review.babyAge}
-                    rating={review.rating}
-                    content={review.content}
-                    likeCount={review.likeCount}
-                    createdAt={review.createdAt}
-                  />
+                  <ReviewCard key={index} {...review} />
                 )),
                 <ThinDivider />,
               )
