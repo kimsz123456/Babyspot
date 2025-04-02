@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import {postImgPresignedUrl} from '../services/onboardingService';
 import getImageBlob from './getImageBlob';
 
@@ -22,11 +20,13 @@ const uploadImageToS3 = async ({
 
     const {profileImgPreSignedUrl} = response;
 
-    const blob = getImageBlob(imagePath || '');
+    const blob = await getImageBlob(imagePath || '');
 
-    await axios.put(profileImgPreSignedUrl, blob, {
+    await fetch(profileImgPreSignedUrl, {
+      method: 'PUT',
+      body: blob,
       headers: {
-        'Content-Type': imageType,
+        'Content-Type': imageType || 'application/octet-stream',
       },
     });
   } catch (error) {
