@@ -18,6 +18,7 @@ export interface ReviewProps {
   totalReviewCount: number;
   reviews: ReviewCardProps[];
   storeName: string;
+  storeId: number;
 }
 
 const Review = (props: ReviewProps) => {
@@ -29,6 +30,7 @@ const Review = (props: ReviewProps) => {
   const handleMoreButtonPress = () => {
     navigation.navigate('ReviewListScreen', {
       reviewInformation: props,
+      storeId: props.storeId,
     });
   };
 
@@ -85,6 +87,7 @@ const Review = (props: ReviewProps) => {
           navigation.navigate('ReviewListScreen', {
             reviewInformation: props,
             filterAges: selectedAges,
+            storeId: props.storeId,
           });
         }}
       />
