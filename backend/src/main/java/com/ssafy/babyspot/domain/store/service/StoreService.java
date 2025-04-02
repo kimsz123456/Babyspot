@@ -246,6 +246,7 @@ public class StoreService {
 			.sentiment(sentiment)
 			.kidsMenu(kidsMenus)
 			.latestReviews(latestReviews)
+			.babyAges(store.getBabyAges())
 			.build();
 	}
 
