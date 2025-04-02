@@ -8,8 +8,8 @@ import re
 import subprocess
 
 # 처리할 레스토랑 ID 범위
-start_id = 9
-end_id = 9
+start_id = 15
+end_id = 15
 
 # 레스토랑 ID 목록 (범위 또는 특정 ID 목록 사용 가능)
 restaurant_ids = range(start_id, end_id + 1)  # 1부터 10까지

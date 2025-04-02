@@ -13,7 +13,7 @@ def run_home_info_pipeline(restaurant_id):
   # 데이터 정제를 위한 파이프라인 생성
   pipeline = Pipeline()
 
-  review_dir = f"/user/hadoop/big_final_rest_home_information_json/restaurant_id={restaurant_id}"
+  review_dir = f"/user/hadoop/big_final_rest_home_information_json2/restaurant_id={restaurant_id}"
 
   system_prompt = f"""
   항상 한국어로 대답 부탁드립니다.
@@ -295,8 +295,8 @@ def main():
   결과를 병합한 후, 사용자가 원하는 시점에 PostgreSQL 데이터베이스에 저장합니다.
   """
   # 처리할 레스토랑 ID 범위
-  start_id = 11
-  end_id = 11
+  start_id = 10
+  end_id = 10
 
   # 레스토랑 ID 목록 (범위 또는 특정 ID 목록 사용 가능)
   restaurant_ids = range(start_id, end_id + 1)  # 1부터 10까지

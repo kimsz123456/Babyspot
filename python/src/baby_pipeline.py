@@ -7,15 +7,15 @@ from db.database import \
   PostgresImporter  # database.py 모듈에서 PostgresImporter 클래스 가져오기
 
 # 처리할 레스토랑 ID 범위
-start_id = 6
-end_id = 6
+start_id = 1
+end_id = 1
 
 # 레스토랑 ID 목록 (범위 또는 특정 ID 목록 사용 가능)
 restaurant_ids = range(start_id, end_id + 1)  # 1부터 10까지
 # restaurant_ids = [2, 5, 10, 15, 20]  # 특정 ID만 처리하려면 이렇게 리스트로 지정
 
 # 실행 모드 설정
-do_extract = True  # True: HDFS에서 리뷰 추출 및 분석 실행
+do_extract = False  # True: HDFS에서 리뷰 추출 및 분석 실행
 do_save = True  # True: 데이터베이스에 저장 실행
 
 # 데이터 정제를 위한 파이프라인 생성

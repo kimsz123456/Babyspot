@@ -180,7 +180,7 @@ def main():
   결과를 Store 테이블에 업데이트합니다.
   """
   # 처리할 레스토랑 ID 범위
-  start_id = 22
+  start_id = 394
   end_id = 500
 
   # 레스토랑 ID 목록 (범위 또는 특정 ID 목록 사용 가능)

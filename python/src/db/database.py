@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from typing import Dict, Any, List
 from collections import Counter
 
+
 class PostgresImporter:
   def __init__(self):
     """
@@ -313,38 +314,6 @@ class PostgresImporter:
       self.cursor.execute(insert_query, (keyword, count, store_id))
       return self.cursor.fetchone()[0]
 
-  def _save_review_keyword_relation_with_source(self, content, keyword_id,
-      source):
-    """
-    리뷰 컨텐츠와 키워드 ID 간의 관계를 소스 정보와 함께 저장
-
-    Args:
-        content (str): 리뷰 내용
-        keyword_id (int): 키워드 ID
-        source (str): 리뷰 소스 ('naver' 또는 'blog')
-
-    Returns:
-        int: 저장된 관계의 ID 또는 -1(에러)
-    """
-    cursor = self.conn.cursor()
-
-    try:
-      # 리뷰 컨텐츠 & 키워드 ID & 소스 관계 저장
-      cursor.execute(
-          """
-          INSERT INTO review_keyword_relations
-          (content, keyword_id, source)
-          VALUES (%s, %s, %s)
-          RETURNING id
-          """,
-          (content, keyword_id, source)
-      )
-      relation_id = cursor.fetchone()[0]
-      return relation_id
-    except Exception as e:
-      print(f"리뷰-키워드 관계 저장 중 오류: {e}")
-      return -1
-
   def import_sentiment_analysis(self, positive_json, negative_json, store_id):
     try:
       # sentiment_analysis 테이블에 단일 행으로 저장
@@ -420,6 +389,38 @@ class PostgresImporter:
       self.conn.rollback()
 
       return {"success": False, "error": str(e)}
+
+  def _save_review_keyword_relation_with_source(self, content, keyword_id,
+      source):
+    """
+    리뷰 컨텐츠와 키워드 ID 간의 관계를 소스 정보와 함께 저장
+
+    Args:
+        content (str): 리뷰 내용
+        keyword_id (int): 키워드 ID (store_keyword 테이블의 id 값)
+        source (str): 리뷰 소스 ('네이버' 또는 '블로그')
+
+    Returns:
+        int: 저장된 관계의 ID 또는 -1(에러)
+    """
+    try:
+      # 리뷰 컨텐츠 & 키워드 ID & 소스 관계 저장
+      self.cursor.execute(
+          """
+          INSERT INTO keyword_review
+          (review, store_keyword, source)
+          VALUES (%s, %s, %s)
+          RETURNING id
+          """,
+          (content, keyword_id, source)
+      )
+      relation_id = self.cursor.fetchone()[0]
+      self.conn.commit()
+      return relation_id
+    except Exception as e:
+      self.conn.rollback()
+      print(f"리뷰-키워드 관계 저장 중 오류: {e}")
+      return -1
 
   def close(self):
     """
