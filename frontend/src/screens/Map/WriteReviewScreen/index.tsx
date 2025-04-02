@@ -3,7 +3,7 @@ import * as S from './styles';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import StarRating from '../../../components/atoms/StarRating';
-import {IC_SECONDARY_PLUS} from '../../../constants/icons';
+import {IC_DELETE_IMAGE, IC_SECONDARY_PLUS} from '../../../constants/icons';
 import MultilineTextInput from '../../../components/atoms/MultilineTextInput';
 import {
   Keyboard,
@@ -14,16 +14,55 @@ import {
 } from 'react-native';
 import MainButton from '../../../components/atoms/Button/MainButton';
 import {useMapNavigation} from '../../../hooks/useNavigationHooks';
+import {launchImageLibrary} from 'react-native-image-picker';
+import scale from '../../../utils/scale';
+import {GrayColors} from '../../../constants/colors';
+
+const MAX_IMAGE_COUNT = 10;
 
 type StoreDetailRouteProp = RouteProp<MapStackParamList, 'WriteReviewScreen'>;
+interface ImageProps {
+  fileName: string;
+  uri: string;
+  type: string;
+}
 
 const WriteReviewScreen = () => {
   const route = useRoute<StoreDetailRouteProp>();
   const navigation = useMapNavigation();
+  const {rating} = route.params;
 
+  const [imagePaths, setImagePaths] = useState<ImageProps[]>([]);
   const [content, setContent] = useState('');
 
-  const {rating} = route.params;
+  const handleAddImage = async () => {
+    try {
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 1,
+        selectionLimit: MAX_IMAGE_COUNT - imagePaths.length,
+      });
+
+      if (result.assets) {
+        const existingFileNames = imagePaths.map(img => img.fileName);
+
+        const newImages = result.assets
+          .filter(
+            image =>
+              image.fileName && !existingFileNames.includes(image.fileName),
+          )
+          .map(image => ({
+            fileName: image.fileName || '',
+            uri: image.uri || '',
+            type: image.type || 'image/jpeg',
+          }));
+
+        setImagePaths(prev => [...prev, ...newImages]);
+      }
+    } catch (error) {
+      console.error('이미지 선택 실패:', error);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -39,14 +78,58 @@ const WriteReviewScreen = () => {
           <S.WriteReviewScreenContainer>
             <S.ReviewContainer>
               <StarRating rating={rating} starSize={51} />
-              <S.AddImageButtonContainer>
-                <S.AddImageText>{`사진을 추가해 주세요`}</S.AddImageText>
-                <S.AddImageSecondaryPlusIcon source={IC_SECONDARY_PLUS} />
-              </S.AddImageButtonContainer>
+              {imagePaths.length == 0 ? (
+                <S.AddImageButtonContainer
+                  onPress={() => {
+                    handleAddImage();
+                  }}>
+                  <S.AddImageText>{`사진을 추가해 주세요`}</S.AddImageText>
+                  <S.AddImageSecondaryPlusIcon source={IC_SECONDARY_PLUS} />
+                </S.AddImageButtonContainer>
+              ) : (
+                <S.ImageListContainer
+                  horizontal
+                  contentContainerStyle={{
+                    minWidth: '100%',
+                    columnGap: scale(8),
+                    paddingHorizontal: scale(24),
+                  }}
+                  showsHorizontalScrollIndicator={false}>
+                  <S.AddImageSmallButtonContainer
+                    onPress={() => {
+                      handleAddImage();
+                    }}>
+                    <S.AddImageSmallSecondaryPlusIcon
+                      source={IC_SECONDARY_PLUS}
+                    />
+                    <S.AddImageSmallText>{`${imagePaths.length} / ${MAX_IMAGE_COUNT}`}</S.AddImageSmallText>
+                  </S.AddImageSmallButtonContainer>
+                  {imagePaths.map((images, index) => {
+                    return (
+                      <S.ImageContainer
+                        key={index}
+                        source={{uri: images.uri}}
+                        imageStyle={{
+                          borderWidth: 1,
+                          borderColor: GrayColors[200],
+                          borderRadius: scale(10),
+                        }}>
+                        <S.DeleteIconContainer
+                          onPress={() => {
+                            setImagePaths(prev =>
+                              prev.filter((_, i) => i !== index),
+                            );
+                          }}>
+                          <S.DeleteImageIcon source={IC_DELETE_IMAGE} />
+                        </S.DeleteIconContainer>
+                      </S.ImageContainer>
+                    );
+                  })}
+                </S.ImageListContainer>
+              )}
               <MultilineTextInput
                 textEdited={text => {
                   setContent(text);
-                  console.log(text);
                 }}
                 placeholder={
                   '아이와 함께하기에 어떠셨는지 알려주세요!\n작성 내용은 마이페이지와 해당 매장의 리뷰에 노출 됩니다.'
