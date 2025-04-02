@@ -1,17 +1,24 @@
 import React, {useState} from 'react';
 import {View, Alert, ScrollView} from 'react-native';
+
 import {Picker} from '@react-native-picker/picker';
-import * as S from './styles';
-import MainButton from '../../../../components/atoms/Button/MainButton';
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import {useOnboardingNavigation} from '../../../../hooks/useNavigationHooks';
-import ChildrenInfromationButton from './ChildrenInfromationButton';
+import {useOnboardingStore} from '../../../../stores/onboardingStore';
+import {useGlobalStore} from '../../../../stores/globalStore';
+
+import MainButton from '../../../../components/atoms/Button/MainButton';
+import ChildrenInformationButton from './ChildrenInformationButton';
 import AddChildrenButton from './AddChildrenButton';
 import CenteredModal from '../../../../components/atoms/CenterModal';
-import {useOnboardingStore} from '../../../../stores/onboardingStore';
-import {signUp} from '../../../../services/onboardingService';
-import {useGlobalStore} from '../../../../stores/globalStore';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import useUploadImageToS3 from '../../../../hooks/useUploadImageToS3';
+import {
+  postImgPresignedUrl,
+  postSignUp,
+} from '../../../../services/onboardingService';
+import uploadImageToS3 from '../../../../utils/uploadImageToS3';
+
+import * as S from './styles';
 
 interface ChildrenButtonProps {
   year: number;
@@ -23,23 +30,18 @@ const AddChildScreen = () => {
 
   const {profileImageName, profileImageType, profileImagePath} =
     useOnboardingStore();
-  const {uploadImage} = useUploadImageToS3({
-    imageName: profileImageName,
-    imageType: profileImageType,
-    imagePath: profileImagePath,
-  });
 
-  const [childrens, setChildrens] = useState<ChildrenButtonProps[]>([]);
+  const [children, setChildren] = useState<ChildrenButtonProps[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  const totalChildrenCount = childrens.reduce(
+  const totalChildrenCount = children.reduce(
     (sum, child) => sum + child.count,
     0,
   );
 
   const handleMinus = (index: number) => {
-    setChildrens(prev => {
+    setChildren(prev => {
       const target = prev[index];
       if (target.count <= 1) {
         return prev.filter((_, i) => i !== index);
@@ -56,7 +58,7 @@ const AddChildScreen = () => {
       Alert.alert('최대 10명까지만 입력할 수 있습니다.');
       return;
     }
-    setChildrens(prev =>
+    setChildren(prev =>
       prev.map((child, i) =>
         i === index ? {...child, count: child.count + 1} : child,
       ),
@@ -73,7 +75,7 @@ const AddChildScreen = () => {
   };
 
   const handleConfirm = () => {
-    setChildrens(prev => {
+    setChildren(prev => {
       const existingIndex = prev.findIndex(
         child => child.year === selectedYear,
       );
@@ -93,7 +95,7 @@ const AddChildScreen = () => {
   const handleSignUp = async () => {
     let childrenArray: number[] = [];
 
-    childrens
+    children
       .sort((a, b) => b.year - a.year)
       .map(item => {
         for (let i = 0; i < item.count; i++) {
@@ -104,7 +106,6 @@ const AddChildScreen = () => {
 
     const tempToken = useOnboardingStore.getState().tempToken;
     const nickname = useOnboardingStore.getState().nickname;
-    const profileImageName = useOnboardingStore.getState().profileImageName;
     const childBirthYears = useOnboardingStore.getState().childBirthYears;
 
     try {
@@ -115,7 +116,7 @@ const AddChildScreen = () => {
         childBirthYears != null &&
         tempToken != null
       ) {
-        const response = await signUp({
+        const response = await postSignUp({
           params: {
             nickname,
             profileImgUrl: profileImageName,
@@ -128,7 +129,20 @@ const AddChildScreen = () => {
           useGlobalStore.getState().setAccessToken(response.accessToken);
           await EncryptedStorage.setItem('refreshToken', response.refreshToken);
 
-          await uploadImage();
+          // pre-signed url 요청
+          const preSignedUrlData = await postImgPresignedUrl({
+            profileName: profileImageName || '',
+            contentType: profileImageType || '',
+          });
+
+          const {profileImgPreSignedUrl} = preSignedUrlData;
+
+          // S3 업로드
+          await uploadImageToS3({
+            imageType: profileImageType,
+            imagePath: profileImagePath,
+            preSignedUrl: profileImgPreSignedUrl,
+          });
 
           navigation.navigate('SignUpComplete');
         }
@@ -150,10 +164,10 @@ const AddChildScreen = () => {
             <View>
               <S.AddChildrenSectionTitle>자녀 정보</S.AddChildrenSectionTitle>
               <S.ChildrenInformationSection>
-                {[...childrens]
+                {[...children]
                   .sort((a, b) => b.year - a.year)
                   .map((item, index) => (
-                    <ChildrenInfromationButton
+                    <ChildrenInformationButton
                       key={`${item.year}-${index}`}
                       year={item.year}
                       currentCount={item.count}
