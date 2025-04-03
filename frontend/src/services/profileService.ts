@@ -1,6 +1,6 @@
 import {api} from './api';
 
-export interface MemberProfile {
+export interface MemberProfileType {
   id: number;
   nickname: string;
   profile_img: string;
@@ -9,9 +9,33 @@ export interface MemberProfile {
   babyBirthYears: number[];
 }
 
-export const getMemberProfile = async (): Promise<MemberProfile> => {
+export interface UpdateProfileRequestType {
+  nickname: string;
+  profileImgUrl: string;
+  contentType: string;
+  babyAges: number[];
+}
+
+export interface UpdateProfileResponseType {
+  nickname: string;
+  preSignedUrl: string;
+  profileImgUrl: string;
+}
+
+export const getMemberProfile = async (): Promise<MemberProfileType> => {
   try {
     const result = await api.get('/members/me');
+    return result.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const patchMemberProfile = async (
+  data: UpdateProfileRequestType,
+): Promise<UpdateProfileResponseType> => {
+  try {
+    const result = await api.patch('/members/update', data);
     return result.data;
   } catch (error) {
     throw error;

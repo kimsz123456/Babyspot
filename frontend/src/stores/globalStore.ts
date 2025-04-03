@@ -1,13 +1,13 @@
 import {create} from 'zustand';
-import {MemberProfile} from '../services/profileService';
+import {MemberProfileType} from '../services/profileService';
 
 interface GlobalState {
   accessToken: string | null;
   isLoggedIn: boolean;
-  memberProfile: MemberProfile | null;
+  memberProfile: MemberProfileType | null;
   setAccessToken: (token: string | null) => void;
   setIsLoggedIn: (loggedIn: boolean) => void;
-  setMemberProfile: (profile: MemberProfile | null) => void;
+  setMemberProfile: (profile: MemberProfileType | null) => void;
   resetGlobalState: () => void;
 }
 
