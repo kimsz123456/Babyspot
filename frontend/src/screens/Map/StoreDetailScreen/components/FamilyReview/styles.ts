@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import {GrayColors, SystemColors} from '../../../../../constants/colors';
 import {FontStyles} from '../../../../../constants/fonts';
@@ -35,6 +35,8 @@ export const SummaryText = styled(Text)`
 export const ReviewTextContainer = styled(View)`
   gap: ${scale(8)}px;
 `;
+
+export const ReviewTextButton = styled(TouchableOpacity)``;
 
 export const ReviewText = styled(Text)<{$isPositive: boolean}>`
   padding: ${scale(4)}px ${scale(8)}px;
