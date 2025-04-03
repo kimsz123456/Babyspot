@@ -44,6 +44,7 @@ const StoreDetailScreen = () => {
   const fetchStoreDetail = async () => {
     try {
       // TODO: 가게 돌리기, 콘솔 삭제, 데이터 없을 때 처리
+      // const response = await getStoreDetail(3);
       const response = await getStoreDetail(storeBasicInformation.storeId);
       console.log(response);
 
@@ -84,10 +85,10 @@ const StoreDetailScreen = () => {
             <Menu menus={storeDetail.menus} />,
             <KeywordSection {...storeDetail.keywordSection} />,
             <FamilyReview
-              positiveSummary={familyReviewMocks.positiveSummary}
-              positiveReviews={familyReviewMocks.positiveReviews}
-              negativeSummary={familyReviewMocks.negativeSummary}
-              negativeReviews={familyReviewMocks.negativeReviews}
+              positiveSummary={storeDetail.sentiment.positive[0]}
+              positiveReviews={storeDetail.sentiment.positive}
+              negativeSummary={storeDetail.sentiment.negative[0]}
+              negativeReviews={storeDetail.sentiment.negative}
             />,
             <MyReview storeName={storeBasicInformation.title} review={null} />,
             <Review
