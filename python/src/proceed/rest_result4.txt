@@ -1,0 +1,8 @@
+{
+    "restaurant_id": "4",
+    "title": "한우특가",
+    "parking": true,
+    "baby_chair": true,
+    "baby_tableware": true,
+    "kids_menu": "된장국밥"
+}

@@ -1,0 +1,12 @@
+{
+  "restaurant_id": "8",
+  "address": "서울 중랑구 동일로 635 흥양빌딩 7면목역 3번 출구에서 796m",
+  "transportation_convenience": "7호선 면목역 3번출구",
+  "contact_number": "0507-1426-3734",
+  "business_hours": "월~수 화~토 16:00 - 23:00, 일 정기휴무",
+  "title": "이어도참치",
+  "parking": true,
+  "baby_chair": true,
+  "kids_menu": "회덮밥",
+  "location": "POINT(127.07968 37.5871763)"
+}

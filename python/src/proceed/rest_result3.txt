@@ -1,0 +1,35 @@
+{
+    "restaurant_id": "3",
+    "title": "신선한우촌",
+    "parking": false,
+    "baby_chair": false,
+    "baby_tableware": false,
+    "kids_menu": ""
+}
+
+{
+  "restaurant_id": "3",
+  "title": "",
+  "parking": false,
+  "baby_chair": false,
+  "baby_tableware": false,
+  "kids_menu": ""
+}
+
+{
+    "restaurant_id": "3",
+    "title": "신선한우촌",
+    "parking": false, 
+    "baby_chair": false, 
+    "baby_tableware": false, 
+    "kids_menu": ""
+}
+
+{
+    "restaurant_id": "3",
+    "title": "신선한우촌",
+    "parking": true,
+    "baby_chair": false,
+    "baby_tableware": false,
+    "kids_menu": "누룽지 등심,갈비"
+}

@@ -1,0 +1,11 @@
+{
+  "restaurant_id": "1",
+  "address": "서울 중랑구 동일로 633",
+  "transportation_convenience": "7면목역 3번 출구에서 756m",
+  "contact_number": "02-435-7999",
+  "business_hours": "매일 00:00 - 24:00",
+  "title": "황기닭곰탕",
+  "baby_chair": true,
+  "kids_menu": "돈까스",
+  "location": "POINT(127.0796735 37.5870124)"
+}

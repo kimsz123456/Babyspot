@@ -1,0 +1,8 @@
+{
+    "restaurant_id": "10",
+    "title": "성공시대팔팔추어탕",
+    "parking": true,
+    "baby_chair": false,
+    "baby_tableware": false,
+    "kids_menu": "수제돈까스,  왕새우튀김"
+}

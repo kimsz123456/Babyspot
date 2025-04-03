@@ -1,0 +1,11 @@
+{
+  "restaurant_id": "6",
+  "address": "서울 중랑구 봉우재로 68 1층 105호 육육상회",
+  "transportation_convenience": "경의중앙경춘중랑역 3번 출구에서 697m",
+  "contact_number": "0507-1347-6693",
+  "business_hours": "매일 11:00 - 23:00",
+  "title": "육육상회",
+  "kids_menu": "한우안심100g(키즈메뉴)",
+  "parking": true,
+  "location": "POINT(127.0807473 37.5912678)"
+}

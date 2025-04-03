@@ -1,0 +1,26 @@
+{
+    "restaurant_id": "6",
+    "title": "육육상회",
+    "parking": false,
+    "baby_chair": false,
+    "baby_tableware": false,
+    "kids_menu": "한우안심100g(키즈메뉴)"
+}
+
+{
+    "restaurant_id": "6",
+    "title": "",
+    "parking": false,
+    "baby_chair": false,
+    "baby_tableware": false,
+    "kids_menu": "한우안심100g"
+}
+
+{
+    "restaurant_id": "6",
+    "title": "육육상회",
+    "parking": true,
+    "baby_chair": false,
+    "baby_tableware": false,
+    "kids_menu": "부드러운 암소부위"
+}
