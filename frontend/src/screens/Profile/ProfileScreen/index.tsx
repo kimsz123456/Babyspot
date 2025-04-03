@@ -31,7 +31,7 @@ const AGE_ICONS: {[key: number]: ImageSourcePropType} = {
 const ProfileScreen = () => {
   const navigation = useProfileNavigation();
   const {memberProfile} = useGlobalStore();
-  console.log(memberProfile);
+
   const getBabyAgeIcon = (babyBirthYears?: number[]) => {
     if (!babyBirthYears || babyBirthYears.length === 0) {
       return <S.AgeIcons source={IC_AGE3} />;
