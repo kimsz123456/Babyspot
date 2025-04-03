@@ -57,12 +57,25 @@ const MapStackNavigator = () => {
       <Stack.Screen
         name="StoreDetail"
         component={StoreDetailScreen}
-        options={{headerShown: false}}
+        options={({route}) => ({
+          header(props) {
+            return (
+              <CustomHeader
+                props={props}
+                title={route.params.storeBasicInformation.title}
+              />
+            );
+          },
+        })}
       />
       <Stack.Screen
         name="KeywordReview"
         component={KeywordReviewScreen}
-        options={() => ({title: '키워드 리뷰'})}
+        options={() => ({
+          header(props) {
+            return <CustomHeader props={props} title={'키워드 리뷰'} />;
+          },
+        })}
       />
       <Stack.Screen
         name="ReviewListScreen"

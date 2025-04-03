@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {menuType} from '../../types';
 import {formatPrice} from '../../../../../utils/format';
 import * as S from './styles';
 import OKzoneMarker from '../../../../../components/atoms/OKZoneMarker';
 import MoreButtonWithDivider from '../../../../../components/atoms/MoreButtonWithDivider';
+import {KidsMenu} from '../../../../../services/mapService';
 
 interface KidMenuProps {
-  menus: menuType[];
+  menus: KidsMenu[];
 }
 
 const KidMenu = ({menus}: KidMenuProps) => {
@@ -25,22 +25,27 @@ const KidMenu = ({menus}: KidMenuProps) => {
         <OKzoneMarker />
       </S.TitleContainer>
       <S.MenuListContainer>
-        {visibleMenus.map(menu => (
-          <S.LineContainer key={menu.name}>
-            <S.BasicText>{menu.name}</S.BasicText>
+        {visibleMenus.map((menu, index) => (
+          <S.LineContainer key={index}>
+            <S.BasicText>{menu.babyMenuName}</S.BasicText>
             <S.BasicText>
-              <S.BoldText>{formatPrice(menu.price)}</S.BoldText>원
+              <S.BoldText>
+                {menu.babyMenuPrice ? formatPrice(menu.babyMenuPrice) : `-`}
+              </S.BoldText>
+              {`원`}
             </S.BasicText>
           </S.LineContainer>
         ))}
       </S.MenuListContainer>
 
-      <MoreButtonWithDivider
-        onPressed={handleMoreButtonPress}
-        isOpened={isMenuOpened}
-        openedText={'메뉴 접기'}
-        closedText={'메뉴 더 보기'}
-      />
+      {menus.length > 0 && (
+        <MoreButtonWithDivider
+          onPressed={handleMoreButtonPress}
+          isOpened={isMenuOpened}
+          openedText={'메뉴 접기'}
+          closedText={'메뉴 더 보기'}
+        />
+      )}
     </S.MenuContainer>
   );
 };

@@ -38,8 +38,7 @@ export const LineContainer = styled(View)`
 `;
 
 export const BasicText = styled(Text)`
-  ${FontStyles.bodyMedium}
-  line-height: ${scale(28)}px;
+  ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
 `;
 

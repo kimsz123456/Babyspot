@@ -35,7 +35,7 @@ const CustomHeader = (props: CustomHeaderProps) => {
         <Text
           style={{
             fontFamily: 'Pretendard-SemiBold',
-            fontSize: scale(16),
+            fontSize: scale(18),
             marginLeft: scale(8),
             lineHeight: scale(24),
           }}>

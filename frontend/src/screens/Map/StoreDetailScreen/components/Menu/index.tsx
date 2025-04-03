@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {menuType} from '../../types';
 import {formatPrice} from '../../../../../utils/format';
 import * as S from './styles';
 import MoreButtonWithDivider from '../../../../../components/atoms/MoreButtonWithDivider';
+import {MenuType} from '../../../../../services/mapService';
 
 interface MenuProps {
-  menus: menuType[];
+  menus: MenuType[];
 }
 
 const Menu = ({menus}: MenuProps) => {
@@ -32,12 +32,14 @@ const Menu = ({menus}: MenuProps) => {
         ))}
       </S.MenuListContainer>
 
-      <MoreButtonWithDivider
-        onPressed={handleMoreButtonPress}
-        isOpened={isMenuOpened}
-        openedText={'메뉴 접기'}
-        closedText={'메뉴 더 보기'}
-      />
+      {menus.length > 0 && (
+        <MoreButtonWithDivider
+          onPressed={handleMoreButtonPress}
+          isOpened={isMenuOpened}
+          openedText={'메뉴 접기'}
+          closedText={'메뉴 더 보기'}
+        />
+      )}
     </S.MenuContainer>
   );
 };
