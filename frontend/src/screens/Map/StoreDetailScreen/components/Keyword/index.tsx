@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import * as S from './styles';
 import MoreButtonWithDivider from '../../../../../components/atoms/MoreButtonWithDivider';
 import {useMapNavigation} from '../../../../../hooks/useNavigationHooks';
+import NoDataContainer from '../../../../../components/atoms/NoDataContainer';
 
 export interface KeywordSectionProps {
   keywords: KeywordProps[];
@@ -41,23 +42,27 @@ const KeywordSection = ({keywords, totalCount}: KeywordSectionProps) => {
     <S.KeywordSectionContainer>
       <S.TitleContainer>
         <S.Title>{`키워드`}</S.Title>
-        <S.TotalCountText>{totalCount}</S.TotalCountText>
+        <S.TotalCountText>{totalCount ?? 0}</S.TotalCountText>
       </S.TitleContainer>
       <S.KeywordListContainer>
-        {visibleKeywords.map((keyword, index) => (
-          <S.KeywordBar key={index}>
-            <S.ColoredBar $percent={(keyword.count / totalCount) * 100} />
-            <S.TextContainer
-              onPress={() => {
-                navigation.navigate('KeywordReview', {
-                  keywordInformation: keyword,
-                });
-              }}>
-              <S.KeywordText>{keyword.keyword}</S.KeywordText>
-              <S.KeywordCountText>{keyword.count}</S.KeywordCountText>
-            </S.TextContainer>
-          </S.KeywordBar>
-        ))}
+        {keywords.length == 0 ? (
+          <NoDataContainer text="등록된 키워드가 없습니다." />
+        ) : (
+          visibleKeywords.map((keyword, index) => (
+            <S.KeywordBar key={index}>
+              <S.ColoredBar $percent={(keyword.count / totalCount) * 100} />
+              <S.TextContainer
+                onPress={() => {
+                  navigation.navigate('KeywordReview', {
+                    keywordInformation: keyword,
+                  });
+                }}>
+                <S.KeywordText>{keyword.keyword}</S.KeywordText>
+                <S.KeywordCountText>{keyword.count}</S.KeywordCountText>
+              </S.TextContainer>
+            </S.KeywordBar>
+          ))
+        )}
       </S.KeywordListContainer>
       {keywords.length > 0 && (
         <MoreButtonWithDivider

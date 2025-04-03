@@ -58,9 +58,3 @@ export const FilterIconImage = styled(Image)`
 export const ReviewCardListContainer = styled(View)`
   gap: ${scale(8)}px;
 `;
-
-export const NoReviewText = styled(Text)`
-  text-align: center;
-  padding: ${scale(20)}px;
-  color: ${GrayColors[500]};
-`;

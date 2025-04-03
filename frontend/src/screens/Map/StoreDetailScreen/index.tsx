@@ -37,10 +37,7 @@ const StoreDetailScreen = () => {
 
   const fetchStoreDetail = async () => {
     try {
-      // TODO: 가게 돌리기, 콘솔 삭제, 데이터 없을 때 처리
-      const response = await getStoreDetail(3);
-      // const response = await getStoreDetail(storeBasicInformation.storeId);
-      console.log(response);
+      const response = await getStoreDetail(storeBasicInformation.storeId);
 
       setStoreDetail(response);
     } catch (error) {
@@ -50,7 +47,7 @@ const StoreDetailScreen = () => {
 
   const fetchMyReviewInStore = async () => {
     try {
-      const response = await getStoreReviews(3);
+      const response = await getStoreReviews(storeBasicInformation.storeId);
 
       if (!response.empty) {
         setMyReview(response.content[0]);
@@ -91,22 +88,18 @@ const StoreDetailScreen = () => {
             <KidMenu menus={storeDetail.kidsMenu} />,
             <Menu menus={storeDetail.menus} />,
             <KeywordSection {...storeDetail.keywordSection} />,
-            <FamilyReview
-              positiveSummary={storeDetail.sentiment.positive[0]}
-              positiveReviews={storeDetail.sentiment.positive}
-              negativeSummary={storeDetail.sentiment.negative[0]}
-              negativeReviews={storeDetail.sentiment.negative}
-            />,
+            <FamilyReview {...storeDetail.sentiment} />,
             <MyReview
-              storeName={storeBasicInformation.title}
+              storeId={storeDetail.storeId}
+              storeName={storeDetail.storeName}
               review={myReview}
             />,
             <Review
               totalRating={storeBasicInformation.rating}
               totalReviewCount={storeBasicInformation.reviewCount}
               reviews={storeDetail.latestReviews}
-              storeName={storeBasicInformation.title}
-              storeId={storeBasicInformation.storeId}
+              storeName={storeDetail.storeName}
+              storeId={storeDetail.storeId}
             />,
           ],
           <ThickDivider />,
