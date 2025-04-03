@@ -8,7 +8,9 @@ import {useGlobalStore} from '../../../../../stores/globalStore';
 import Config from 'react-native-config';
 
 interface ProfileImageProps {
-  onImageSelect: (imageData: {uri: string; type: string} | null) => void;
+  onImageSelect: (
+    imageData: {uri: string; type: string; fileName: string} | null,
+  ) => void;
 }
 
 const ProfileImage = ({onImageSelect}: ProfileImageProps) => {
@@ -16,6 +18,7 @@ const ProfileImage = ({onImageSelect}: ProfileImageProps) => {
   const [selectedImage, setSelectedImage] = useState<{
     uri: string;
     type: string;
+    fileName: string;
   } | null>(null);
 
   const handleImageEdit = async () => {
@@ -30,6 +33,7 @@ const ProfileImage = ({onImageSelect}: ProfileImageProps) => {
         const imageData = {
           uri: asset.uri!,
           type: asset.type || 'image/jpeg',
+          fileName: asset.fileName || 'profile.jpg',
         };
         setSelectedImage(imageData);
         onImageSelect(imageData);
@@ -40,27 +44,20 @@ const ProfileImage = ({onImageSelect}: ProfileImageProps) => {
     }
   };
 
-  const cleanImageUrl = (url: string) => {
-    const cloudfrontPrefix = Config.CLOUDFRONT_PREFIX || '';
-    if (url.startsWith(cloudfrontPrefix)) {
-      const potentialUrl = url.substring(cloudfrontPrefix.length);
-      if (
-        potentialUrl.startsWith('http://') ||
-        potentialUrl.startsWith('https://')
-      ) {
-        return potentialUrl;
-      }
-    }
-    return url;
-  };
-
   const getImageSource = () => {
     if (selectedImage?.uri) {
       return {uri: selectedImage.uri};
     }
     if (memberProfile?.profile_img) {
-      const uri = cleanImageUrl(memberProfile.profile_img);
-      return {uri};
+      // CloudFront URL이 이미 포함되어 있는지 확인
+      if (memberProfile.profile_img.startsWith('http')) {
+        return {uri: memberProfile.profile_img};
+      }
+      // 상대 경로인 경우 CloudFront URL 생성
+      const timestamp = Date.now();
+      return {
+        uri: `${Config.CLOUDFRONT_PREFIX}${memberProfile.profile_img}?v=${timestamp}`,
+      };
     }
     return IMG_DEFAULT_PROFILE;
   };
