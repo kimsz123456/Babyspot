@@ -6,9 +6,6 @@ import StoreBasicInformation from '../NearStoreListScreen/components/StoreBasicI
 import Home from './components/Home';
 import Menu from './components/Menu';
 import {ThickDivider} from '../../../components/atoms/Divider';
-
-import {familyReviewMocks} from './mock';
-
 import * as S from './styles';
 import KidMenu from './components/KidMenu';
 import {withDivider} from '../../../utils/withDivider';
@@ -21,10 +18,7 @@ import {
   getStoreDetail,
   StoreDetailResponse,
 } from '../../../services/mapService';
-import {
-  getStoreReviews,
-  ReviewResponseType,
-} from '../../../services/reviewService';
+import {getStoreReviews, ReviewType} from '../../../services/reviewService';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
 
@@ -33,7 +27,7 @@ type StoreDetailRouteProp = RouteProp<MapStackParamList, 'StoreDetail'>;
 const StoreDetailScreen = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [storeDetail, setStoreDetail] = useState<StoreDetailResponse>();
-
+  const [myReview, setMyReview] = useState<ReviewType>();
   const route = useRoute<StoreDetailRouteProp>();
   const {storeBasicInformation} = route.params;
 
@@ -44,8 +38,8 @@ const StoreDetailScreen = () => {
   const fetchStoreDetail = async () => {
     try {
       // TODO: 가게 돌리기, 콘솔 삭제, 데이터 없을 때 처리
-      // const response = await getStoreDetail(3);
-      const response = await getStoreDetail(storeBasicInformation.storeId);
+      const response = await getStoreDetail(3);
+      // const response = await getStoreDetail(storeBasicInformation.storeId);
       console.log(response);
 
       setStoreDetail(response);
@@ -54,8 +48,21 @@ const StoreDetailScreen = () => {
     }
   };
 
+  const fetchMyReviewInStore = async () => {
+    try {
+      const response = await getStoreReviews(3);
+
+      if (!response.empty) {
+        setMyReview(response.content[0]);
+      }
+    } catch (error) {
+      console.error('내 리뷰 조회 실패:', error);
+    }
+  };
+
   useEffect(() => {
     fetchStoreDetail();
+    fetchMyReviewInStore();
   }, []);
 
   return (
@@ -90,7 +97,10 @@ const StoreDetailScreen = () => {
               negativeSummary={storeDetail.sentiment.negative[0]}
               negativeReviews={storeDetail.sentiment.negative}
             />,
-            <MyReview storeName={storeBasicInformation.title} review={null} />,
+            <MyReview
+              storeName={storeBasicInformation.title}
+              review={myReview}
+            />,
             <Review
               totalRating={storeBasicInformation.rating}
               totalReviewCount={storeBasicInformation.reviewCount}
