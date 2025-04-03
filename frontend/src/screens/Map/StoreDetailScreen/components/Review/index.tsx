@@ -12,6 +12,7 @@ import {ThinDivider} from '../../../../../components/atoms/Divider';
 import MoreButtonWithDivider from '../../../../../components/atoms/MoreButtonWithDivider';
 import {useMapNavigation} from '../../../../../hooks/useNavigationHooks';
 import ReviewFilterModal from '../../../ReviewListScreen/ReviewFilterModal';
+import NoDataContainer from '../../../../../components/atoms/NoDataContainer';
 
 export interface ReviewProps {
   totalRating: number;
@@ -69,7 +70,7 @@ const Review = (props: ReviewProps) => {
               <ThinDivider />,
             )
           ) : (
-            <S.NoReviewText> 리뷰가 없습니다. </S.NoReviewText>
+            <NoDataContainer text={'등록된 리뷰가 없습니다.'} />
           )}
         </S.ReviewCardListContainer>
 
