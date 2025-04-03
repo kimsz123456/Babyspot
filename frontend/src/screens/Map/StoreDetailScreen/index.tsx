@@ -37,7 +37,6 @@ const StoreDetailScreen = () => {
 
   const fetchStoreDetail = async () => {
     try {
-      // TODO: 데이터 없을 때 처리
       const response = await getStoreDetail(storeBasicInformation.storeId);
 
       setStoreDetail(response);
@@ -89,12 +88,7 @@ const StoreDetailScreen = () => {
             <KidMenu menus={storeDetail.kidsMenu} />,
             <Menu menus={storeDetail.menus} />,
             <KeywordSection {...storeDetail.keywordSection} />,
-            <FamilyReview
-              positiveSummary={storeDetail.sentiment.positive[0]}
-              positiveReviews={storeDetail.sentiment.positive}
-              negativeSummary={storeDetail.sentiment.negative[0]}
-              negativeReviews={storeDetail.sentiment.negative}
-            />,
+            <FamilyReview {...storeDetail.sentiment} />,
             <MyReview
               storeId={storeDetail.storeId}
               storeName={storeDetail.storeName}

@@ -78,8 +78,10 @@ export interface KidsMenu {
 }
 
 export interface Sentiment {
-  positive: any[];
-  negative: any[];
+  positiveSummary: string;
+  positive: string[];
+  negativeSummary: string;
+  negative: string[];
 }
 
 export interface PostReviewsRequest {
