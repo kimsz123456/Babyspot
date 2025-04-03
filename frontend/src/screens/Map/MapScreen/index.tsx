@@ -31,7 +31,10 @@ import calculateMapRegion from '../../../utils/calculateMapRegion';
 import checkLocationPermission from '../../../utils/checkLocationPermission';
 import getCurrentLocation from '../../../utils/getCurrentLocation';
 import moveToCamera from '../../../utils/moveToCamera';
-import {IC_RESTAURANT_MARKER} from '../../../constants/icons';
+import {
+  IC_RECOMMEND_MARKER,
+  IC_RESTAURANT_MARKER,
+} from '../../../constants/icons';
 
 import * as S from './styles';
 
@@ -49,6 +52,7 @@ const MapScreen = () => {
     {centerCoordinate, zoom},
   );
   const {chips, handleChipPressed} = useChips();
+  const {selectedAges, setSelectedAges} = useMapStore();
 
   const clearAddress = useMapStore(state => state.clearAddress);
 
@@ -70,13 +74,11 @@ const MapScreen = () => {
     try {
       const {latitude, longitude} = await getCurrentLocation();
 
-      console.log(`latitude: ${latitude}  /  longitude: ${longitude}`);
-
       moveToCamera({latitude, longitude, mapRef});
 
       setIsReadyToFirstSearch(true);
     } catch (e) {
-      console.warn('위치 정보 가져오기 실패', e);
+      throw new Error('위치 정보 가져오기 실패');
     }
   };
 
@@ -93,15 +95,31 @@ const MapScreen = () => {
 
   const handleResearchButtonPress = () => {
     clearAddress();
+    setSelectedAges([]);
 
     if (!mapRef.current) {
       return;
     }
 
-    mapRef.current.animateCameraTo({
+    moveToCamera({
       latitude: centerCoordinate.latitude,
       longitude: centerCoordinate.longitude,
-      zoom: 15,
+      mapRef: mapRef,
+    });
+
+    setIsPendingResearch(true);
+  };
+
+  const decreaseZoom = () => {
+    if (!mapRef.current) {
+      return;
+    }
+
+    moveToCamera({
+      latitude: centerCoordinate.latitude,
+      longitude: centerCoordinate.longitude,
+      mapRef: mapRef,
+      zoom: 13,
     });
 
     setIsPendingResearch(true);
@@ -121,13 +139,44 @@ const MapScreen = () => {
         bottomRightLong: bottomRight.longitude,
       });
 
-      console.log(response);
-
       setStores(response);
 
       updateLastSearchedCoordinate();
     } catch (e) {
-      console.error(e);
+      throw new Error('주변 가게 검색 중 문제가 발생하였습니다.');
+    } finally {
+      setIsPendingResearch(false);
+    }
+  };
+
+  const filterStores = async () => {
+    try {
+      // 보이는 영역 다시 계산
+      const {topLeft, bottomRight} = calculateMapRegion(
+        centerCoordinate,
+        mapRegion,
+      );
+
+      // 주변 음식점 검색
+      const response = await getRangeInfo({
+        topLeftLat: topLeft.latitude,
+        topLeftLong: topLeft.longitude,
+        bottomRightLat: bottomRight.latitude,
+        bottomRightLong: bottomRight.longitude,
+      });
+
+      // 음식점 필터링
+      const filteredStores = response.filter(store => {
+        return store.babyAges?.some((age: number) =>
+          selectedAges.includes(age),
+        );
+      });
+
+      setStores(filteredStores);
+
+      updateLastSearchedCoordinate();
+    } catch (error) {
+      throw new Error('주변 음식점 추천 중 문제가 발생하였습니다.');
     } finally {
       setIsPendingResearch(false);
     }
@@ -175,12 +224,28 @@ const MapScreen = () => {
   }, [address]);
 
   useEffect(() => {
-    if (!isPendingResearch || zoom !== 15) {
+    if (!isPendingResearch) {
       return;
     }
 
-    searchStoresInRegion();
+    if (selectedAges.length > 0 && zoom === 13) {
+      filterStores();
+      return;
+    }
+
+    if (selectedAges.length === 0 && zoom === 15) {
+      searchStoresInRegion();
+      return;
+    }
   }, [isPendingResearch, zoom]);
+
+  useEffect(() => {
+    if (selectedAges.length === 0) {
+      return;
+    }
+
+    decreaseZoom();
+  }, [selectedAges]);
 
   return (
     <S.MapScreenContainer>
@@ -197,7 +262,11 @@ const MapScreen = () => {
             longitude={data.longitude}
             width={30}
             height={40}
-            image={IC_RESTAURANT_MARKER}
+            image={
+              selectedAges.length > 0 && !isPendingResearch
+                ? IC_RECOMMEND_MARKER
+                : IC_RESTAURANT_MARKER
+            }
             onTap={() => handleMarkerTab(idx)}
           />
         ))}

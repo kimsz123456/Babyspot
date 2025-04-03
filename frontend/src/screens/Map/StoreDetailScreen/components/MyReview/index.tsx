@@ -15,7 +15,7 @@ const MyReview = ({storeName, review}: MyReviewProps) => {
     <S.MyReviewContainer>
       {review ? (
         <>
-          <ReviewCard {...review} isMine />
+          <ReviewCard {...review} />
         </>
       ) : (
         <>

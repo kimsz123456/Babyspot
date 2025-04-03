@@ -7,7 +7,7 @@ import Home from './components/Home';
 import Menu from './components/Menu';
 import {ThickDivider} from '../../../components/atoms/Divider';
 
-import MOCK, {familyReviewMocks, keywordSectionMock, reviewMocks} from './mock';
+import {familyReviewMocks} from './mock';
 
 import * as S from './styles';
 import KidMenu from './components/KidMenu';
@@ -17,7 +17,10 @@ import FamilyReview from './components/FamilyReview';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import MyReview from './components/MyReview';
 import Review from './components/Review';
-import {getStoreDetail} from '../../../services/mapService';
+import {
+  getStoreDetail,
+  StoreDetailResponse,
+} from '../../../services/mapService';
 import {
   getStoreReviews,
   ReviewResponseType,
@@ -29,8 +32,7 @@ type StoreDetailRouteProp = RouteProp<MapStackParamList, 'StoreDetail'>;
 
 const StoreDetailScreen = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [reviews, setReviews] = useState<ReviewResponseType['content']>([]);
-  const [totalElements, setTotalElements] = useState(0);
+  const [storeDetail, setStoreDetail] = useState<StoreDetailResponse>();
 
   const route = useRoute<StoreDetailRouteProp>();
   const {storeBasicInformation} = route.params;
@@ -41,12 +43,11 @@ const StoreDetailScreen = () => {
 
   const fetchStoreDetail = async () => {
     try {
+      // TODO: 가게 돌리기, 콘솔 삭제, 데이터 없을 때 처리
       const response = await getStoreDetail(storeBasicInformation.storeId);
-      const reviewResponse = await getStoreReviews(
-        storeBasicInformation.storeId,
-      );
-      setReviews(reviewResponse.content);
-      setTotalElements(reviewResponse.totalElements);
+      console.log(response);
+
+      setStoreDetail(response);
     } catch (error) {
       console.error('리뷰 목록 조회 실패:', error);
     }
@@ -75,48 +76,30 @@ const StoreDetailScreen = () => {
         ))}
       </S.TabBar>
 
-      {withDivider(
-        [
-          <Home
-            basicInformation={storeBasicInformation}
-            detailInformation={MOCK}
-          />,
-          <KidMenu menus={MOCK.menus} />,
-          <Menu menus={MOCK.menus} />,
-          <KeywordSection
-            keywords={keywordSectionMock.keywords}
-            totalCount={keywordSectionMock.totalCount}
-          />,
-          <FamilyReview
-            positiveSummary={familyReviewMocks.positiveSummary}
-            positiveReviews={familyReviewMocks.positiveReviews}
-            negativeSummary={familyReviewMocks.negativeSummary}
-            negativeReviews={familyReviewMocks.negativeReviews}
-          />,
-          <MyReview storeName={storeBasicInformation.title} review={null} />,
-          <Review
-            totalRating={
-              reviews.length > 0
-                ? Number(
-                    (
-                      reviews.reduce((acc, review) => acc + review.rating, 0) /
-                      reviews.length
-                    ).toFixed(1),
-                  )
-                : 0
-            }
-            totalReviewCount={totalElements} // TODO: 총 리뷰 개수 표시
-            reviews={reviews.slice(0, 2).map(review => ({
-              ...review,
-              profileImagePath: '', // 임시
-              reviewCount: 1, // 임시
-            }))}
-            storeName={storeBasicInformation.title}
-            storeId={storeBasicInformation.storeId}
-          />,
-        ],
-        <ThickDivider />,
-      )}
+      {storeDetail &&
+        withDivider(
+          [
+            <Home basicInformation={storeBasicInformation} />,
+            <KidMenu menus={storeDetail.kidsMenu} />,
+            <Menu menus={storeDetail.menus} />,
+            <KeywordSection {...storeDetail.keywordSection} />,
+            <FamilyReview
+              positiveSummary={familyReviewMocks.positiveSummary}
+              positiveReviews={familyReviewMocks.positiveReviews}
+              negativeSummary={familyReviewMocks.negativeSummary}
+              negativeReviews={familyReviewMocks.negativeReviews}
+            />,
+            <MyReview storeName={storeBasicInformation.title} review={null} />,
+            <Review
+              totalRating={storeBasicInformation.rating}
+              totalReviewCount={storeBasicInformation.reviewCount}
+              reviews={storeDetail.latestReviews}
+              storeName={storeBasicInformation.title}
+              storeId={storeBasicInformation.storeId}
+            />,
+          ],
+          <ThickDivider />,
+        )}
     </S.StoreDetailScreenContainer>
   );
 };

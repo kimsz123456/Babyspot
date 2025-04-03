@@ -4,6 +4,10 @@ import {create} from 'zustand';
 interface MapState {
   selectedAddress: OnCompleteParams | null;
   setSelectedAddress: (address: OnCompleteParams) => void;
+
+  selectedAges: number[];
+  setSelectedAges: (ages: number[]) => void;
+
   clearAddress: () => void;
   resetMapState: () => void;
 }
@@ -11,9 +15,14 @@ interface MapState {
 const initialState = {
   selectedAddress: null,
 };
+
 export const useMapStore = create<MapState>(set => ({
   ...initialState,
-  resetMapState: () => set({...initialState}),
   setSelectedAddress: address => set({selectedAddress: address}),
+
+  selectedAges: [],
+  setSelectedAges: ages => set({selectedAges: ages}),
+
+  resetMapState: () => set({...initialState}),
   clearAddress: () => set({selectedAddress: null}),
 }));
