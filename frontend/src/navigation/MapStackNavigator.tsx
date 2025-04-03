@@ -17,6 +17,7 @@ import CompleteScreen, {
   CompleteTypes,
 } from '../screens/Map/WriteReviewScreen/CompleteScreen';
 import SelectRecommendationAgeScreen from '../screens/Map/SelectRecommendationAgeScreen';
+import {ReviewType} from '../services/reviewService';
 
 export type MapStackParamList = {
   MapMain: {address: string};
@@ -29,7 +30,7 @@ export type MapStackParamList = {
     filterAges?: number[];
     storeId: number;
   };
-  WriteReviewScreen: {storeName: string; rating: number};
+  WriteReviewScreen: {review: ReviewType};
   CompleteScreen: {completeType: CompleteTypes};
   SelectRecommendationAgeScreen: undefined;
 };
@@ -97,7 +98,10 @@ const MapStackNavigator = () => {
         options={({route}) => ({
           header(props) {
             return (
-              <CustomHeader props={props} title={route.params.storeName} />
+              <CustomHeader
+                props={props}
+                title={route.params.review.storeName}
+              />
             );
           },
         })}
