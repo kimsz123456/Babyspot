@@ -5,17 +5,19 @@ import CenteredModal from '../../../../../components/atoms/CenterModal';
 import {Alert} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import ChildrenInformationButton from '../../../../Onboarding/SignUpScreen/AddChildScreen/ChildrenInformationButton';
-import {
-  getMemberProfile,
-  MemberProfile,
-} from '../../../../../services/profileService';
+import {useGlobalStore} from '../../../../../stores/globalStore';
 
 interface ChildrenButtonProps {
   year: number;
   count: number;
 }
 
-const ChildAge = () => {
+interface ChildAgeProps {
+  onBabyAgesChange: (ages: number[]) => void;
+}
+
+const ChildAge = ({onBabyAgesChange}: ChildAgeProps) => {
+  const {memberProfile} = useGlobalStore();
   const [modalVisible, setModalVisible] = useState(false);
   const [children, setChildren] = useState<ChildrenButtonProps[]>([]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -31,19 +33,17 @@ const ChildAge = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const profile: MemberProfile = await getMemberProfile();
-        if (profile.babyBirthYears && profile.babyBirthYears.length > 0) {
-          setChildren(aggregateBabyBirthYears(profile.babyBirthYears));
-        }
-      } catch (error) {
-        console.error('프로필 조회 오류:', error);
-      }
-    };
+    if (memberProfile?.babyBirthYears) {
+      const newChildren = aggregateBabyBirthYears(memberProfile.babyBirthYears);
+      setChildren(newChildren);
+      onBabyAgesChange(memberProfile.babyBirthYears);
+    }
+  }, [memberProfile, onBabyAgesChange]);
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+    const ages = children.flatMap(child => Array(child.count).fill(child.year));
+    onBabyAgesChange(ages);
+  }, [children, onBabyAgesChange]);
 
   const totalChildrenCount = children.reduce(
     (sum, child) => sum + child.count,
