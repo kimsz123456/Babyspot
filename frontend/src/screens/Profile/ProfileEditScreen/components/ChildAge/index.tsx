@@ -12,7 +12,11 @@ interface ChildrenButtonProps {
   count: number;
 }
 
-const ChildAge = () => {
+interface ChildAgeProps {
+  onBabyAgesChange: (ages: number[]) => void;
+}
+
+const ChildAge = ({onBabyAgesChange}: ChildAgeProps) => {
   const {memberProfile} = useGlobalStore();
   const [modalVisible, setModalVisible] = useState(false);
   const [children, setChildren] = useState<ChildrenButtonProps[]>([]);
@@ -29,13 +33,17 @@ const ChildAge = () => {
   };
 
   useEffect(() => {
-    if (
-      memberProfile?.babyBirthYears &&
-      memberProfile.babyBirthYears.length > 0
-    ) {
-      setChildren(aggregateBabyBirthYears(memberProfile.babyBirthYears));
+    if (memberProfile?.babyBirthYears) {
+      const newChildren = aggregateBabyBirthYears(memberProfile.babyBirthYears);
+      setChildren(newChildren);
+      onBabyAgesChange(memberProfile.babyBirthYears);
     }
-  }, [memberProfile]);
+  }, [memberProfile, onBabyAgesChange]);
+
+  useEffect(() => {
+    const ages = children.flatMap(child => Array(child.count).fill(child.year));
+    onBabyAgesChange(ages);
+  }, [children, onBabyAgesChange]);
 
   const totalChildrenCount = children.reduce(
     (sum, child) => sum + child.count,

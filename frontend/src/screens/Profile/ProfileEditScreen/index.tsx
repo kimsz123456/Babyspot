@@ -13,6 +13,7 @@ const ProfileEditScreen = () => {
   const navigation = useProfileNavigation();
   const {setMemberProfile} = useGlobalStore();
   const [nickname, setNickname] = useState<string>('');
+  const [babyAges, setBabyAges] = useState<number[]>([]);
 
   const handleProfileUpdate = async () => {
     try {
@@ -20,14 +21,14 @@ const ProfileEditScreen = () => {
         nickname: nickname,
         profileImgUrl: '',
         contentType: 'image/jpeg',
-        babyAges: [],
+        babyAges: babyAges,
       };
 
       const response = await patchMemberProfile(updateData);
 
       setMemberProfile({
         ...response,
-        babyBirthYears: [],
+        babyBirthYears: babyAges,
       });
 
       Alert.alert('성공', '프로필이 수정되었습니다.', [
@@ -46,7 +47,7 @@ const ProfileEditScreen = () => {
     <S.BackGround>
       <ProfileImage onImageSelect={() => {}} />
       <MyInformation onNicknameChange={setNickname} />
-      <ChildAge />
+      <ChildAge onBabyAgesChange={setBabyAges} />
       <S.ProfileEditButtonWrapper>
         <MainButton text="프로필 수정" onPress={handleProfileUpdate} />
       </S.ProfileEditButtonWrapper>
