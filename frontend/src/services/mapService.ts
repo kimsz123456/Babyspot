@@ -81,6 +81,16 @@ export interface Sentiment {
   negative: any[];
 }
 
+export interface PostReviewsRequest {
+  memberId: number;
+  storeId: number;
+  rating: number;
+  content: string;
+  babyAges: number[];
+  imgNames: string[];
+  contentTypes: string[];
+}
+
 export const getRangeInfo = async (data: RangeInfoParameterType) => {
   try {
     const result = await api.get(
@@ -121,6 +131,16 @@ export const getStoreDetail = async (
 ): Promise<StoreDetailResponse> => {
   try {
     const response = await api.get(`/store/detail?storeId=${storeId}`);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postReviews = async (params: PostReviewsRequest) => {
+  try {
+    const response = await api.post(`/reviews`, params);
 
     return response.data;
   } catch (error) {

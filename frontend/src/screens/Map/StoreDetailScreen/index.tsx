@@ -51,6 +51,7 @@ const StoreDetailScreen = () => {
   const fetchMyReviewInStore = async () => {
     try {
       const response = await getStoreReviews(3);
+      // const response = await getStoreReviews(storeBasicInformation.storeId);
 
       if (!response.empty) {
         setMyReview(response.content[0]);
@@ -98,15 +99,16 @@ const StoreDetailScreen = () => {
               negativeReviews={storeDetail.sentiment.negative}
             />,
             <MyReview
-              storeName={storeBasicInformation.title}
+              storeId={storeDetail.storeId}
+              storeName={storeDetail.storeName}
               review={myReview}
             />,
             <Review
               totalRating={storeBasicInformation.rating}
               totalReviewCount={storeBasicInformation.reviewCount}
               reviews={storeDetail.latestReviews}
-              storeName={storeBasicInformation.title}
-              storeId={storeBasicInformation.storeId}
+              storeName={storeDetail.storeName}
+              storeId={storeDetail.storeId}
             />,
           ],
           <ThickDivider />,

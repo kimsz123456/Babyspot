@@ -4,10 +4,11 @@ import ReviewCard, {ReviewCardProps} from '../Review/ReviewCard';
 import {useMapNavigation} from '../../../../../hooks/useNavigationHooks';
 import StarRating from '../../../../../components/atoms/StarRating';
 interface MyReviewProps {
+  storeId: number;
   storeName: string;
   review: ReviewCardProps | undefined;
 }
-const MyReview = ({storeName, review}: MyReviewProps) => {
+const MyReview = ({storeId, storeName, review}: MyReviewProps) => {
   const navigation = useMapNavigation();
 
   const [rating, setRating] = useState(0);
@@ -29,7 +30,11 @@ const MyReview = ({storeName, review}: MyReviewProps) => {
               starSize={51}
               ratingPressed={rating => {
                 setRating(rating);
-                navigation.navigate('WriteReviewScreen', {storeName, rating});
+                navigation.navigate('WriteReviewScreen', {
+                  storeId,
+                  storeName,
+                  rating,
+                });
               }}
             />
           </S.StarContainer>

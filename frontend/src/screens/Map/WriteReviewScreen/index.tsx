@@ -20,6 +20,8 @@ import scale from '../../../utils/scale';
 import {GrayColors, SystemColors} from '../../../constants/colors';
 import SubButton from '../../../components/atoms/Button/SubButton';
 import CenteredModal from '../../../components/atoms/CenterModal';
+import {postReviews, PostReviewsRequest} from '../../../services/mapService';
+import {useGlobalStore} from '../../../stores/globalStore';
 
 const MAX_IMAGE_COUNT = 10;
 
@@ -33,8 +35,9 @@ interface ImageProps {
 const WriteReviewScreen = () => {
   const route = useRoute<StoreDetailRouteProp>();
   const navigation = useMapNavigation();
-  const {rating} = route.params;
-  const isWriteScreen = false;
+  const {memberProfile} = useGlobalStore();
+  const {storeId, rating} = route.params;
+  const isWriteScreen = true;
 
   const [imagePaths, setImagePaths] = useState<ImageProps[]>([]);
   const [content, setContent] = useState('');
@@ -68,6 +71,52 @@ const WriteReviewScreen = () => {
     } catch (error) {
       console.error('이미지 선택 실패:', error);
     }
+  };
+
+  const handleCreateReview = async () => {
+    try {
+      if (memberProfile) {
+        const currentYear = new Date().getFullYear();
+        let tempBabyAges: number[] = [];
+
+        memberProfile.babyBirthYears.forEach(birthYear => {
+          tempBabyAges.push(currentYear - birthYear + 1);
+        });
+
+        // TODO: 이미지 추가 필요
+        const request: PostReviewsRequest = {
+          memberId: memberProfile?.id,
+          storeId: storeId,
+          rating: rating,
+          content: content,
+          babyAges: tempBabyAges,
+          imgNames: [],
+          contentTypes: [],
+        };
+
+        await postReviews(request);
+
+        navigation.navigate('CompleteScreen', {
+          completeType: 'create',
+        });
+      } else {
+        throw new Error('사용자 정보 호출에 문제가 생겼습니다.');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleUpdateReview = async () => {
+    navigation.navigate('CompleteScreen', {
+      completeType: 'update',
+    });
+  };
+
+  const handleDeleteReview = async () => {
+    navigation.navigate('CompleteScreen', {
+      completeType: 'delete',
+    });
   };
 
   return (
@@ -157,9 +206,7 @@ const WriteReviewScreen = () => {
                 text={'작성 완료'}
                 onPress={() => {
                   Keyboard.dismiss();
-                  navigation.navigate('CompleteScreen', {
-                    completeType: 'create',
-                  });
+                  handleCreateReview();
                 }}
               />
             ) : (
@@ -169,9 +216,7 @@ const WriteReviewScreen = () => {
                   text={'수정하기'}
                   onPress={() => {
                     Keyboard.dismiss();
-                    navigation.navigate('CompleteScreen', {
-                      completeType: 'update',
-                    });
+                    handleUpdateReview();
                   }}
                 />
                 <SubButton
@@ -197,9 +242,8 @@ const WriteReviewScreen = () => {
         }}
         onConfirm={() => {
           setDeleteModalVisible(false);
-          navigation.navigate('CompleteScreen', {
-            completeType: 'delete',
-          });
+
+          handleDeleteReview();
         }}
       />
     </KeyboardAvoidingView>

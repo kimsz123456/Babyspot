@@ -29,7 +29,7 @@ export type MapStackParamList = {
     filterAges?: number[];
     storeId: number;
   };
-  WriteReviewScreen: {storeName: string; rating: number};
+  WriteReviewScreen: {storeId: number; storeName: string; rating: number};
   CompleteScreen: {completeType: CompleteTypes};
   SelectRecommendationAgeScreen: undefined;
 };
