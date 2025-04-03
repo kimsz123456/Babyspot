@@ -39,6 +39,7 @@ const IC_PROFILE_NAV: ImageRequireSource = require('../../assets/icons/profile-n
 const IC_PROFILE_NAV_ACTIVE: ImageRequireSource = require('../../assets/icons/profile-nav-active.png');
 
 const IC_RESTAURANT_MARKER: ImageRequireSource = require('../../assets/icons/restaurant-marker.png');
+const IC_RECOMMEND_MARKER: ImageRequireSource = require('../../assets/icons/recommend-marker.png');
 
 const IC_BABY: ImageRequireSource = require('../../assets/icons/baby.png');
 const IC_SEARCH: ImageRequireSource = require('../../assets/icons/search.png');
@@ -110,6 +111,7 @@ export {
   IC_PROFILE_NAV,
   IC_PROFILE_NAV_ACTIVE,
   IC_RESTAURANT_MARKER,
+  IC_RECOMMEND_MARKER,
   IC_BABY,
   IC_SEARCH,
   IC_CLOSE,
