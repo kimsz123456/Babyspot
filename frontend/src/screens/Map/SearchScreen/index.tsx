@@ -1,33 +1,9 @@
 import React from 'react';
-import {View} from 'react-native';
-
 import PlaceSearchButton from '../components/PlaceSearchButton';
 import SearchHistory from './components/SearchHistory';
-
 import * as S from './styles';
-
-const MOCK = [
-  {
-    address: '구이구이 3번로 2길 20-11 샤샤샤샤샤샤',
-    date: new Date('2024-03-02'),
-  },
-  {
-    address: '구이구이 3번로 2길 20-11',
-    date: new Date('2024-03-02'),
-  },
-  {
-    address: '구이구이 3번로 2길 20-11',
-    date: new Date('2024-03-02'),
-  },
-  {
-    address: '구이구이 3번로 2길 20-11',
-    date: new Date('2024-03-02'),
-  },
-  {
-    address: '구이구이 3번로 2길 20-11',
-    date: new Date('2024-03-02'),
-  },
-];
+import NoDataContainer from '../../../components/atoms/NoDataContainer';
+import {withDivider} from '../../../utils/withDivider';
 
 const SearchScreen = () => {
   return (
@@ -39,12 +15,19 @@ const SearchScreen = () => {
       <S.SearchHistoryListContainer>
         <S.SearchHistoryListTitle>최근 검색</S.SearchHistoryListTitle>
         <S.SearchHistoryList>
-          {MOCK.map((history, idx) => (
-            <View key={idx}>
-              {idx > 0 && <S.Divider />}
-              <SearchHistory address={history.address} date={history.date} />
-            </View>
-          ))}
+          <NoDataContainer text="서비스 준비 중입니다." />
+          {/* {withDivider(
+            [
+              ...[].map((history, index) => (
+                <SearchHistory
+                  key={index}
+                  address={history.address}
+                  date={history.date}
+                />
+              )),
+            ],
+            <S.Divider />,
+          )} */}
         </S.SearchHistoryList>
       </S.SearchHistoryListContainer>
     </S.SearchScreenContainer>
