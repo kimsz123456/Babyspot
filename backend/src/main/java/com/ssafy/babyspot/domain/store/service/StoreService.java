@@ -19,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.babyspot.api.s3.S3Component;
 import com.ssafy.babyspot.domain.reveiw.Review;
 import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
@@ -108,6 +110,7 @@ public class StoreService {
 
 				List<StoreImageDto> storeImages = getStoreImages(store.getId());
 				dto.setImages(storeImages);
+				dto.setRating(store.getRating());
 
 				dto.setConvenience(List.of(convenienceDto));
 
@@ -194,18 +197,55 @@ public class StoreService {
 
 	@Transactional
 	public SentimentAnalysisDto getSentimentAnalysis(int storeId) {
-
 		List<SentimentAnalysis> sentiments = sentimentAnalysisRepository.findAllByStore_Id(storeId);
 
-		List<String> allPositive = sentiments.stream()
-			.flatMap(s -> s.getPositive().stream())
-			.toList();
+		ObjectMapper mapper = new ObjectMapper();
 
-		List<String> allNegative = sentiments.stream()
-			.flatMap(s -> s.getNegative().stream())
-			.toList();
+		String posSummary = "";
+		List<String> posReviews = new ArrayList<>();
+		String negSummary = "";
+		List<String> negReviews = new ArrayList<>();
 
-		return new SentimentAnalysisDto(allPositive, allNegative);
+		if (!sentiments.isEmpty()) {
+			SentimentAnalysis sentiment = sentiments.get(0);
+
+			if (!sentiment.getPositive().isEmpty()) {
+				String positiveJson = sentiment.getPositive().get(0);
+				try {
+					JsonNode posRoot = mapper.readTree(positiveJson);
+					if (posRoot.has("summary")) {
+						posSummary = posRoot.get("summary").asText();
+					}
+					if (posRoot.has("reviews") && posRoot.get("reviews").isArray()) {
+						for (JsonNode node : posRoot.get("reviews")) {
+							posReviews.add(node.asText());
+						}
+					}
+				} catch (Exception e) {
+					// 예외 처리
+					throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+				}
+			}
+
+			if (!sentiment.getNegative().isEmpty()) {
+				String negativeJson = sentiment.getNegative().get(0);
+				try {
+					JsonNode negRoot = mapper.readTree(negativeJson);
+					if (negRoot.has("summary")) {
+						negSummary = negRoot.get("summary").asText();
+					}
+					if (negRoot.has("reviews") && negRoot.get("reviews").isArray()) {
+						for (JsonNode node : negRoot.get("reviews")) {
+							negReviews.add(node.asText());
+						}
+					}
+				} catch (Exception e) {
+					throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+				}
+			}
+		}
+
+		return new SentimentAnalysisDto(posSummary, posReviews, negSummary, negReviews);
 	}
 
 	@Transactional

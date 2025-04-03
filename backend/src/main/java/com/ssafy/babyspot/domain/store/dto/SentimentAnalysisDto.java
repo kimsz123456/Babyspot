@@ -8,6 +8,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SentimentAnalysisDto {
+	private String positiveSummary;
 	private List<String> positive;
+	private String negativeSummary;
 	private List<String> negative;
 }
+
