@@ -6,30 +6,59 @@ import ChildAge from './components/ChildAge';
 import MainButton from '../../../components/atoms/Button/MainButton';
 import {Alert} from 'react-native';
 import {useProfileNavigation} from '../../../hooks/useNavigationHooks';
-import {patchMemberProfile} from '../../../services/profileService';
+import {
+  getMemberProfile,
+  patchMemberProfile,
+} from '../../../services/profileService';
 import {useGlobalStore} from '../../../stores/globalStore';
+import uploadImageToS3 from '../../../utils/uploadImageToS3';
+import Config from 'react-native-config';
 
 const ProfileEditScreen = () => {
   const navigation = useProfileNavigation();
-  const {setMemberProfile} = useGlobalStore();
-  const [nickname, setNickname] = useState<string>('');
-  const [babyAges, setBabyAges] = useState<number[]>([]);
+  const {setMemberProfile, memberProfile} = useGlobalStore();
+  const [nickname, setNickname] = useState<string>(
+    memberProfile?.nickname || '',
+  );
+  const [babyAges, setBabyAges] = useState<number[]>(
+    memberProfile?.babyBirthYears || [],
+  );
+  const [selectedImage, setSelectedImage] = useState<{
+    uri: string;
+    type: string;
+    fileName: string;
+  } | null>(() => {
+    if (memberProfile?.profile_img) {
+      return {
+        uri: memberProfile.profile_img,
+        type: 'image/jpeg',
+        fileName: memberProfile.profile_img.split('/').pop() || 'profile.jpg',
+      };
+    }
+    return null;
+  });
 
   const handleProfileUpdate = async () => {
     try {
-      const updateData = {
+      const response = await patchMemberProfile({
         nickname: nickname,
-        profileImgUrl: '',
-        contentType: 'image/jpeg',
+        profileImgUrl: selectedImage?.uri || '',
+        contentType: selectedImage?.type || '',
         babyAges: babyAges,
-      };
-
-      const response = await patchMemberProfile(updateData);
-
-      setMemberProfile({
-        ...response,
-        babyBirthYears: babyAges,
       });
+
+      const {preSignedUrl} = response;
+      console.log(selectedImage?.uri);
+
+      await uploadImageToS3({
+        imageType: selectedImage?.type || '',
+        imagePath: selectedImage?.uri || '',
+        preSignedUrl: preSignedUrl || '',
+      });
+
+      // 프로필 업데이트 후 최신 데이터를 가져옴
+      const updatedProfile = await getMemberProfile();
+      setMemberProfile(updatedProfile);
 
       Alert.alert('성공', '프로필이 수정되었습니다.', [
         {
@@ -45,7 +74,7 @@ const ProfileEditScreen = () => {
 
   return (
     <S.BackGround>
-      <ProfileImage onImageSelect={() => {}} />
+      <ProfileImage onImageSelect={setSelectedImage} />
       <MyInformation onNicknameChange={setNickname} />
       <ChildAge onBabyAgesChange={setBabyAges} />
       <S.ProfileEditButtonWrapper>
