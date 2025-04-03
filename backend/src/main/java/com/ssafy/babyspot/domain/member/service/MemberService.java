@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,9 @@ public class MemberService {
 	private final TokenService tokenService;
 	private final S3Component s3Component;
 	private final BabyRepository babyRepository;
+
+	@Value("${CLOUDFRONT_URL}")
+	private String CLOUDFRONT_URL;
 
 	@Autowired
 	public MemberService(MemberRepository memberRepository, TokenService tokenService, S3Component s3Component,
@@ -101,27 +105,30 @@ public class MemberService {
 	@Transactional
 	public UpdateProfileResponse updateProfile(String memberId, UpdateProfileRequest request) {
 		Member member = memberRepository.findById(Integer.valueOf(memberId))
-			.orElseThrow(() -> new CustomException((HttpStatus.NOT_FOUND), "회원을 찾을 수 없습니다."));
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다."));
 
 		if (request.getNickname() != null && !request.getNickname().isEmpty()) {
 			member.setNickname(request.getNickname());
 		}
 
 		String profileKey = findByProfileImgKey(memberId);
-
 		String preSignedUrl = null;
 		if (request.getProfileImgUrl() != null && !request.getProfileImgUrl().isEmpty()) {
 			if (profileKey == null) {
-				Map<String, String> imgPreSignedUrl = s3Component.generateProfilePreSignedUrl(memberId,
+				Map<String, String> imgPreSignedUrl = s3Component.generateProfilePreSignedUrl(
+					memberId,
 					request.getProfileImgUrl(),
-					request.getContentType());
+					request.getContentType()
+				);
 				profileKey = imgPreSignedUrl.get("profileKey");
 				preSignedUrl = imgPreSignedUrl.get("profileImgPreSignedUrl");
 
 				member.setProfileImg(profileKey);
 			} else {
-				preSignedUrl = s3Component.generatePreSignedUrlForProfileImageUpdate(profileKey,
-					request.getContentType());
+				preSignedUrl = s3Component.generatePreSignedUrlForProfileImageUpdate(
+					profileKey,
+					request.getContentType()
+				);
 			}
 		}
 
@@ -148,7 +155,8 @@ public class MemberService {
 		}
 
 		memberRepository.save(member);
-		return new UpdateProfileResponse(member.getNickname(), preSignedUrl, profileKey);
+		
+		return UpdateProfileResponse.fromMember(member, CLOUDFRONT_URL, preSignedUrl);
 	}
 
 	@Transactional
