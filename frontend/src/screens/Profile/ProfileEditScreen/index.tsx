@@ -4,27 +4,31 @@ import ProfileImage from './components/ProfileImage';
 import MyInformation from './components/MyInformation';
 import ChildAge from './components/ChildAge';
 import MainButton from '../../../components/atoms/Button/MainButton';
-import {api} from '../../../services/api';
 import {Alert} from 'react-native';
 import {useProfileNavigation} from '../../../hooks/useNavigationHooks';
+import {patchMemberProfile} from '../../../services/profileService';
+import {useGlobalStore} from '../../../stores/globalStore';
 
 const ProfileEditScreen = () => {
   const navigation = useProfileNavigation();
-  const [selectedImage, setSelectedImage] = useState<{
-    uri: string;
-    type: string;
-  } | null>(null);
+  const {setMemberProfile} = useGlobalStore();
   const [nickname, setNickname] = useState<string>('');
 
   const handleProfileUpdate = async () => {
     try {
       const updateData = {
         nickname: nickname,
-        profileImgUrl: selectedImage?.uri,
-        contentType: selectedImage?.type || 'image/jpeg',
+        profileImgUrl: '',
+        contentType: 'image/jpeg',
+        babyAges: [],
       };
 
-      await api.patch('/members/update', updateData);
+      const response = await patchMemberProfile(updateData);
+
+      setMemberProfile({
+        ...response,
+        babyBirthYears: [],
+      });
 
       Alert.alert('성공', '프로필이 수정되었습니다.', [
         {
@@ -40,7 +44,7 @@ const ProfileEditScreen = () => {
 
   return (
     <S.BackGround>
-      <ProfileImage onImageSelect={setSelectedImage} />
+      <ProfileImage onImageSelect={() => {}} />
       <MyInformation onNicknameChange={setNickname} />
       <ChildAge />
       <S.ProfileEditButtonWrapper>
