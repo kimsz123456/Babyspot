@@ -9,10 +9,16 @@ import {useGlobalStore} from '../stores/globalStore';
 import {getMemberProfile} from '../services/profileService';
 
 const RootNavigator = () => {
-  const {isLoggedIn, setIsLoggedIn, setAccessToken, setMemberProfile} =
-    useGlobalStore();
+  const {
+    isLoggedIn,
+    setIsLoggedIn,
+    accessToken,
+    setAccessToken,
+    setMemberProfile,
+  } = useGlobalStore();
 
   const [loading, setLoading] = useState(true);
+  console.log(accessToken);
 
   useEffect(() => {
     const checkRefreshToken = async () => {

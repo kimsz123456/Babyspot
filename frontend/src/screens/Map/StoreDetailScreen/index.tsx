@@ -37,10 +37,8 @@ const StoreDetailScreen = () => {
 
   const fetchStoreDetail = async () => {
     try {
-      // TODO: 가게 돌리기, 콘솔 삭제, 데이터 없을 때 처리
-      const response = await getStoreDetail(3);
-      // const response = await getStoreDetail(storeBasicInformation.storeId);
-      console.log(response);
+      // TODO: 데이터 없을 때 처리
+      const response = await getStoreDetail(storeBasicInformation.storeId);
 
       setStoreDetail(response);
     } catch (error) {
@@ -50,8 +48,7 @@ const StoreDetailScreen = () => {
 
   const fetchMyReviewInStore = async () => {
     try {
-      const response = await getStoreReviews(3);
-      // const response = await getStoreReviews(storeBasicInformation.storeId);
+      const response = await getStoreReviews(storeBasicInformation.storeId);
 
       if (!response.empty) {
         setMyReview(response.content[0]);

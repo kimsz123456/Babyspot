@@ -91,6 +91,31 @@ export interface PostReviewsRequest {
   contentTypes: string[];
 }
 
+export interface PostReviewsResponse {
+  images: PostReviewsResponseImages[];
+}
+
+export interface PostReviewsResponseImages {
+  preSignedUrl: string;
+  reviewImgKey: string;
+  contentType: string;
+}
+export interface PatchReviewsRequest {
+  rating: number;
+  content: string;
+  images: PatchReviewsRequestImages[];
+}
+export interface PatchReviewsRequestImages {
+  contentType: string;
+  imageName: string;
+  orderIndex: number;
+}
+
+export interface PatchReviewsResponse {
+  reviewId: number;
+  preSignedUrls: string[];
+}
+
 export const getRangeInfo = async (data: RangeInfoParameterType) => {
   try {
     const result = await api.get(
@@ -140,9 +165,49 @@ export const getStoreDetail = async (
 
 export const postReviews = async (params: PostReviewsRequest) => {
   try {
-    const response = await api.post(`/reviews`, params);
+    const response = await api.post<PostReviewsResponse>(`/reviews`, params);
 
-    return response.data;
+    if (response.status == 201) {
+      return response.data;
+    } else {
+      throw new Error('작성 중 문제가 생겼습니다.');
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const patchReviews = async ({
+  reviewId,
+  params,
+}: {
+  reviewId: number;
+  params: PatchReviewsRequest;
+}) => {
+  try {
+    const response = await api.patch<PatchReviewsResponse>(
+      `/reviews/${reviewId}/update`,
+      params,
+    );
+
+    if (response.status == 200) {
+      return response.data;
+    } else {
+      throw new Error('수정 중 문제가 생겼습니다.');
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteReviews = async (reviewId: number) => {
+  try {
+    const response = await api.delete(`/reviews/${reviewId}`);
+    if (response.status == 204) {
+      return response.data;
+    } else {
+      throw new Error('삭제 중 문제가 생겼습니다.');
+    }
   } catch (error) {
     throw error;
   }

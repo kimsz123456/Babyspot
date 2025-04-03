@@ -11,6 +11,7 @@ import {
   Platform,
   ScrollView,
   Text,
+  ToastAndroid,
   TouchableNativeFeedback,
 } from 'react-native';
 import MainButton from '../../../components/atoms/Button/MainButton';
@@ -20,8 +21,13 @@ import scale from '../../../utils/scale';
 import {GrayColors, SystemColors} from '../../../constants/colors';
 import SubButton from '../../../components/atoms/Button/SubButton';
 import CenteredModal from '../../../components/atoms/CenterModal';
-import {postReviews, PostReviewsRequest} from '../../../services/mapService';
-import {useGlobalStore} from '../../../stores/globalStore';
+import {
+  deleteReviews,
+  patchReviews,
+  PatchReviewsRequest,
+  postReviews,
+  PostReviewsRequest,
+} from '../../../services/mapService';
 
 const MAX_IMAGE_COUNT = 10;
 
@@ -35,13 +41,12 @@ interface ImageProps {
 const WriteReviewScreen = () => {
   const route = useRoute<StoreDetailRouteProp>();
   const navigation = useMapNavigation();
-  const {memberProfile} = useGlobalStore();
-  const {storeId, rating} = route.params;
-  const isWriteScreen = true;
+  const {review} = route.params;
+  const isWriteScreen = review.reviewId == -1;
 
+  const [starRating, setStarRating] = useState(review.rating);
   const [imagePaths, setImagePaths] = useState<ImageProps[]>([]);
-  const [content, setContent] = useState('');
-  const [starRating, setStarRating] = useState(rating);
+  const [content, setContent] = useState(review.content);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const handleAddImage = async () => {
@@ -75,48 +80,66 @@ const WriteReviewScreen = () => {
 
   const handleCreateReview = async () => {
     try {
-      if (memberProfile) {
-        const currentYear = new Date().getFullYear();
-        let tempBabyAges: number[] = [];
+      // TODO: 이미지 추가 필요
+      const params: PostReviewsRequest = {
+        memberId: review.memberId,
+        storeId: review.storeId,
+        rating: starRating,
+        content: content,
+        babyAges: review.babyAges,
+        imgNames: [],
+        contentTypes: [],
+      };
 
-        memberProfile.babyBirthYears.forEach(birthYear => {
-          tempBabyAges.push(currentYear - birthYear + 1);
-        });
+      console.log(imagePaths);
 
-        // TODO: 이미지 추가 필요
-        const request: PostReviewsRequest = {
-          memberId: memberProfile?.id,
-          storeId: storeId,
-          rating: rating,
-          content: content,
-          babyAges: tempBabyAges,
-          imgNames: [],
-          contentTypes: [],
-        };
+      // await postReviews(params);
 
-        await postReviews(request);
-
-        navigation.navigate('CompleteScreen', {
-          completeType: 'create',
-        });
-      } else {
-        throw new Error('사용자 정보 호출에 문제가 생겼습니다.');
-      }
+      navigation.navigate('CompleteScreen', {
+        completeType: 'create',
+      });
     } catch (error) {
+      ToastAndroid.show('작성 중 문제가 발생했습니다.', 500);
+
       throw error;
     }
   };
 
   const handleUpdateReview = async () => {
-    navigation.navigate('CompleteScreen', {
-      completeType: 'update',
-    });
+    try {
+      // TODO: 이미지 추가 필요
+      const params: PatchReviewsRequest = {
+        rating: starRating,
+        content: content,
+        images: [],
+      };
+
+      await patchReviews({
+        reviewId: review.reviewId,
+        params: params,
+      });
+
+      navigation.navigate('CompleteScreen', {
+        completeType: 'update',
+      });
+    } catch (error) {
+      ToastAndroid.show('수정 중 문제가 발생했습니다.', 500);
+      throw error;
+    }
   };
 
   const handleDeleteReview = async () => {
-    navigation.navigate('CompleteScreen', {
-      completeType: 'delete',
-    });
+    try {
+      await deleteReviews(review.reviewId);
+
+      navigation.navigate('CompleteScreen', {
+        completeType: 'delete',
+      });
+    } catch (error) {
+      ToastAndroid.show('삭제 중 문제가 발생했습니다.', 500);
+
+      throw error;
+    }
   };
 
   return (
@@ -191,6 +214,7 @@ const WriteReviewScreen = () => {
               )}
 
               <MultilineTextInput
+                initialText={content}
                 textEdited={text => {
                   setContent(text);
                 }}
@@ -234,6 +258,7 @@ const WriteReviewScreen = () => {
       </TouchableNativeFeedback>
       <CenteredModal
         visible={deleteModalVisible}
+        cancelText={'취소하기'}
         confirmText={'삭제하기'}
         title="정말 리뷰를 삭제할까요?"
         children={<Text>{`리뷰가 사라지며, 복구할 수 없습니다.`}</Text>}

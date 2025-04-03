@@ -1,10 +1,10 @@
-import {Image, Text, View} from 'react-native';
+import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components/native';
 import {GrayColors} from '../../../../../../constants/colors';
 import {FontStyles} from '../../../../../../constants/fonts';
 import scale from '../../../../../../utils/scale';
 
-export const ReviewCardContainer = styled(View)`
+export const ReviewCardContainer = styled(Pressable)`
   flex: 1;
   gap: ${scale(8)}px;
 `;
