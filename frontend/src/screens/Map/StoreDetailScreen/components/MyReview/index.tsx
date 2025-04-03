@@ -5,7 +5,7 @@ import {useMapNavigation} from '../../../../../hooks/useNavigationHooks';
 import StarRating from '../../../../../components/atoms/StarRating';
 interface MyReviewProps {
   storeName: string;
-  review: ReviewCardProps | null;
+  review: ReviewCardProps | undefined;
 }
 const MyReview = ({storeName, review}: MyReviewProps) => {
   const navigation = useMapNavigation();

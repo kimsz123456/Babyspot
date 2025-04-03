@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import * as S from './styles';
 
 export interface FamilyReviewProps {
@@ -16,11 +16,22 @@ const FamilyReview = (props: FamilyReviewProps) => {
         <S.EmotionTitle $isPositive={true}>{`긍정`}</S.EmotionTitle>
         <S.SummaryText>{props.positiveSummary}</S.SummaryText>
         <S.ReviewTextContainer>
-          {props.positiveReviews.map((review, index) => {
+          {props.positiveReviews.slice(0, 5).map((review, index) => {
+            const [isFold, setIsFold] = useState(true);
+
             return (
-              <S.ReviewText key={index} $isPositive={true}>
-                {review}
-              </S.ReviewText>
+              <S.ReviewTextButton
+                key={index}
+                onPress={() => {
+                  setIsFold(!isFold);
+                }}>
+                <S.ReviewText
+                  $isPositive={true}
+                  numberOfLines={isFold ? 2 : undefined}
+                  ellipsizeMode="tail">
+                  {review}
+                </S.ReviewText>
+              </S.ReviewTextButton>
             );
           })}
         </S.ReviewTextContainer>
@@ -29,11 +40,22 @@ const FamilyReview = (props: FamilyReviewProps) => {
         <S.EmotionTitle $isPositive={false}>{`부정`}</S.EmotionTitle>
         <S.SummaryText>{props.negativeSummary}</S.SummaryText>
         <S.ReviewTextContainer>
-          {props.negativeReviews.map((review, index) => {
+          {props.negativeReviews.slice(0, 5).map((review, index) => {
+            const [isFold, setIsFold] = useState(true);
+
             return (
-              <S.ReviewText key={index} $isPositive={false}>
-                {review}
-              </S.ReviewText>
+              <S.ReviewTextButton
+                key={index}
+                onPress={() => {
+                  setIsFold(!isFold);
+                }}>
+                <S.ReviewText
+                  $isPositive={false}
+                  numberOfLines={isFold ? 2 : undefined}
+                  ellipsizeMode="tail">
+                  {review}
+                </S.ReviewText>
+              </S.ReviewTextButton>
             );
           })}
         </S.ReviewTextContainer>
