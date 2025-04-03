@@ -19,7 +19,10 @@ export interface KeywordReviewProps {
   content: string;
 }
 
-export type ReviewFromTypes = 'blog' | 'place' | 'cafe';
+export enum ReviewFromTypes {
+  Blog = '블로그',
+  Place = '플레이스',
+}
 
 const KeywordSection = ({keywords, totalCount}: KeywordSectionProps) => {
   const navigation = useMapNavigation();
@@ -56,12 +59,14 @@ const KeywordSection = ({keywords, totalCount}: KeywordSectionProps) => {
           </S.KeywordBar>
         ))}
       </S.KeywordListContainer>
-      <MoreButtonWithDivider
-        onPressed={handleMoreButtonPress}
-        isOpened={isKeywordOpened}
-        openedText={'키워드 접기'}
-        closedText={'키워드 더 보기'}
-      />
+      {keywords.length > 0 && (
+        <MoreButtonWithDivider
+          onPressed={handleMoreButtonPress}
+          isOpened={isKeywordOpened}
+          openedText={'키워드 접기'}
+          closedText={'키워드 더 보기'}
+        />
+      )}
     </S.KeywordSectionContainer>
   );
 };

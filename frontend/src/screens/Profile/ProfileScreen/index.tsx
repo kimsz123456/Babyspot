@@ -39,7 +39,6 @@ const ProfileScreen = () => {
     try {
       const data = await getMemberProfile();
       setUserProfile(data);
-      console.log(data);
     } catch (error) {
       console.error('프로필 Screen에서 프로필 정보 조회 실패:', error);
     }
