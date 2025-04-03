@@ -5,12 +5,22 @@ import {IC_HEART} from '../../../../../../constants/icons';
 import scale from '../../../../../../utils/scale';
 import StarRating from '../../../../../../components/atoms/StarRating';
 import {ReviewType} from '../../../../../../services/reviewService';
+import {useGlobalStore} from '../../../../../../stores/globalStore';
+import {useMapNavigation} from '../../../../../../hooks/useNavigationHooks';
 
 export interface ReviewCardProps extends ReviewType {}
 
 const ReviewCard = (props: ReviewCardProps) => {
+  const {memberProfile} = useGlobalStore();
+  const navigation = useMapNavigation();
+
   return (
-    <S.ReviewCardContainer>
+    <S.ReviewCardContainer
+      onPress={() => {
+        if (props.memberId == memberProfile?.id) {
+          navigation.navigate('WriteReviewScreen', {review: props});
+        }
+      }}>
       <S.ProfileContainer>
         <S.ProfileImage source={{uri: props.profile}} resizeMode="cover" />
         <S.InformationAndAgeContainer>

@@ -11,6 +11,7 @@ import {
   Platform,
   ScrollView,
   Text,
+  ToastAndroid,
   TouchableNativeFeedback,
 } from 'react-native';
 import MainButton from '../../../components/atoms/Button/MainButton';
@@ -20,6 +21,13 @@ import scale from '../../../utils/scale';
 import {GrayColors, SystemColors} from '../../../constants/colors';
 import SubButton from '../../../components/atoms/Button/SubButton';
 import CenteredModal from '../../../components/atoms/CenterModal';
+import {
+  deleteReviews,
+  patchReviews,
+  PatchReviewsRequest,
+  postReviews,
+  PostReviewsRequest,
+} from '../../../services/mapService';
 
 const MAX_IMAGE_COUNT = 10;
 
@@ -33,12 +41,12 @@ interface ImageProps {
 const WriteReviewScreen = () => {
   const route = useRoute<StoreDetailRouteProp>();
   const navigation = useMapNavigation();
-  const {rating} = route.params;
-  const isWriteScreen = false;
+  const {review} = route.params;
+  const isWriteScreen = review.reviewId == -1;
 
+  const [starRating, setStarRating] = useState(review.rating);
   const [imagePaths, setImagePaths] = useState<ImageProps[]>([]);
-  const [content, setContent] = useState('');
-  const [starRating, setStarRating] = useState(rating);
+  const [content, setContent] = useState(review.content);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const handleAddImage = async () => {
@@ -67,6 +75,70 @@ const WriteReviewScreen = () => {
       }
     } catch (error) {
       console.error('이미지 선택 실패:', error);
+    }
+  };
+
+  const handleCreateReview = async () => {
+    try {
+      // TODO: 이미지 추가 필요
+      const params: PostReviewsRequest = {
+        memberId: review.memberId,
+        storeId: review.storeId,
+        rating: starRating,
+        content: content,
+        babyAges: review.babyAges,
+        imgNames: [],
+        contentTypes: [],
+      };
+
+      console.log(imagePaths);
+
+      // await postReviews(params);
+
+      navigation.navigate('CompleteScreen', {
+        completeType: 'create',
+      });
+    } catch (error) {
+      ToastAndroid.show('작성 중 문제가 발생했습니다.', 500);
+
+      throw error;
+    }
+  };
+
+  const handleUpdateReview = async () => {
+    try {
+      // TODO: 이미지 추가 필요
+      const params: PatchReviewsRequest = {
+        rating: starRating,
+        content: content,
+        images: [],
+      };
+
+      await patchReviews({
+        reviewId: review.reviewId,
+        params: params,
+      });
+
+      navigation.navigate('CompleteScreen', {
+        completeType: 'update',
+      });
+    } catch (error) {
+      ToastAndroid.show('수정 중 문제가 발생했습니다.', 500);
+      throw error;
+    }
+  };
+
+  const handleDeleteReview = async () => {
+    try {
+      await deleteReviews(review.reviewId);
+
+      navigation.navigate('CompleteScreen', {
+        completeType: 'delete',
+      });
+    } catch (error) {
+      ToastAndroid.show('삭제 중 문제가 발생했습니다.', 500);
+
+      throw error;
     }
   };
 
@@ -142,6 +214,7 @@ const WriteReviewScreen = () => {
               )}
 
               <MultilineTextInput
+                initialText={content}
                 textEdited={text => {
                   setContent(text);
                 }}
@@ -157,9 +230,7 @@ const WriteReviewScreen = () => {
                 text={'작성 완료'}
                 onPress={() => {
                   Keyboard.dismiss();
-                  navigation.navigate('CompleteScreen', {
-                    completeType: 'create',
-                  });
+                  handleCreateReview();
                 }}
               />
             ) : (
@@ -169,9 +240,7 @@ const WriteReviewScreen = () => {
                   text={'수정하기'}
                   onPress={() => {
                     Keyboard.dismiss();
-                    navigation.navigate('CompleteScreen', {
-                      completeType: 'update',
-                    });
+                    handleUpdateReview();
                   }}
                 />
                 <SubButton
@@ -189,6 +258,7 @@ const WriteReviewScreen = () => {
       </TouchableNativeFeedback>
       <CenteredModal
         visible={deleteModalVisible}
+        cancelText={'취소하기'}
         confirmText={'삭제하기'}
         title="정말 리뷰를 삭제할까요?"
         children={<Text>{`리뷰가 사라지며, 복구할 수 없습니다.`}</Text>}
@@ -197,9 +267,8 @@ const WriteReviewScreen = () => {
         }}
         onConfirm={() => {
           setDeleteModalVisible(false);
-          navigation.navigate('CompleteScreen', {
-            completeType: 'delete',
-          });
+
+          handleDeleteReview();
         }}
       />
     </KeyboardAvoidingView>
