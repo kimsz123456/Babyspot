@@ -85,7 +85,7 @@ const WriteReviewScreen = () => {
         memberId: review.memberId,
         storeId: review.storeId,
         rating: starRating,
-        content: content,
+        content: content.trim(),
         babyAges: review.babyAges,
         imgNames: [],
         contentTypes: [],
@@ -108,7 +108,7 @@ const WriteReviewScreen = () => {
       // TODO: 이미지 추가 필요
       const params: PatchReviewsRequest = {
         rating: starRating,
-        content: content,
+        content: content.trim(),
         images: [],
       };
 
@@ -213,8 +213,8 @@ const WriteReviewScreen = () => {
               )}
 
               <MultilineTextInput
-                initialText={content}
-                textEdited={text => {
+                text={content}
+                setText={text => {
                   setContent(text);
                 }}
                 placeholder={

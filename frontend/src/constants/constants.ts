@@ -56,3 +56,5 @@ export const CONVENIENCE_ICON = {
   groupTable: IC_TABLE,
   playZone: IC_PLAYGROUND,
 } as const;
+
+export const NICKNAME_LENGTH = 10 as const;

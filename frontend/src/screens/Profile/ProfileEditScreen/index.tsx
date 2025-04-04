@@ -40,24 +40,20 @@ const ProfileEditScreen = () => {
   const handleProfileUpdate = async () => {
     try {
       const response = await patchMemberProfile({
-        nickname: nickname,
+        nickname: nickname.trim(),
         profileImgUrl: selectedImage?.uri || '',
         contentType: selectedImage?.type || '',
         babyAges: babyAges,
       });
-
       const {preSignedUrl} = response;
-
       await uploadImageToS3({
         imageType: selectedImage?.type || '',
         imagePath: selectedImage?.uri || '',
         preSignedUrl: preSignedUrl || '',
       });
-
       // 프로필 업데이트 후 최신 데이터를 가져옴
       const updatedProfile = await getMemberProfile();
       setMemberProfile(updatedProfile);
-
       Alert.alert('성공', '프로필이 수정되었습니다.', [
         {
           text: '확인',
@@ -66,17 +62,20 @@ const ProfileEditScreen = () => {
       ]);
     } catch (error) {
       throw error;
-      Alert.alert('오류', '프로필 수정에 실패했습니다.');
     }
   };
 
   return (
     <S.BackGround>
       <ProfileImage onImageSelect={setSelectedImage} />
-      <MyInformation onNicknameChange={setNickname} />
+      <MyInformation nickname={nickname} setNickname={setNickname} />
       <ChildAge onBabyAgesChange={setBabyAges} />
       <S.ProfileEditButtonWrapper>
-        <MainButton text="프로필 수정" onPress={handleProfileUpdate} />
+        <MainButton
+          disabled={nickname.trim() == '' || babyAges.length == 0}
+          text="프로필 수정"
+          onPress={handleProfileUpdate}
+        />
       </S.ProfileEditButtonWrapper>
     </S.BackGround>
   );

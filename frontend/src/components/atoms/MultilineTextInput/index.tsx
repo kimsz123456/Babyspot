@@ -1,20 +1,23 @@
 import React, {useRef, useState} from 'react';
-import {TextInput} from 'react-native';
+import {TextInput, ToastAndroid} from 'react-native';
 import {PrimaryColors, GrayColors} from '../../../constants/colors';
 import scale from '../../../utils/scale';
 import * as S from './styles';
 
 interface MultilineTextInputProps {
-  initialText?: string;
-  textEdited: (text: string) => void;
+  text: string;
+  setText: (text: string) => void;
   placeholder: string;
 }
 
 const MIN_HEIGHT = 180;
 const MAX_LENGTH = 500;
 
-const MultilineTextInput = (props: MultilineTextInputProps) => {
-  const [text, setText] = useState(props.initialText ?? '');
+const MultilineTextInput = ({
+  text,
+  setText,
+  placeholder,
+}: MultilineTextInputProps) => {
   const [inputHeight, setInputHeight] = useState(scale(MIN_HEIGHT));
   const lastHeightRef = useRef(scale(MIN_HEIGHT));
 
@@ -22,10 +25,9 @@ const MultilineTextInput = (props: MultilineTextInputProps) => {
     <S.MultilineTextInputContainer>
       <TextInput
         value={text}
-        placeholder={props.placeholder}
+        placeholder={placeholder}
         selectionColor={PrimaryColors[500]}
         multiline
-        maxLength={MAX_LENGTH}
         scrollEnabled={false}
         placeholderTextColor={GrayColors[300]}
         textAlignVertical="top"
@@ -41,6 +43,11 @@ const MultilineTextInput = (props: MultilineTextInputProps) => {
           textDecorationColor: GrayColors[800],
         }}
         onChangeText={text => {
+          if (MAX_LENGTH && text.length > MAX_LENGTH) {
+            text = text.slice(0, MAX_LENGTH);
+
+            ToastAndroid.show(`최대 ${MAX_LENGTH}자까지 입력 가능합니다.`, 500);
+          }
           setText(text);
         }}
         onContentSizeChange={e => {
@@ -49,9 +56,6 @@ const MultilineTextInput = (props: MultilineTextInputProps) => {
             lastHeightRef.current = newHeight;
             setInputHeight(Math.max(scale(MIN_HEIGHT), newHeight));
           }
-        }}
-        onBlur={e => {
-          props.textEdited(text);
         }}
       />
       <S.CountText
