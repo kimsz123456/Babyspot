@@ -1,24 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, {useEffect, useState} from 'react';
 
 import {RouteProp, useRoute} from '@react-navigation/native';
 
+import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import StoreBasicInformation from '../NearStoreListScreen/components/StoreBasicInformation';
 import Home from './components/Home';
 import Menu from './components/Menu';
 import {ThickDivider} from '../../../components/atoms/Divider';
-import * as S from './styles';
 import KidMenu from './components/KidMenu';
-import {withDivider} from '../../../utils/withDivider';
 import KeywordSection from './components/Keyword';
 import FamilyReview from './components/FamilyReview';
-import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import MyReview from './components/MyReview';
 import Review from './components/Review';
+
 import {
   getStoreDetail,
   StoreDetailResponse,
 } from '../../../services/mapService';
 import {getStoreReviews, ReviewType} from '../../../services/reviewService';
+import {withDivider} from '../../../utils/withDivider';
+
+import * as S from './styles';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
 
