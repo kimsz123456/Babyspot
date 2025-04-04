@@ -5,6 +5,7 @@ import {
   getMyReviews,
   ReviewType,
 } from '../../../../../services/reviewService.ts';
+import NoDataContainer from '../../../../../components/atoms/NoDataContainer/index.tsx';
 
 export const MyReviewList = () => {
   const [reviews, setReviews] = useState<ReviewType[]>([]);
@@ -25,7 +26,7 @@ export const MyReviewList = () => {
   }, []);
 
   if (reviews.length === 0) {
-    return <S.EmptyText>작성한 리뷰가 없습니다.</S.EmptyText>;
+    return <NoDataContainer text="작성한 리뷰가 없습니다." />;
   }
 
   return (
