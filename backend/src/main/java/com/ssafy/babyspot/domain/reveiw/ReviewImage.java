@@ -31,9 +31,15 @@ public class ReviewImage {
 
 	@Setter
 	private String imageUrl;
-	
+
 	@Setter
 	private int orderIndex;
+
+	@Setter
+	private String imgName;
+	@Setter
+	private String contentType;
+
 	private LocalDateTime createdAt;
 
 	@PrePersist

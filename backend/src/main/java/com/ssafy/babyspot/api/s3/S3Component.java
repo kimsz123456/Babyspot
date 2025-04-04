@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import com.ssafy.babyspot.exception.CustomException;
 
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
@@ -18,12 +21,14 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 public class S3Component {
 
 	private final S3Presigner presigner;
+	private final S3Client s3Client;
 
 	@Value("${cloud.aws.s3.babyspot-bucket}")
 	private String bucket;
 
-	public S3Component(S3Presigner presigner) {
+	public S3Component(S3Presigner presigner, S3Client s3Client) {
 		this.presigner = presigner;
+		this.s3Client = s3Client;
 	}
 
 	public Map<String, String> generateProfilePreSignedUrl(String memberId,
@@ -95,4 +100,12 @@ public class S3Component {
 		return urls;
 	}
 
+	public void deleteObject(String key) {
+		DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+			.bucket(bucket)
+			.key(key)
+			.build();
+
+		DeleteObjectResponse deleteResponse = s3Client.deleteObject(deleteRequest);
+	}
 }
