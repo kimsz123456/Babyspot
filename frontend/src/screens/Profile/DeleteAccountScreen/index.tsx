@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Text, View} from 'react-native';
 
 import {
@@ -21,6 +21,7 @@ const DeleteAccountScreen = () => {
   const onboardingNavigation = useOnboardingNavigation();
   const [firstModalVisible, setFirstModalVisible] = useState(false);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
+  const [text, setText] = useState('');
   const [matchingText, setMatchingText] = useState(false);
   const contentTexts = [
     '본 서비스를 탈퇴하시면 더이상 ‘베이비 스팟’ 서비스를 이용하실 수 없습니다.',
@@ -55,6 +56,14 @@ const DeleteAccountScreen = () => {
   const handleSecondCancel = () => {
     setSecondModalVisible(false);
   };
+
+  useEffect(() => {
+    if (text === '탈퇴처리에 동의합니다.') {
+      setMatchingText(true);
+    } else {
+      setMatchingText(false);
+    }
+  }, [text]);
 
   return (
     <S.BackGround>
@@ -95,14 +104,9 @@ const DeleteAccountScreen = () => {
           <Text>라는 문구를 입력한 뒤, 탈퇴하기 버튼을 클릭해</Text>
           <Text>주세요.</Text>
           <LinedTextInput
+            text={text}
             placeholder="탈퇴처리에 동의합니다."
-            textEditted={(text: string) => {
-              if (text === '탈퇴처리에 동의합니다.') {
-                setMatchingText(true);
-              } else {
-                setMatchingText(false);
-              }
-            }}
+            setText={setText}
           />
         </View>
       </CenteredModal>

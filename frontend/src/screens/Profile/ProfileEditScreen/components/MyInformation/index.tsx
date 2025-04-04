@@ -1,37 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import * as S from './styles';
 import LinedTextInput from '../../../../../components/atoms/Button/LinedTextInput';
-import {useGlobalStore} from '../../../../../stores/globalStore';
+import {NICKNAME_LENGTH} from '../../../../../constants/constants';
 
 interface MyInformationProps {
-  onNicknameChange: (nickname: string) => void;
+  nickname: string;
+  setNickname: (nickname: string) => void;
 }
 
-const MyInformation = ({onNicknameChange}: MyInformationProps) => {
-  const {memberProfile} = useGlobalStore();
-  const [nickname, setNickname] = useState('');
-  const [placeholder, setPlaceholder] = useState('');
-
-  useEffect(() => {
-    if (memberProfile) {
-      setPlaceholder(memberProfile.nickname);
-      setNickname(memberProfile.nickname);
-    }
-  }, [memberProfile]);
-
+const MyInformation = ({nickname, setNickname}: MyInformationProps) => {
   return (
     <S.InformationContainer>
       <S.NicknameContainer>
         <S.NicknameTitle>닉네임</S.NicknameTitle>
         <LinedTextInput
-          placeholder={placeholder}
-          textEditted={(text: string) => {
-            if (text.trim() != '') {
-              setNickname(text);
-              onNicknameChange(text);
-            } else {
-              setNickname(nickname);
-            }
+          text={nickname}
+          maxLength={NICKNAME_LENGTH}
+          placeholder={'닉네임을 입력해주세요.'}
+          setText={(text: string) => {
+            setNickname(text);
           }}
         />
       </S.NicknameContainer>
