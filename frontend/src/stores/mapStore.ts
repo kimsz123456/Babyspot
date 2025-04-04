@@ -8,6 +8,9 @@ interface MapState {
   selectedAges: number[];
   setSelectedAges: (ages: number[]) => void;
 
+  selectedChips: string[];
+  setSelectedChips: (chips: string[]) => void;
+
   clearAddress: () => void;
   resetMapState: () => void;
 }
@@ -23,6 +26,9 @@ export const useMapStore = create<MapState>(set => ({
   selectedAges: [],
   setSelectedAges: ages => set({selectedAges: ages}),
 
-  resetMapState: () => set({...initialState}),
+  selectedChips: [],
+  setSelectedChips: chips => set({selectedChips: chips}),
+
   clearAddress: () => set({selectedAddress: null}),
+  resetMapState: () => set({...initialState}),
 }));

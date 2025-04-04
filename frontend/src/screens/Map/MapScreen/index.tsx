@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Alert} from 'react-native';
 
 import {useRoute} from '@react-navigation/native';
@@ -24,7 +24,10 @@ import StoreBasicScreen from '../StoreBasicScreen';
 import {getRangeInfo} from '../../../services/mapService';
 import {getGeocoding} from '../../../services/mapService';
 import {useMapStore} from '../../../stores/mapStore';
-import {StoreBasicInformationType} from '../NearStoreListScreen/components/StoreBasicInformation/types';
+import {
+  ConvenienceType,
+  StoreBasicInformationType,
+} from '../NearStoreListScreen/components/StoreBasicInformation/types';
 
 import scale from '../../../utils/scale';
 import calculateMapRegion from '../../../utils/calculateMapRegion';
@@ -52,12 +55,32 @@ const MapScreen = () => {
     {centerCoordinate, zoom},
   );
   const {chips, handleChipPressed} = useChips();
-  const {selectedAges, setSelectedAges} = useMapStore();
+  const {selectedAges, selectedChips, setSelectedAges, setSelectedChips} =
+    useMapStore();
 
   const clearAddress = useMapStore(state => state.clearAddress);
 
   const route = useRoute();
   const address = (route.params as any)?.address as string;
+
+  const filteredStores = useMemo(() => {
+    if (selectedChips.length === 0) {
+      return stores;
+    }
+
+    return stores.filter(store => {
+      const conveniences = store.convenience[0].convenienceDetails;
+
+      if (!conveniences) {
+        return false;
+      }
+
+      return selectedChips.every(
+        chip =>
+          conveniences[chip as keyof ConvenienceType['convenienceDetails']],
+      );
+    });
+  }, [selectedChips, stores]);
 
   const initMapToCurrentLocation = async () => {
     const hasPermission = await checkLocationPermission();
@@ -95,7 +118,9 @@ const MapScreen = () => {
 
   const handleResearchButtonPress = () => {
     clearAddress();
+
     setSelectedAges([]);
+    setSelectedChips([]);
 
     if (!mapRef.current) {
       return;
@@ -149,7 +174,7 @@ const MapScreen = () => {
     }
   };
 
-  const filterStores = async () => {
+  const filterStoresByAge = async () => {
     try {
       // 보이는 영역 다시 계산
       const {topLeft, bottomRight} = calculateMapRegion(
@@ -166,13 +191,13 @@ const MapScreen = () => {
       });
 
       // 음식점 필터링
-      const filteredStores = response.filter(store => {
+      const recommendStores = response.filter(store => {
         return store.babyAges?.some((age: number) =>
           selectedAges.includes(age),
         );
       });
 
-      setStores(filteredStores);
+      setStores(recommendStores);
 
       updateLastSearchedCoordinate();
     } catch (error) {
@@ -209,7 +234,6 @@ const MapScreen = () => {
       });
     } catch (error) {
       Alert.alert('위치 이동 중 오류 발생');
-      console.error(error);
     }
   };
 
@@ -229,7 +253,7 @@ const MapScreen = () => {
     }
 
     if (selectedAges.length > 0 && zoom === 13) {
-      filterStores();
+      filterStoresByAge();
       return;
     }
 
@@ -255,7 +279,7 @@ const MapScreen = () => {
         onTapMap={handleNaverMapTab}
         isIndoorEnabled={true}
         isExtentBoundedInKorea={true}>
-        {stores.map((data, idx) => (
+        {filteredStores.map((data, idx) => (
           <NaverMapMarkerOverlay
             key={idx}
             latitude={data.latitude}
@@ -302,9 +326,9 @@ const MapScreen = () => {
       {isVisible && <ResearchButton onPress={handleResearchButtonPress} />}
 
       {selectedMarker >= 0 ? (
-        <StoreBasicScreen store={stores[selectedMarker]} />
+        <StoreBasicScreen store={filteredStores[selectedMarker]} />
       ) : (
-        <NearStoreListScreen stores={stores} />
+        <NearStoreListScreen stores={filteredStores} />
       )}
     </S.MapScreenContainer>
   );
