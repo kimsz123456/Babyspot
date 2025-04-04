@@ -5,12 +5,10 @@ import {FontStyles} from '../../../../../../constants/fonts';
 import scale from '../../../../../../utils/scale';
 
 export const ReviewCardContainer = styled(Pressable)`
-  /* flex: 1; */
   gap: ${scale(8)}px;
 `;
 
 export const ProfileContainer = styled(View)`
-  /* flex: 1; */
   flex-direction: row;
   align-items: center;
   gap: ${scale(8)}px;

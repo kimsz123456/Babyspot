@@ -10,10 +10,14 @@ interface KidMenuProps {
   menus: KidsMenu[];
 }
 
+const MAX_CONTENT_LENGTH = 4;
+
 const KidMenu = ({menus}: KidMenuProps) => {
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
-  const visibleMenus = isMenuOpened ? menus : menus.slice(0, 4);
+  const visibleMenus = isMenuOpened
+    ? menus
+    : menus.slice(0, MAX_CONTENT_LENGTH);
 
   const handleMoreButtonPress = () => {
     setIsMenuOpened(prev => !prev);
@@ -43,7 +47,7 @@ const KidMenu = ({menus}: KidMenuProps) => {
         )}
       </S.MenuListContainer>
 
-      {menus.length > 0 && (
+      {menus.length > MAX_CONTENT_LENGTH && (
         <MoreButtonWithDivider
           onPressed={handleMoreButtonPress}
           isOpened={isMenuOpened}

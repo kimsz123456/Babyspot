@@ -22,6 +22,8 @@ export interface ReviewProps {
   storeId: number;
 }
 
+const MAX_CONTENT_LENGTH = 2;
+
 const Review = (props: ReviewProps) => {
   const navigation = useMapNavigation();
   const [modalOpened, setModalOpened] = useState(false);
@@ -65,7 +67,7 @@ const Review = (props: ReviewProps) => {
           {props.reviews.length > 0 ? (
             withDivider(
               props.reviews
-                .slice(0, 2)
+                .slice(0, MAX_CONTENT_LENGTH)
                 .map((review, index) => <ReviewCard key={index} {...review} />),
               <ThinDivider />,
             )
