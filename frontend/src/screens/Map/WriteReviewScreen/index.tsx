@@ -91,9 +91,7 @@ const WriteReviewScreen = () => {
         contentTypes: [],
       };
 
-      console.log(imagePaths);
-
-      // await postReviews(params);
+      await postReviews(params);
 
       navigation.navigate('CompleteScreen', {
         completeType: 'create',
