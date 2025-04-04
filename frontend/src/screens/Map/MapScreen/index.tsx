@@ -63,6 +63,18 @@ const MapScreen = () => {
   const route = useRoute();
   const address = (route.params as any)?.address as string;
 
+  const changeMarkerSize = (idx: number, defaultSize: number) => {
+    if (selectedMarker === -1) {
+      return defaultSize;
+    }
+
+    if (idx !== selectedMarker) {
+      return defaultSize * 0.7;
+    }
+
+    return defaultSize * 1.3;
+  };
+
   const filteredStores = useMemo(() => {
     if (selectedChips.length === 0) {
       return stores;
@@ -284,8 +296,8 @@ const MapScreen = () => {
             key={idx}
             latitude={data.latitude}
             longitude={data.longitude}
-            width={30}
-            height={40}
+            width={changeMarkerSize(idx, 30)}
+            height={changeMarkerSize(idx, 40)}
             image={
               selectedAges.length > 0 && !isPendingResearch
                 ? IC_RECOMMEND_MARKER
