@@ -36,9 +36,8 @@ const ChildAge = ({onBabyAgesChange}: ChildAgeProps) => {
     if (memberProfile?.babyBirthYears) {
       const newChildren = aggregateBabyBirthYears(memberProfile.babyBirthYears);
       setChildren(newChildren);
-      onBabyAgesChange(memberProfile.babyBirthYears);
     }
-  }, [memberProfile, onBabyAgesChange]);
+  }, [memberProfile]);
 
   useEffect(() => {
     const ages = children.flatMap(child => Array(child.count).fill(child.year));
@@ -90,13 +89,22 @@ const ChildAge = ({onBabyAgesChange}: ChildAgeProps) => {
         child => child.year === selectedYear,
       );
 
+      let newChildren;
       if (existingIndex !== -1) {
-        return prev.map((child, i) =>
+        newChildren = prev.map((child, i) =>
           i === existingIndex ? {...child, count: child.count + 1} : child,
         );
       } else {
-        return [...prev, {year: selectedYear, count: 1}];
+        newChildren = [...prev, {year: selectedYear, count: 1}];
       }
+
+      // 즉시 ages 배열 생성하여 부모 컴포넌트에 전달
+      const ages = newChildren.flatMap(child =>
+        Array(child.count).fill(child.year),
+      );
+      onBabyAgesChange(ages);
+
+      return newChildren;
     });
 
     setModalVisible(false);
