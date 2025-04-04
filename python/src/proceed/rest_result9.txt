@@ -1,0 +1,8 @@
+{
+  "restaurant_id": "9",
+  "title": "대흥정육식당",
+  "parking": true, 
+  "baby_chair": true, 
+  "baby_tableware": false, 
+  "kids_menu": "계란찜"
+}

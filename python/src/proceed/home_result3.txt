@@ -1,0 +1,6 @@
+{
+  "address": "서울 중랑구 용마산로 707 1층",
+  "transportation_convenience": "경춘신내역 2번 출구에서 248m",
+  "contact_number": "0507-1458-3348",
+  "business_hours": "월~일 11:00 - 22:00, 라스트오더 21:30"
+}

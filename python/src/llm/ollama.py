@@ -19,7 +19,7 @@ class OllamaClient:
     self.chat_endpoint = f"{base_url}/api/chat"
 
   @staticmethod
-  def split_message(message: str, chunk_size: int = 2000) -> List[str]:
+  def split_message(message: str, chunk_size: int = 1500) -> List[str]:
     """
     메시지를 지정된 길이로 분할합니다.
 
@@ -89,7 +89,7 @@ class OllamaClient:
       user_message: str,
       system_prompt: str = "",
       stream: bool = False,
-      chunk_size: int = 2000) -> Dict[str, Any]:
+      chunk_size: int = 1500) -> Dict[str, Any]:
     """
     메시지를 청크로 나누고 각 청크마다 LLM에 요청을 보냅니다.
 
@@ -110,7 +110,7 @@ class OllamaClient:
     print(f"메시지가 {len(message_chunks)}개 청크로 분할되었습니다.")
 
     # 각 청크마다 LLM에 요청 보내기
-    model = "qwen2.5:latest"  # 모델 고정
+    model = "qwen2.5:14b"  # 모델 고정
     results = []
     error_messages = []
 

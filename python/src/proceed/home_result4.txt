@@ -1,0 +1,7 @@
+{
+      "restaurant_id": "4",
+      "address": "서울 중랑구 봉화산로 243 1층 6",
+      "transportation_convenience": "경춘신내역 1번 출구에서 도보 8분, 신내초등학교에서 도보 5분",
+      "contact_number": "0507-1420-2025",
+      "business_hours": "월~일 11:30 - 22:00 (매월 첫째주 화요일은 17:00부터 영업)"
+}

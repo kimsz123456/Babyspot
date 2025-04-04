@@ -70,3 +70,37 @@ class HDFSClient:
         items = self.client.list(hdfs_directory)
         print(f"📂 디렉토리 '{hdfs_directory}'에서 {len(items)}개의 항목을 찾았습니다.")
         return items
+
+    def get_all_json_files(self, hdfs_directory: str) -> list:
+        """
+        HDFS 디렉토리와 모든 하위 디렉토리의 JSON 파일 재귀적으로 찾기
+        """
+        all_json_files = []
+
+        try:
+            # 현재 디렉토리의 항목들 가져오기
+            items = self.list_directory(hdfs_directory)
+
+            for item in items:
+                full_path = f"{hdfs_directory}/{item}"
+
+                # 디렉토리인 경우 재귀적으로 탐색
+                try:
+                    if self.client.status(full_path, strict=False)[
+                        'type'] == 'DIRECTORY':
+                        # 하위 디렉토리의 JSON 파일들도 추가
+                        all_json_files.extend(
+                            self.get_all_json_files(full_path))
+                except Exception as e:
+                    print(f"디렉토리 탐색 중 오류: {e}")
+
+                # JSON 파일인 경우 추가
+                if item.endswith('.json'):
+                    all_json_files.append(full_path)
+
+        except FileNotFoundError as e:
+            print(f"디렉토리 탐색 실패: {e}")
+
+        print(
+            f"📂 디렉토리 '{hdfs_directory}'에서 총 {len(all_json_files)}개의 JSON 파일을 찾았습니다.")
+        return all_json_files
