@@ -1,4 +1,4 @@
-import React, {RefObject, useRef} from 'react';
+import React, {Ref, RefObject, useRef} from 'react';
 
 import BottomSheet, {TouchableWithoutFeedback} from '@gorhom/bottom-sheet';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -14,14 +14,17 @@ import scale from '../../../utils/scale';
 
 import * as S from './styles';
 
-const SNAP_POINTS = [scale(32), '80%'];
+const SNAP_POINTS = [scale(32), scale(280), '80%'];
 
 interface NearStoreListScreenProps {
   stores: StoreBasicInformationType[];
+  bottomSheetRef: Ref<BottomSheet>;
 }
 
-const NearStoreListScreen = ({stores}: NearStoreListScreenProps) => {
-  const bottomSheetRef = useRef<BottomSheet>(null);
+const NearStoreListScreen = ({
+  stores,
+  bottomSheetRef,
+}: NearStoreListScreenProps) => {
   const imageCarouselRef = useRef<ScrollView>(null);
 
   const navigation = useMapNavigation();
