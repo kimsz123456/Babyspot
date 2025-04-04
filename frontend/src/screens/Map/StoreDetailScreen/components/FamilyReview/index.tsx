@@ -5,6 +5,8 @@ import NoDataContainer from '../../../../../components/atoms/NoDataContainer';
 
 export interface FamilyReviewProps extends Sentiment {}
 
+const MAX_CONTENT_LENGTH = 5;
+
 const FamilyReview = (props: FamilyReviewProps) => {
   return (
     <S.FamilyReviewContainer>
@@ -17,24 +19,26 @@ const FamilyReview = (props: FamilyReviewProps) => {
           <>
             <S.SummaryText>{`❝ ${props.positiveSummary} ❞`}</S.SummaryText>
             <S.ReviewTextContainer>
-              {props.positive.slice(0, 5).map((review, index) => {
-                const [isFold, setIsFold] = useState(true);
+              {props.positive
+                .slice(0, MAX_CONTENT_LENGTH)
+                .map((review, index) => {
+                  const [isFold, setIsFold] = useState(true);
 
-                return (
-                  <S.ReviewTextButton
-                    key={index}
-                    onPress={() => {
-                      setIsFold(!isFold);
-                    }}>
-                    <S.ReviewText
-                      $isPositive={true}
-                      numberOfLines={isFold ? 2 : undefined}
-                      ellipsizeMode="tail">
-                      {review}
-                    </S.ReviewText>
-                  </S.ReviewTextButton>
-                );
-              })}
+                  return (
+                    <S.ReviewTextButton
+                      key={index}
+                      onPress={() => {
+                        setIsFold(!isFold);
+                      }}>
+                      <S.ReviewText
+                        $isPositive={true}
+                        numberOfLines={isFold ? 2 : undefined}
+                        ellipsizeMode="tail">
+                        {review}
+                      </S.ReviewText>
+                    </S.ReviewTextButton>
+                  );
+                })}
             </S.ReviewTextContainer>
           </>
         )}
@@ -47,24 +51,26 @@ const FamilyReview = (props: FamilyReviewProps) => {
           <>
             <S.SummaryText>{`❝ ${props.negativeSummary} ❞`}</S.SummaryText>
             <S.ReviewTextContainer>
-              {props.negative.slice(0, 5).map((review, index) => {
-                const [isFold, setIsFold] = useState(true);
+              {props.negative
+                .slice(0, MAX_CONTENT_LENGTH)
+                .map((review, index) => {
+                  const [isFold, setIsFold] = useState(true);
 
-                return (
-                  <S.ReviewTextButton
-                    key={index}
-                    onPress={() => {
-                      setIsFold(!isFold);
-                    }}>
-                    <S.ReviewText
-                      $isPositive={false}
-                      numberOfLines={isFold ? 2 : undefined}
-                      ellipsizeMode="tail">
-                      {review}
-                    </S.ReviewText>
-                  </S.ReviewTextButton>
-                );
-              })}
+                  return (
+                    <S.ReviewTextButton
+                      key={index}
+                      onPress={() => {
+                        setIsFold(!isFold);
+                      }}>
+                      <S.ReviewText
+                        $isPositive={false}
+                        numberOfLines={isFold ? 2 : undefined}
+                        ellipsizeMode="tail">
+                        {review}
+                      </S.ReviewText>
+                    </S.ReviewTextButton>
+                  );
+                })}
             </S.ReviewTextContainer>
           </>
         )}

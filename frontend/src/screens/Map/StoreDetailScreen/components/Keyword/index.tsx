@@ -25,6 +25,8 @@ export enum ReviewFromTypes {
   Place = '플레이스',
 }
 
+const MAX_CONTENT_LENGTH = 3;
+
 const KeywordSection = ({keywords, totalCount}: KeywordSectionProps) => {
   const navigation = useMapNavigation();
 
@@ -32,7 +34,7 @@ const KeywordSection = ({keywords, totalCount}: KeywordSectionProps) => {
 
   const visibleKeywords = isKeywordOpened
     ? keywords.sort((a, b) => b.count - a.count)
-    : keywords.slice(0, 3).sort((a, b) => b.count - a.count);
+    : keywords.slice(0, MAX_CONTENT_LENGTH).sort((a, b) => b.count - a.count);
 
   const handleMoreButtonPress = () => {
     setIsKeywordOpened(prev => !prev);
@@ -64,7 +66,7 @@ const KeywordSection = ({keywords, totalCount}: KeywordSectionProps) => {
           ))
         )}
       </S.KeywordListContainer>
-      {keywords.length > 0 && (
+      {keywords.length > MAX_CONTENT_LENGTH && (
         <MoreButtonWithDivider
           onPressed={handleMoreButtonPress}
           isOpened={isKeywordOpened}
