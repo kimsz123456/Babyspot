@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -133,21 +131,15 @@ public class MemberService {
 		}
 
 		if (request.getBabyAges() != null && !request.getBabyAges().isEmpty()) {
-			// 기존 등록된 Baby 엔티티 조회
-			List<Baby> existingBabies = babyRepository.findByMember_Id(Integer.valueOf(memberId));
-			Set<Integer> existingBirthYears = existingBabies.stream()
-				.map(Baby::getBirthYear)
-				.collect(Collectors.toSet());
+			babyRepository.deleteByMemberId(Integer.parseInt(memberId));
 
 			List<Baby> newBabies = new ArrayList<>();
 			for (Integer birthYear : request.getBabyAges()) {
-				if (!existingBirthYears.contains(birthYear)) {
-					Baby baby = Baby.builder()
-						.member(member)
-						.birthYear(birthYear)
-						.build();
-					newBabies.add(baby);
-				}
+				Baby baby = Baby.builder()
+					.member(member)
+					.birthYear(birthYear)
+					.build();
+				newBabies.add(baby);
 			}
 			if (!newBabies.isEmpty()) {
 				babyRepository.saveAll(newBabies);
@@ -155,7 +147,7 @@ public class MemberService {
 		}
 
 		memberRepository.save(member);
-		
+
 		return UpdateProfileResponse.fromMember(member, CLOUDFRONT_URL, preSignedUrl);
 	}
 
