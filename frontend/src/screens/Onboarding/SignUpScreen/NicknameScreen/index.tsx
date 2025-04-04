@@ -1,15 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import * as S from './styles';
 import MainButton from '../../../../components/atoms/Button/MainButton';
 import {useOnboardingNavigation} from '../../../../hooks/useNavigationHooks';
 import {useOnboardingStore} from '../../../../stores/onboardingStore';
 import {Keyboard, TouchableNativeFeedback, View} from 'react-native';
 import LinedTextInput from '../../../../components/atoms/Button/LinedTextInput';
+import {NICKNAME_LENGTH} from '../../../../constants/constants';
 
 const NicknameScreen = () => {
   const navigation = useOnboardingNavigation();
-  const nickname = useOnboardingStore(state => state.nickname);
   const setNickname = useOnboardingStore(state => state.setNickname);
+  const [text, setText] = useState('');
 
   return (
     <TouchableNativeFeedback
@@ -22,13 +23,11 @@ const NicknameScreen = () => {
           <View>
             <S.TextInputTitle>닉네임</S.TextInputTitle>
             <LinedTextInput
+              text={text}
+              maxLength={NICKNAME_LENGTH}
               placeholder="감귤농장 주인"
-              textEditted={(text: string) => {
-                if (text.trim() != '') {
-                  setNickname(text);
-                } else {
-                  setNickname(null);
-                }
+              setText={(text: string) => {
+                setText(text.trim());
               }}
             />
           </View>
@@ -36,9 +35,10 @@ const NicknameScreen = () => {
         <MainButton
           text={'다음'}
           onPress={() => {
+            setNickname(text.trim());
             navigation.navigate('ProfileImage');
           }}
-          disabled={!nickname}
+          disabled={text.trim() === ''}
         />
       </S.SignUpScreenView>
     </TouchableNativeFeedback>
