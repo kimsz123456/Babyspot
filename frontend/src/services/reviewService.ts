@@ -42,6 +42,12 @@ export interface ReviewType {
   likeCount: number;
 }
 
+export interface ReviewRequestParams {
+  page?: number;
+  size?: number;
+  sort?: string[];
+}
+
 export const getStoreReviews = async (storeId: number) => {
   try {
     const response = await api.get(`/reviews/${storeId}/list`);
@@ -49,6 +55,22 @@ export const getStoreReviews = async (storeId: number) => {
     return response.data as ReviewResponseType;
   } catch (error) {
     console.error('리뷰 목록 조회 실패:', error);
+    throw error;
+  }
+};
+
+export const getMyReviews = async (
+  params: ReviewRequestParams = {},
+): Promise<ReviewResponseType> => {
+  try {
+    const defaultParams = {
+      page: 0,
+      size: 10,
+      ...params,
+    };
+    const result = await api.get('/reviews/myreview', {params: defaultParams});
+    return result.data;
+  } catch (error) {
     throw error;
   }
 };

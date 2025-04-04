@@ -22,6 +22,7 @@ const ReviewScoreContainer = styled(View)`
   flex: 1;
   flex-direction: row;
   align-items: center;
+  padding-top: ${scale(1)}px;
 `;
 const ReviewStar = styled(Image)`
   height: ${scale(16)}px;
