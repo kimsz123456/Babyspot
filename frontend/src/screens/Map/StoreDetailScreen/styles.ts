@@ -23,13 +23,13 @@ export const TabBar = styled(View)`
   border-bottom-width: 1px;
   border-top-color: ${GrayColors[200]};
   border-bottom-color: ${GrayColors[200]};
-  padding: 0 ${scale(24)}px;
+  padding: 0px ${scale(24)}px;
 `;
 
 export const TabContainer = styled(TouchableOpacity)<{$isSelected: boolean}>`
-  padding: ${scale(8)}px 0;
+  padding: ${scale(8)}px 0px;
   width: ${scale(66)}px;
-  border-bottom-width: ${({$isSelected}) => ($isSelected ? '2px' : 0)};
+  border-bottom-width: ${({$isSelected}) => ($isSelected ? '2px' : '0px')};
   border-bottom-color: ${({$isSelected}) =>
     $isSelected ? GrayColors[800] : 'transparent'};
 `;
