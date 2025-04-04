@@ -1,18 +1,14 @@
 import {useState} from 'react';
 
 import {Camera, Region} from '@mj-studio/react-native-naver-map';
+import {INITIAL_MAP_CENTER_COORDINATE} from '../constants/constants';
 
 interface Coordinate {
   latitude: number;
   longitude: number;
 }
 
-const useMapViewport = (
-  initialCenter: Coordinate = {
-    latitude: 37.498040483,
-    longitude: 127.02758183,
-  }, // 초기 위치 강남역
-) => {
+const useMapViewport = (initialCenter = INITIAL_MAP_CENTER_COORDINATE) => {
   const [centerCoordinate, setCenterCoordinate] =
     useState<Coordinate>(initialCenter);
   const [mapRegion, setMapRegion] = useState({
