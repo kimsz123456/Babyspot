@@ -1,27 +1,50 @@
-import React, {useRef} from 'react';
-
+import React, {useEffect, useState} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
-
-import MOCK from '../MyReviewListScreen/components/MyReviewInformation/mocks';
-
 import * as S from './styles';
 import MyReviewInformation from './components/MyReviewInformation';
 import {ThinDivider} from '../../../components/atoms/Divider';
+import {getMyReviews, ReviewType} from '../../../services/reviewService';
+import NoDataContainer from '../../../components/atoms/NoDataContainer';
 
 const MyReviewListScreen = () => {
-  const imageCarouselRef = useRef<ScrollView>(null);
+  const [reviews, setReviews] = useState<ReviewType[]>([]);
+  const imageCarouselRef = React.useRef<ScrollView>(null);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await getMyReviews({
+          page: 0,
+          size: 10,
+        });
+        setReviews(response.content);
+      } catch (error) {
+        console.error('내 리뷰 조회 실패:', error);
+        throw error;
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
+  if (reviews.length === 0) {
+    return (
+      <S.BackGround>
+        <NoDataContainer text="작성한 리뷰가 없습니다." />
+      </S.BackGround>
+    );
+  }
 
   return (
     <ScrollView>
       <S.MyReviewListScreenContainer>
-        {MOCK.map((store, idx) => (
-          <React.Fragment key={idx}>
+        {reviews.map((review, idx) => (
+          <React.Fragment key={review.reviewId}>
             <MyReviewInformation
-              key={idx}
-              store={store}
+              reviews={review}
               imageCarouselRef={imageCarouselRef}
             />
-            {idx !== MOCK.length - 1 && (
+            {idx !== reviews.length - 1 && (
               <S.Divider>
                 <ThinDivider />
               </S.Divider>
