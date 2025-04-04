@@ -40,6 +40,8 @@ export interface ReviewType {
   createdAt: string;
   imgUrls: string[];
   likeCount: number;
+  okZone: boolean;
+  category: string;
 }
 
 export interface ReviewRequestParams {
