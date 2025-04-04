@@ -34,6 +34,7 @@ export const StoreName = styled(Text)`
 export const StoreCategory = styled(Text)`
   ${FontStyles.captionMedium}
   color: ${GrayColors[700]};
+  padding-top: ${scale(4)}px;
 `;
 export const AgeMarkerContainer = styled(View)`
   display: flex;
