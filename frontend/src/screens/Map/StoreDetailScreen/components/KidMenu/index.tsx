@@ -26,7 +26,7 @@ const KidMenu = ({menus}: KidMenuProps) => {
   return (
     <S.MenuContainer>
       <S.TitleContainer>
-        <S.Title>{`어린이 메뉴`}</S.Title>
+        <S.Title>{'어린이 메뉴'}</S.Title>
         <OKzoneMarker />
       </S.TitleContainer>
       <S.MenuListContainer>
@@ -38,9 +38,11 @@ const KidMenu = ({menus}: KidMenuProps) => {
               <S.BasicText>{menu.babyMenuName}</S.BasicText>
               <S.BasicText>
                 <S.BoldText>
-                  {menu.babyMenuPrice ? formatPrice(menu.babyMenuPrice) : `-`}
+                  {menu.babyMenuPrice
+                    ? formatPrice(menu.babyMenuPrice)
+                    : '정보 없음'}
                 </S.BoldText>
-                {`원`}
+                {menu.babyMenuPrice && '원'}
               </S.BasicText>
             </S.LineContainer>
           ))
