@@ -14,8 +14,9 @@ import {
   IC_PLAYGROUND,
   IC_TABLE,
 } from './icons';
+import {Coordinate} from '../screens/Map/MapScreen/types';
 
-export const FIGMA_DESIGN_WIDTH = 360;
+export const FIGMA_DESIGN_WIDTH = 360 as const;
 export const WINDOW_WIDTH = Dimensions.get('window').width;
 
 export const AGE_MARKERS = [

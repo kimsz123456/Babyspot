@@ -58,7 +58,7 @@ const Home = ({basicInformation}: HomeProps) => {
     ];
     return sortedDays.map(day => ({
       day,
-      hours: basicInformation.businessHour[day] || '정보 없음',
+      hours: basicInformation.businessHour[day.slice(0, 1)] || '정보 없음',
     }));
   };
 
@@ -89,7 +89,7 @@ const Home = ({basicInformation}: HomeProps) => {
           <S.TextContainer>
             <S.BoldText>{DAY[CURRENT_DAY]}</S.BoldText>
             <S.BasicText>
-              {basicInformation.businessHour[DAY[CURRENT_DAY]]}
+              {basicInformation.businessHour[DAY[CURRENT_DAY].slice(0, 1)]}
             </S.BasicText>
           </S.TextContainer>
         </S.LineContainer>
