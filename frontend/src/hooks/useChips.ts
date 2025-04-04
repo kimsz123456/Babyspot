@@ -11,7 +11,6 @@ interface ChipType {
 const chipList: ChipType[] = [
   {label: '유아 의자', value: 'babyChair', isSelected: false},
   {label: '유아 식기', value: 'babyTableware', isSelected: false},
-  {label: '기저귀 교환대', value: 'diaperChangingStation', isSelected: false},
   {label: '놀이방', value: 'playZone', isSelected: false},
   {label: '수유실', value: 'nursingRoom', isSelected: false},
   {label: '6인 이상 테이블', value: 'groupTable', isSelected: false},
