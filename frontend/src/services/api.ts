@@ -4,7 +4,7 @@ import Config from 'react-native-config';
 import {getTokenByRefreshToken} from './onboardingService';
 import {useGlobalStore} from '../stores/globalStore';
 
-const baseURL = Config.BASE_URL;
+const baseURL = __DEV__ ? Config.BASE_URL_DEBUG : Config.BASE_URL_RELEASE;
 
 export const api = axios.create({
   baseURL,
