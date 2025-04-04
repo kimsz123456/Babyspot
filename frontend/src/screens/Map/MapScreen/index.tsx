@@ -40,9 +40,11 @@ import {
 } from '../../../constants/icons';
 
 import * as S from './styles';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
@@ -182,11 +184,13 @@ const MapScreen = () => {
     } catch (e) {
       throw new Error('주변 가게 검색 중 문제가 발생하였습니다.');
     } finally {
+      bottomSheetRef.current?.snapToIndex(1);
+
       setIsPendingResearch(false);
     }
   };
 
-  const filterStoresByAge = async () => {
+  const searchStoresByAge = async () => {
     try {
       // 보이는 영역 다시 계산
       const {topLeft, bottomRight} = calculateMapRegion(
@@ -215,6 +219,8 @@ const MapScreen = () => {
     } catch (error) {
       throw new Error('주변 음식점 추천 중 문제가 발생하였습니다.');
     } finally {
+      bottomSheetRef.current?.snapToIndex(1);
+
       setIsPendingResearch(false);
     }
   };
@@ -224,6 +230,8 @@ const MapScreen = () => {
   };
 
   const handleNaverMapTab = () => {
+    bottomSheetRef.current?.snapToIndex(0);
+
     setSelectedMarker(-1);
   };
 
@@ -265,7 +273,7 @@ const MapScreen = () => {
     }
 
     if (selectedAges.length > 0 && zoom === 13) {
-      filterStoresByAge();
+      searchStoresByAge();
       return;
     }
 
@@ -340,7 +348,10 @@ const MapScreen = () => {
       {selectedMarker >= 0 ? (
         <StoreBasicScreen store={filteredStores[selectedMarker]} />
       ) : (
-        <NearStoreListScreen stores={filteredStores} />
+        <NearStoreListScreen
+          stores={filteredStores}
+          bottomSheetRef={bottomSheetRef}
+        />
       )}
     </S.MapScreenContainer>
   );
