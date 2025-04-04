@@ -25,10 +25,15 @@ export const MenuListContainer = styled(View)`
 
 export const LineContainer = styled(View)`
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   padding: ${scale(8)}px 0;
+`;
+
+export const StoreName = styled(Text)`
+  ${FontStyles.bodyMedium}
+  line-height: ${scale(28)}px;
+  color: ${GrayColors[800]};
 `;
 
 export const BasicText = styled(Text)`
