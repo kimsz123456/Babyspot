@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -37,8 +38,10 @@ public class SecurityConfig {
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/", "/auth/**", "/oauth2/**", "/swagger-ui/**", "/v3/api-docs/**",
-					"/api/members/signup", "/api/utils/status")
+					"/api/members/signup", "/api/utils/status", "/api/auth/kakao", "/api/auth/refresh-token",
+					"/api/store/**")
 				.permitAll()
+				.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.anyRequest()
 				.authenticated()
 			)
@@ -53,9 +56,9 @@ public class SecurityConfig {
 
 	private CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:5173")); // 배포 url 추가 예정
+		configuration.setAllowedOrigins(List.of("http://localhost:8082", "https://j12a607.p.ssafy.io"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
