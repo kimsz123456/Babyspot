@@ -26,9 +26,13 @@ const MyReviewInformation = ({
       <S.DetailContainer>
         <S.FirstRowContainer>
           <S.StoreName>{reviews.storeName}</S.StoreName>
-          <S.StoreCategory>카테고리</S.StoreCategory>
+          <S.StoreCategory>{reviews.category}</S.StoreCategory>
+          {reviews.okZone && (
+            <S.OKZoneMarker>
+              <S.OKZoneText>OK Zone</S.OKZoneText>
+            </S.OKZoneMarker>
+          )}
         </S.FirstRowContainer>
-
         <S.SecondRowContainer>
           <S.RatingContainer>
             <S.RatingText>내 별점</S.RatingText>
