@@ -15,7 +15,6 @@ import com.ssafy.babyspot.api.oauth.service.TokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -31,11 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
 
-		String token = getJwtFromCookies(request);
+		String token = getJwtFromHeader(request);
 
 		if (token != null && tokenService.validateToken(token)) {
-
-			int MemberId = tokenService.getMemberId(token);
+			int memberId = tokenService.getMemberId(token);
 
 			UserDetails userDetails = new UserDetails() {
 				@Override
@@ -50,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 				@Override
 				public String getUsername() {
-					return String.valueOf(MemberId);
+					return String.valueOf(memberId);
 				}
 			};
 
@@ -63,14 +61,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	private String getJwtFromCookies(HttpServletRequest request) {
-		if (request.getCookies() == null) {
-			return null;
-		}
-		for (Cookie cookie : request.getCookies()) {
-			if ("access-token".equals(cookie.getName())) {
-				return cookie.getValue();
-			}
+	private String getJwtFromHeader(HttpServletRequest request) {
+		String bearerToken = request.getHeader("Authorization");
+		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7);
 		}
 		return null;
 	}

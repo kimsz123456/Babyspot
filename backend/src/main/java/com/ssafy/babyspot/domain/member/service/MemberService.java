@@ -2,20 +2,27 @@ package com.ssafy.babyspot.domain.member.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.babyspot.api.oauth.service.TokenService;
+import com.ssafy.babyspot.api.s3.S3Component;
 import com.ssafy.babyspot.domain.member.Baby;
 import com.ssafy.babyspot.domain.member.Member;
 import com.ssafy.babyspot.domain.member.dto.SignUpRequest;
 import com.ssafy.babyspot.domain.member.dto.SignUpToken;
+import com.ssafy.babyspot.domain.member.dto.UpdateProfileRequest;
+import com.ssafy.babyspot.domain.member.dto.UpdateProfileResponse;
+import com.ssafy.babyspot.domain.member.repository.BabyRepository;
 import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.exception.CustomException;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -23,11 +30,19 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final TokenService tokenService;
+	private final S3Component s3Component;
+	private final BabyRepository babyRepository;
+
+	@Value("${CLOUDFRONT_URL}")
+	private String CLOUDFRONT_URL;
 
 	@Autowired
-	public MemberService(MemberRepository memberRepository, TokenService tokenService) {
+	public MemberService(MemberRepository memberRepository, TokenService tokenService, S3Component s3Component,
+		BabyRepository babyRepository) {
 		this.memberRepository = memberRepository;
 		this.tokenService = tokenService;
+		this.s3Component = s3Component;
+		this.babyRepository = babyRepository;
 	}
 
 	@Transactional
@@ -38,6 +53,11 @@ public class MemberService {
 	@Transactional
 	public Optional<Member> findById(int memberId) {
 		return memberRepository.findById(memberId);
+	}
+
+	@Transactional
+	public String findByProfileImgKey(String memberId) {
+		return memberRepository.findByProfileImg(Integer.valueOf(memberId)).orElse(null);
 	}
 
 	@Transactional
@@ -80,4 +100,63 @@ public class MemberService {
 		return new SignUpToken(newMember, jwtAccessToken, jwtRefreshToken);
 	}
 
+	@Transactional
+	public UpdateProfileResponse updateProfile(String memberId, UpdateProfileRequest request) {
+		Member member = memberRepository.findById(Integer.valueOf(memberId))
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다."));
+
+		if (request.getNickname() != null && !request.getNickname().isEmpty()) {
+			member.setNickname(request.getNickname());
+		}
+
+		String profileKey = findByProfileImgKey(memberId);
+		String preSignedUrl = null;
+		if (request.getProfileImgUrl() != null && !request.getProfileImgUrl().isEmpty()) {
+			if (profileKey == null) {
+				Map<String, String> imgPreSignedUrl = s3Component.generateProfilePreSignedUrl(
+					memberId,
+					request.getProfileImgUrl(),
+					request.getContentType()
+				);
+				profileKey = imgPreSignedUrl.get("profileKey");
+				preSignedUrl = imgPreSignedUrl.get("profileImgPreSignedUrl");
+
+				member.setProfileImg(profileKey);
+			} else {
+				preSignedUrl = s3Component.generatePreSignedUrlForProfileImageUpdate(
+					profileKey,
+					request.getContentType()
+				);
+			}
+		}
+
+		if (request.getBabyAges() != null && !request.getBabyAges().isEmpty()) {
+			babyRepository.deleteByMemberId(Integer.parseInt(memberId));
+
+			List<Baby> newBabies = new ArrayList<>();
+			for (Integer birthYear : request.getBabyAges()) {
+				Baby baby = Baby.builder()
+					.member(member)
+					.birthYear(birthYear)
+					.build();
+				newBabies.add(baby);
+			}
+			if (!newBabies.isEmpty()) {
+				babyRepository.saveAll(newBabies);
+			}
+		}
+
+		memberRepository.save(member);
+
+		return UpdateProfileResponse.fromMember(member, CLOUDFRONT_URL, preSignedUrl);
+	}
+
+	@Transactional
+	public void deleteMember(int memberId) {
+		if (!memberRepository.existsById(memberId)) {
+			throw new EntityNotFoundException("Member with id " + memberId + " does not exist.");
+		}
+		babyRepository.deleteByMemberId(memberId);
+		memberRepository.deleteById(memberId);
+	}
 }
