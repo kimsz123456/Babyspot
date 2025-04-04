@@ -91,9 +91,11 @@ public class ReviewService {
 				reviewImage.setReview(review);
 				reviewImage.setImageUrl(s3Key);
 				reviewImage.setOrderIndex(i + 1);
+				reviewImage.setImgName(imageName);
+				reviewImage.setContentType(contentType);
 				reviewImageRepository.save(reviewImage);
 
-				imageInfos.add(new ImageInfo(preSignedUrl, s3Key, contentType));
+				imageInfos.add(new ImageInfo(preSignedUrl, s3Key, contentType, imageName, reviewImage.getOrderIndex()));
 			}
 		}
 		return new ReviewImagePreSignedUrlDto(imageInfos);
@@ -236,9 +238,6 @@ public class ReviewService {
 		int reviewMemberId = review.getMember().getId();
 		int authenticatedMemberId = Integer.parseInt(authentication.getName());
 
-		LOGGER.info("Authenticated Member ID = {}", authentication.getName());
-		LOGGER.info("Review Member ID = {}", review.getMember().getId());
-
 		if (reviewMemberId != authenticatedMemberId) {
 			throw new CustomException(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.");
 		}
@@ -248,6 +247,11 @@ public class ReviewService {
 		}
 		if (dto.getContent() != null) {
 			review.setContent(dto.getContent());
+		}
+		List<ReviewImage> existingImages = new ArrayList<>(review.getImages());
+		for (ReviewImage image : existingImages) {
+			s3Component.deleteObject(image.getImageUrl());
+			reviewRepository.delete(review);
 		}
 		review.getImages().clear();
 		List<Map<String, String>> preSignedUrlList = new ArrayList<>();
@@ -265,6 +269,8 @@ public class ReviewService {
 				reviewImage.setReview(review);
 				reviewImage.setImageUrl(s3Key);
 				reviewImage.setOrderIndex(imgUpdate.getOrderIndex());
+				reviewImage.setContentType(imgUpdate.getContentType());
+				reviewImage.setImgName(imgUpdate.getImageName());
 				reviewImageRepository.save(reviewImage);
 
 				preSignedUrlList.add(urlMap);

@@ -9,4 +9,6 @@ public class ImageInfo {
 	private String preSignedUrl;
 	private String reviewImgKey;
 	private String contentType;
+	private String imageName;
+	private Integer orderIndex;
 }
