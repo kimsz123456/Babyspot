@@ -12,7 +12,6 @@ import {
 } from '../../../services/profileService';
 import {useGlobalStore} from '../../../stores/globalStore';
 import uploadImageToS3 from '../../../utils/uploadImageToS3';
-import Config from 'react-native-config';
 
 const ProfileEditScreen = () => {
   const navigation = useProfileNavigation();
@@ -48,7 +47,6 @@ const ProfileEditScreen = () => {
       });
 
       const {preSignedUrl} = response;
-      console.log(selectedImage?.uri);
 
       await uploadImageToS3({
         imageType: selectedImage?.type || '',
@@ -67,7 +65,7 @@ const ProfileEditScreen = () => {
         },
       ]);
     } catch (error) {
-      console.error('프로필 수정 실패:', error);
+      throw error;
       Alert.alert('오류', '프로필 수정에 실패했습니다.');
     }
   };
