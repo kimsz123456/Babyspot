@@ -1,12 +1,13 @@
 import React from 'react';
 
-import {TouchableOpacity} from '@gorhom/bottom-sheet';
+import {TouchableWithoutFeedback} from '@gorhom/bottom-sheet';
+
+import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 
 import {StoreBasicInformationType} from '../NearStoreListScreen/components/StoreBasicInformation/types';
 import StoreBasicInformation from '../NearStoreListScreen/components/StoreBasicInformation';
 
 import * as S from './styles';
-import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 
 interface StoreBasicScreenProps {
   store: StoreBasicInformationType;
@@ -23,9 +24,9 @@ const StoreBasicScreen = ({store}: StoreBasicScreenProps) => {
     <S.StoreBasicScreenContainer handleComponent={() => null}>
       <S.BottomSheetContent>
         <S.TopIcon />
-        <TouchableOpacity onPress={handleBottomSheetPress}>
+        <TouchableWithoutFeedback onPress={handleBottomSheetPress}>
           <StoreBasicInformation store={store} isShownBusinessHour={true} />
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       </S.BottomSheetContent>
     </S.StoreBasicScreenContainer>
   );

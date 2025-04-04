@@ -10,6 +10,7 @@ import {
   NaverMapViewRef,
   Region,
 } from '@mj-studio/react-native-naver-map';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 import useMapViewport from '../../../hooks/useMapViewport';
 import useResearchButtonVisibility from '../../../hooks/useResearchButtonVisibility';
@@ -40,7 +41,6 @@ import {
 } from '../../../constants/icons';
 
 import * as S from './styles';
-import BottomSheet from '@gorhom/bottom-sheet';
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
