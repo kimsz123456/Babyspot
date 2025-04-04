@@ -114,7 +114,7 @@ export const LastRowContainer = styled(View)`
   align-items: center;
   justify-content: space-between;
 `;
-export const LikesContainer = styled(View)`
+export const LikesContainer = styled(Pressable)`
   flex-direction: row;
   align-items: center;
   gap: ${scale(4)}px;
