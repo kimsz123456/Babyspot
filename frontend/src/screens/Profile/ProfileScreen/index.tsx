@@ -36,6 +36,9 @@ const ProfileScreen = () => {
     if (!babyBirthYears || babyBirthYears.length === 0) {
       return <S.AgeIcons source={IC_AGE3} />;
     }
+
+    const sortedYears = [...babyBirthYears].sort((a, b) => b - a);
+
     const currentYear = new Date().getFullYear();
     return babyBirthYears.map((birthYear, index) => {
       const age = currentYear - birthYear + 1;

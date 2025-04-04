@@ -34,14 +34,19 @@ const ChildAge = ({onBabyAgesChange}: ChildAgeProps) => {
 
   useEffect(() => {
     if (memberProfile?.babyBirthYears) {
-      const newChildren = aggregateBabyBirthYears(memberProfile.babyBirthYears);
+      const sortedYears = [...memberProfile.babyBirthYears].sort(
+        (a, b) => b - a,
+      );
+      const newChildren = aggregateBabyBirthYears(sortedYears);
       setChildren(newChildren);
-      onBabyAgesChange(memberProfile.babyBirthYears);
     }
-  }, [memberProfile, onBabyAgesChange]);
+  }, [memberProfile]);
 
   useEffect(() => {
-    const ages = children.flatMap(child => Array(child.count).fill(child.year));
+    const sortedChildren = [...children].sort((a, b) => b.year - a.year);
+    const ages = sortedChildren.flatMap(child =>
+      Array(child.count).fill(child.year),
+    );
     onBabyAgesChange(ages);
   }, [children, onBabyAgesChange]);
 
@@ -90,13 +95,23 @@ const ChildAge = ({onBabyAgesChange}: ChildAgeProps) => {
         child => child.year === selectedYear,
       );
 
+      let newChildren;
       if (existingIndex !== -1) {
-        return prev.map((child, i) =>
+        newChildren = prev.map((child, i) =>
           i === existingIndex ? {...child, count: child.count + 1} : child,
         );
       } else {
-        return [...prev, {year: selectedYear, count: 1}];
+        newChildren = [...prev, {year: selectedYear, count: 1}];
       }
+
+      newChildren.sort((a, b) => b.year - a.year);
+      // 즉시 ages 배열 생성하여 부모 컴포넌트에 전달
+      const ages = newChildren.flatMap(child =>
+        Array(child.count).fill(child.year),
+      );
+      onBabyAgesChange(ages);
+
+      return newChildren;
     });
 
     setModalVisible(false);
@@ -106,17 +121,15 @@ const ChildAge = ({onBabyAgesChange}: ChildAgeProps) => {
     <S.ChildAgeWrapper>
       <S.ChildTitle>자녀 정보</S.ChildTitle>
       <S.ChildAgesContainer>
-        {[...children]
-          .sort((a, b) => b.year - a.year)
-          .map((item, index) => (
-            <ChildrenInformationButton
-              key={`${item.year}-${index}`}
-              year={item.year}
-              currentCount={item.count}
-              onMinusPressed={() => handleMinus(index)}
-              onPlusPressed={() => handlePlus(index)}
-            />
-          ))}
+        {children.map((item, index) => (
+          <ChildrenInformationButton
+            key={`${item.year}-${index}`}
+            year={item.year}
+            currentCount={item.count}
+            onMinusPressed={() => handleMinus(index)}
+            onPlusPressed={() => handlePlus(index)}
+          />
+        ))}
       </S.ChildAgesContainer>
       <S.AgeCountContainer>
         <AddChildrenButton onPressed={handleAddChild} />
