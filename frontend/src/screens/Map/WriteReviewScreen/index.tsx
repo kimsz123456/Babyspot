@@ -166,7 +166,8 @@ const WriteReviewScreen = () => {
               {imagePaths.length == 0 ? (
                 <S.AddImageButtonContainer
                   onPress={() => {
-                    handleAddImage();
+                    ToastAndroid.show('서비스 준비 중입니다.', 500);
+                    // handleAddImage();
                   }}>
                   <S.AddImageText>{`사진을 추가해 주세요`}</S.AddImageText>
                   <S.AddImageSecondaryPlusIcon source={IC_SECONDARY_PLUS} />
