@@ -17,16 +17,16 @@ interface MapState {
 
 const initialState = {
   selectedAddress: null,
+  selectedAges: [],
+  selectedChips: [],
 };
 
 export const useMapStore = create<MapState>(set => ({
   ...initialState,
   setSelectedAddress: address => set({selectedAddress: address}),
 
-  selectedAges: [],
   setSelectedAges: ages => set({selectedAges: ages}),
 
-  selectedChips: [],
   setSelectedChips: chips => set({selectedChips: chips}),
 
   clearAddress: () => set({selectedAddress: null}),
