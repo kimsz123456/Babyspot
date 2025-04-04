@@ -23,6 +23,7 @@ import {getStoreReviews, ReviewType} from '../../../services/reviewService';
 import {withDivider} from '../../../utils/withDivider';
 
 import * as S from './styles';
+import {useGlobalStore} from '../../../stores/globalStore';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
 
@@ -33,6 +34,7 @@ const StoreDetailScreen = () => {
   const [storeDetail, setStoreDetail] = useState<StoreDetailResponse>();
   const [myReview, setMyReview] = useState<ReviewType>();
   const route = useRoute<StoreDetailRouteProp>();
+  const {memberProfile} = useGlobalStore();
   const {storeBasicInformation} = route.params;
 
   const handleTabPress = (idx: number) => {
@@ -53,8 +55,12 @@ const StoreDetailScreen = () => {
     try {
       const response = await getStoreReviews(storeBasicInformation.storeId);
 
-      if (!response.empty) {
-        setMyReview(response.content[0]);
+      const myReview = response.content.find(
+        review => review.memberId === memberProfile?.id,
+      );
+
+      if (myReview) {
+        setMyReview(myReview);
       }
     } catch (error) {
       console.error('내 리뷰 조회 실패:', error);
