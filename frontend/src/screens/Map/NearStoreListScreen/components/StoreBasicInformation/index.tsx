@@ -16,6 +16,7 @@ import {IC_COMMENT, IC_YELLOW_STAR} from '../../../../../constants/icons';
 
 import * as S from './styles';
 import {IMG_DEFAULT_STORE} from '../../../../../constants/images';
+import {useMapStore} from '../../../../../stores/mapStore';
 
 const {width} = Dimensions.get('window');
 
@@ -34,6 +35,8 @@ const StoreBasicInformation = ({
   isShownBusinessHour,
 }: StoreBasicInformationProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const {selectedAges} = useMapStore();
 
   const haveBabyAges = store.babyAges && store.babyAges.length > 0;
 
@@ -82,7 +85,7 @@ const StoreBasicInformation = ({
         <S.FirstRowContainer>
           <S.StoreName>{store.title}</S.StoreName>
           <S.StoreCategory>{store.category}</S.StoreCategory>
-          {haveBabyAges && (
+          {selectedAges.length > 0 && haveBabyAges && (
             <S.AgeMarkerContainer>
               {store.babyAges.map((age, idx) => (
                 <S.AgeMarker
