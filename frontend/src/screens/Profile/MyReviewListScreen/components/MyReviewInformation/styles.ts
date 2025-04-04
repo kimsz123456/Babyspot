@@ -21,36 +21,39 @@ export const DetailContainer = styled(View)`
 `;
 
 export const FirstRowContainer = styled(View)`
-  display: flex;
   flex-direction: row;
   align-items: center;
-  gap: ${scale(4)}px;
+  gap: ${scale(8)}px;
+  height: ${scale(24)}px;
 `;
-export const StoreName = styled(Text)`
+export const StoreName = styled(Text).attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail',
+})`
   ${FontStyles.bodyMedium}
   font-weight: bold;
   color: ${GrayColors[800]};
+  line-height: ${scale(24)}px;
+  max-width: 60%;
+  flex-shrink: 1;
 `;
+
 export const StoreCategory = styled(Text)`
   ${FontStyles.captionMedium}
   color: ${GrayColors[700]};
-  padding-top: ${scale(4)}px;
+  line-height: ${scale(26)}px;
+  flex-shrink: 0;
 `;
-export const AgeMarkerContainer = styled(View)`
-  display: flex;
-  flex-direction: row;
-`;
-export const AgeMarker = styled(Image)<{$ageIndex: number}>`
-  margin-left: ${({$ageIndex}) => ($ageIndex > 0 ? `-${scale(8)}px` : 0)};
-  width: ${scale(24)}px;
-  height: ${scale(24)}px;
-`;
+
 export const OKZoneMarker = styled(View)`
   padding: ${scale(4)}px;
   border-radius: 15px;
   border-width: 1px;
   border-color: ${SecondaryColors[500]};
   background-color: ${GrayColors[0]};
+  height: ${scale(24)}px;
+  justify-content: center;
+  flex-shrink: 0;
 `;
 export const OKZoneText = styled(Text)`
   ${FontStyles.captionSmall}
