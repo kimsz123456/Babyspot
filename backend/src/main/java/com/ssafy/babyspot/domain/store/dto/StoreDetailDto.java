@@ -28,4 +28,6 @@ public class StoreDetailDto {
 	private List<ReviewResponseDto> latestReviews;
 
 	private List<Integer> babyAges;
+
+	private Float rating;
 }

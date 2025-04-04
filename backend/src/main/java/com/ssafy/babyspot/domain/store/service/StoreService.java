@@ -19,8 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.babyspot.api.s3.S3Component;
 import com.ssafy.babyspot.domain.reveiw.Review;
 import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
@@ -138,6 +136,35 @@ public class StoreService {
 	}
 
 	@Transactional
+	public Long getRating(int storeId) {
+		Store store = storeRepository.findById(storeId)
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "매장이 없습니다."));
+		Page<Review> reviewPage = reviewRepository.findAllByStore_Id(storeId, Pageable.unpaged());
+		List<Review> reviews = reviewPage.getContent();
+
+		if (reviews.isEmpty()) {
+			store.setRating(0f);
+			store.setReviewCount(0);
+			storeRepository.save(store);
+		}
+
+		int reviewCount = reviews.size();
+		double totalRating = reviews.stream()
+			.mapToDouble(Review::getRating)
+			.sum();
+
+		double avg = (reviewCount == 0) ? 0 : totalRating / reviewCount;
+
+		if (store.getRating() != avg || store.getReviewCount() != reviewCount) {
+			store.setRating((float)avg);
+			store.setReviewCount(reviewCount);
+			storeRepository.save(store);
+		}
+
+		return Math.round(avg);
+	}
+
+	@Transactional
 	public List<KidsMenuDto> getKidsMenu(int storeId) {
 		List<String> kidsMenuNames = storeRepository.findById(storeId)
 			.map(Store::getKidsMenu)
@@ -198,49 +225,24 @@ public class StoreService {
 	@Transactional
 	public SentimentAnalysisDto getSentimentAnalysis(int storeId) {
 		List<SentimentAnalysis> sentiments = sentimentAnalysisRepository.findAllByStore_Id(storeId);
-
-		ObjectMapper mapper = new ObjectMapper();
-
 		String posSummary = "";
 		List<String> posReviews = new ArrayList<>();
 		String negSummary = "";
 		List<String> negReviews = new ArrayList<>();
 
-		if (!sentiments.isEmpty()) {
-			SentimentAnalysis sentiment = sentiments.get(0);
-
-			if (!sentiment.getPositive().isEmpty()) {
-				String positiveJson = sentiment.getPositive().get(0);
-				try {
-					JsonNode posRoot = mapper.readTree(positiveJson);
-					if (posRoot.has("summary")) {
-						posSummary = posRoot.get("summary").asText();
-					}
-					if (posRoot.has("reviews") && posRoot.get("reviews").isArray()) {
-						for (JsonNode node : posRoot.get("reviews")) {
-							posReviews.add(node.asText());
-						}
-					}
-				} catch (Exception e) {
-					// 예외 처리
-					throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		for (SentimentAnalysis sentiment : sentiments) {
+			List<String> posList = sentiment.getPositive();
+			if (posList != null && !posList.isEmpty()) {
+				posSummary = posList.get(0);
+				if (posList.size() > 1) {
+					posReviews.addAll(posList.subList(1, posList.size()));
 				}
 			}
-
-			if (!sentiment.getNegative().isEmpty()) {
-				String negativeJson = sentiment.getNegative().get(0);
-				try {
-					JsonNode negRoot = mapper.readTree(negativeJson);
-					if (negRoot.has("summary")) {
-						negSummary = negRoot.get("summary").asText();
-					}
-					if (negRoot.has("reviews") && negRoot.get("reviews").isArray()) {
-						for (JsonNode node : negRoot.get("reviews")) {
-							negReviews.add(node.asText());
-						}
-					}
-				} catch (Exception e) {
-					throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+			List<String> negList = sentiment.getNegative();
+			if (negList != null && !negList.isEmpty()) {
+				negSummary = negList.get(0);
+				if (negList.size() > 1) {
+					negReviews.addAll(negList.subList(1, negList.size()));
 				}
 			}
 		}
@@ -259,6 +261,7 @@ public class StoreService {
 		KeywordSectionDto keywordSection = getKeywordsAndReviews(storeId);
 		SentimentAnalysisDto sentiment = getSentimentAnalysis(storeId);
 		List<KidsMenuDto> kidsMenus = getKidsMenu(storeId);
+		float storeRating = getRating(storeId);
 
 		Pageable pageable = PageRequest.of(0, 3, Sort.by("createdAt").descending());
 		Page<Review> reviewPage = reviewRepository.findAllByStore_IdOrderByCreatedAtDesc(storeId, pageable);
@@ -272,6 +275,7 @@ public class StoreService {
 			dto.setCreatedAt(review.getCreatedAt());
 			dto.setContent(review.getContent());
 			dto.setBabyAges(review.getBabyAges());
+			dto.setRating(review.getRating());
 
 			List<String> imgUrls = review.getImages().stream()
 				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
@@ -296,6 +300,7 @@ public class StoreService {
 			.kidsMenu(kidsMenus)
 			.latestReviews(latestReviews)
 			.babyAges(babyAges)
+			.rating(storeRating)
 			.build();
 	}
 

@@ -20,4 +20,6 @@ public class ReviewResponseDto {
 	private String profile;
 	private Long reviewCount;
 	private String storeName;
+	private Boolean okZone;
+	private String category;
 }

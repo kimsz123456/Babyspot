@@ -197,6 +197,8 @@ public class ReviewService {
 			dto.setContent(review.getContent());
 			dto.setStoreName(review.getStore().getTitle());
 			dto.setBabyAges(review.getBabyAges());
+			dto.setOkZone(review.getStore().getOkZone());
+			dto.setCategory(review.getStore().getCategory());
 			dto.setProfile(String.valueOf(
 				Optional.of(CLOUDFRONT_URL + "/" + memberRepository.findByProfileImg(review.getMember().getId()))));
 

@@ -53,7 +53,9 @@ public class Store {
 	@Column(columnDefinition = "jsonb")
 	private Map<String, String> businessHour;
 
+	@Setter
 	private float rating;
+	@Setter
 	private int reviewCount;
 
 	private Boolean babyChair;
