@@ -26,5 +26,5 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 	@Query("select r.member.id, count(r) from Review r where r.member.id in :memberIds group by r.member.id")
 	List<Object[]> countReviewsByMemberIds(@Param("memberIds") Set<Integer> memberIds);
 
-	long countByMember_Id(int memberId);
+	int countByMember_Id(int memberId);
 }

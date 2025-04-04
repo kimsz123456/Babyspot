@@ -18,7 +18,7 @@ public class ReviewResponseDto {
 	private List<String> imgUrls;
 	private int likeCount;
 	private String profile;
-	private Long reviewCount;
+	private int reviewCount;
 	private String storeName;
 	private Boolean okZone;
 	private String category;

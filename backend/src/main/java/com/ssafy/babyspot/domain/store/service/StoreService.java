@@ -267,6 +267,7 @@ public class StoreService {
 		Page<Review> reviewPage = reviewRepository.findAllByStore_IdOrderByCreatedAtDesc(storeId, pageable);
 		List<ReviewResponseDto> latestReviews = reviewPage.stream().map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
+			int memberId = review.getMember().getId();
 			dto.setReviewId(review.getId());
 			dto.setMemberId(review.getMember().getId());
 			dto.setMemberNickname(review.getMember().getNickname());
@@ -275,7 +276,7 @@ public class StoreService {
 			dto.setCreatedAt(review.getCreatedAt());
 			dto.setContent(review.getContent());
 			dto.setBabyAges(review.getBabyAges());
-			dto.setRating(review.getRating());
+			dto.setReviewCount(reviewRepository.countByMember_Id(memberId));
 
 			List<String> imgUrls = review.getImages().stream()
 				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())

@@ -139,7 +139,7 @@ public class ReviewService {
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
 
-			dto.setReviewCount(reviewCountMap.getOrDefault(review.getMember().getId(), 0L));
+			dto.setReviewCount(reviewRepository.countByMember_Id(review.getMember().getId()));
 			return dto;
 		});
 	}
@@ -168,7 +168,7 @@ public class ReviewService {
 		dto.setImgUrls(imgUrls);
 		dto.setLikeCount(review.getReviewLikes().size());
 
-		long myReviewCount = reviewRepository.countByMember_Id(memberId);
+		int myReviewCount = reviewRepository.countByMember_Id(memberId);
 		dto.setReviewCount(myReviewCount);
 
 		return dto;
@@ -184,7 +184,7 @@ public class ReviewService {
 
 		Page<Review> reviews = reviewRepository.findAllByMember_id(memberId, sortedPageable);
 
-		long myReviewCount = reviewRepository.countByMember_Id(memberId);
+		int myReviewCount = reviewRepository.countByMember_Id(memberId);
 
 		return reviews.map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
