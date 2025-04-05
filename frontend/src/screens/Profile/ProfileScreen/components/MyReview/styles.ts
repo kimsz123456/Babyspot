@@ -13,10 +13,15 @@ const ReviewTitleContainer = styled(View)`
   flex-direction: row;
   align-items: center;
 `;
-const ReviewTitle = styled(Text)`
+const ReviewTitle = styled(Text).attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail',
+})`
   ${FontStyles.bodyMedium};
   color: ${GrayColors[800]};
   font-weight: bold;
+  max-width: 60%;
+  flex-shrink: 1;
 `;
 const ReviewScoreContainer = styled(View)`
   flex: 1;
