@@ -19,7 +19,6 @@ const MyReviewListScreen = () => {
         });
         setReviews(response.content);
       } catch (error) {
-        console.error('내 리뷰 조회 실패:', error);
         throw error;
       }
     };
@@ -36,7 +35,7 @@ const MyReviewListScreen = () => {
   }
 
   return (
-    <ScrollView>
+    <S.BackGround>
       <S.MyReviewListScreenContainer>
         {reviews.map((review, idx) => (
           <React.Fragment key={review.reviewId}>
@@ -52,7 +51,7 @@ const MyReviewListScreen = () => {
           </React.Fragment>
         ))}
       </S.MyReviewListScreenContainer>
-    </ScrollView>
+    </S.BackGround>
   );
 };
 
