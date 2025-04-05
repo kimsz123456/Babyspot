@@ -1,7 +1,5 @@
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
-
 import styled from 'styled-components';
-
 import scale from '../../../utils/scale';
 import {GrayColors} from '../../../constants/colors';
 import {FontStyles} from '../../../constants/fonts';
@@ -15,6 +13,15 @@ export const BasicInformationContainer = styled(View)`
   padding: ${scale(16)}px ${scale(24)}px ${scale(8)}px;
 `;
 
+export const TabBarWrapper = styled(View)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  z-index: 100;
+`;
+
 export const TabBar = styled(View)`
   display: flex;
   flex-direction: row;
@@ -24,6 +31,7 @@ export const TabBar = styled(View)`
   border-top-color: ${GrayColors[200]};
   border-bottom-color: ${GrayColors[200]};
   padding: 0px ${scale(24)}px;
+  background-color: white;
 `;
 
 export const TabContainer = styled(TouchableOpacity)<{$isSelected: boolean}>`
