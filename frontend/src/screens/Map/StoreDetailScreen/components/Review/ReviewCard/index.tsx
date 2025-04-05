@@ -16,12 +16,7 @@ const ReviewCard = (props: ReviewCardProps) => {
   const navigation = useMapNavigation();
 
   return (
-    <S.ReviewCardContainer
-      onPress={() => {
-        if (props.memberId == memberProfile?.id) {
-          navigation.navigate('WriteReviewScreen', {review: props});
-        }
-      }}>
+    <S.ReviewCardContainer>
       <S.ProfileContainer>
         <S.ProfileImage source={{uri: props.profile}} resizeMode="cover" />
         <S.InformationAndAgeContainer>
@@ -41,6 +36,14 @@ const ReviewCard = (props: ReviewCardProps) => {
             ))}
           </S.AgeMarkerContainer>
         </S.InformationAndAgeContainer>
+        <S.EditContainer
+          onPress={() => {
+            if (props.memberId == memberProfile?.id) {
+              navigation.navigate('WriteReviewScreen', {review: props});
+            }
+          }}>
+          <S.EditText>{`수정`}</S.EditText>
+        </S.EditContainer>
       </S.ProfileContainer>
 
       <S.RatingContainer>
