@@ -1,9 +1,9 @@
-import {OnCompleteParams} from '@actbase/react-daum-postcode/lib/types';
 import {create} from 'zustand';
+import {GetGeocodingByKeywordResponse} from '../services/mapService';
 
 interface MapState {
-  selectedAddress: OnCompleteParams | null;
-  setSelectedAddress: (address: OnCompleteParams) => void;
+  selectedPlace: GetGeocodingByKeywordResponse | null;
+  setSelectedPlace: (selectedPlace: GetGeocodingByKeywordResponse) => void;
 
   selectedAges: number[];
   setSelectedAges: (ages: number[]) => void;
@@ -11,24 +11,24 @@ interface MapState {
   selectedChips: string[];
   setSelectedChips: (chips: string[]) => void;
 
-  clearAddress: () => void;
+  clearSelectedPlace: () => void;
   resetMapState: () => void;
 }
 
 const initialState = {
-  selectedAddress: null,
+  selectedPlace: null,
   selectedAges: [],
   selectedChips: [],
 };
 
 export const useMapStore = create<MapState>(set => ({
   ...initialState,
-  setSelectedAddress: address => set({selectedAddress: address}),
+  setSelectedPlace: selectedPlace => set({selectedPlace: selectedPlace}),
 
   setSelectedAges: ages => set({selectedAges: ages}),
 
   setSelectedChips: chips => set({selectedChips: chips}),
 
-  clearAddress: () => set({selectedAddress: null}),
+  clearSelectedPlace: () => set({selectedPlace: null}),
   resetMapState: () => set({...initialState}),
 }));

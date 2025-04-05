@@ -5,7 +5,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MapScreen from '../screens/Map/MapScreen';
 import SearchScreen from '../screens/Map/SearchScreen';
 import StoreDetailScreen from '../screens/Map/StoreDetailScreen';
-import KakaoPostcodeScreen from '../screens/Map/SearchScreen/KakaoPostcodeScreen';
 import {StoreBasicInformationType} from '../screens/Map/NearStoreListScreen/components/StoreBasicInformation/types';
 import {KeywordProps} from '../screens/Map/StoreDetailScreen/components/Keyword';
 import KeywordReviewScreen from '../screens/Map/KeywordReviewScreen';
@@ -18,11 +17,13 @@ import CompleteScreen, {
 } from '../screens/Map/WriteReviewScreen/CompleteScreen';
 import SelectRecommendationAgeScreen from '../screens/Map/SelectRecommendationAgeScreen';
 import {ReviewType} from '../services/reviewService';
+import {GetGeocodingByKeywordResponse} from '../services/mapService';
+import PlaceSearchScreen from '../screens/Map/SearchScreen/PlaceSearchScreen';
 
 export type MapStackParamList = {
-  MapMain: {address: string};
+  MapMain: {searchedPlace: GetGeocodingByKeywordResponse};
   Search: undefined;
-  KakaoPostcode: undefined;
+  PlaceSearchScreen: undefined;
   StoreDetail: {storeBasicInformation: StoreBasicInformationType};
   KeywordReview: {keywordInformation: KeywordProps};
   ReviewListScreen: {
@@ -51,9 +52,13 @@ const MapStackNavigator = () => {
         options={{presentation: 'modal', headerShown: false}}
       />
       <Stack.Screen
-        name="KakaoPostcode"
-        component={KakaoPostcodeScreen}
-        options={{title: '주소 검색'}}
+        name="PlaceSearchScreen"
+        component={PlaceSearchScreen}
+        options={() => ({
+          header(props) {
+            return <CustomHeader props={props} title={'장소 검색'} />;
+          },
+        })}
       />
       <Stack.Screen
         name="StoreDetail"
