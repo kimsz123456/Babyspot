@@ -1,14 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import React, {useEffect, useRef, useState} from 'react';
-
 import {
   View,
   NativeSyntheticEvent,
   NativeScrollEvent,
   InteractionManager,
 } from 'react-native';
-
 import {RouteProp, useRoute} from '@react-navigation/native';
 
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
@@ -33,6 +30,7 @@ import {useGlobalStore} from '../../../stores/globalStore';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
 const TAB_BAR_HEIGHT = 48;
+const EPSILON = 5;
 
 type StoreDetailRouteProp = RouteProp<MapStackParamList, 'StoreDetail'>;
 
@@ -90,13 +88,17 @@ const StoreDetailScreen = () => {
   const handleTabPress = (tabName: string, index: number) => {
     if (isManualScrolling.current) {
       pendingTab.current = {name: tabName, index};
+
       return;
     }
 
     setSelectedTab(index);
 
     const y = sectionLayouts.current[tabName];
-    if (y === undefined || scrollRef.current == null) return;
+
+    if (y === undefined || scrollRef.current == null) {
+      return;
+    }
 
     isManualScrolling.current = true;
 
@@ -109,7 +111,9 @@ const StoreDetailScreen = () => {
 
           if (pendingTab.current) {
             const {name, index} = pendingTab.current;
+
             pendingTab.current = null;
+
             handleTabPress(name, index);
           }
         }, 500);
@@ -118,18 +122,36 @@ const StoreDetailScreen = () => {
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (isManualScrolling.current) return;
+    if (isManualScrolling.current) {
+      return;
+    }
 
     const scrollY = event.nativeEvent.contentOffset.y;
-    const layoutEntries = Object.entries(sectionLayouts.current);
-    for (let i = layoutEntries.length - 1; i >= 0; i--) {
+    const layoutEntries = Object.entries(sectionLayouts.current).sort(
+      (a, b) => a[1] - b[1],
+    );
+
+    for (let i = 0; i < layoutEntries.length; i++) {
       const [name, y] = layoutEntries[i];
-      if (scrollY + TAB_BAR_HEIGHT >= y) {
-        const index = TAB_NAMES.findIndex(tab => tab === name);
+
+      if (scrollY + TAB_BAR_HEIGHT < y - EPSILON) {
+        const selectedIndex = i === 0 ? 0 : i - 1;
+        const selectedName = layoutEntries[selectedIndex][0];
+        const index = TAB_NAMES.findIndex(tab => tab === selectedName);
+
         if (index !== selectedTab) {
           setSelectedTab(index);
         }
-        break;
+
+        return;
+      }
+
+      if (i === layoutEntries.length - 1) {
+        const index = TAB_NAMES.findIndex(tab => tab === name);
+
+        if (index !== selectedTab) {
+          setSelectedTab(index);
+        }
       }
     }
   };
