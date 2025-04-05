@@ -36,14 +36,14 @@ const ReviewCard = (props: ReviewCardProps) => {
             ))}
           </S.AgeMarkerContainer>
         </S.InformationAndAgeContainer>
-        <S.EditContainer
-          onPress={() => {
-            if (props.memberId == memberProfile?.id) {
+        {props.memberId == memberProfile?.id && (
+          <S.EditContainer
+            onPress={() => {
               navigation.navigate('WriteReviewScreen', {review: props});
-            }
-          }}>
-          <S.EditText>{`수정`}</S.EditText>
-        </S.EditContainer>
+            }}>
+            <S.EditText>{`수정`}</S.EditText>
+          </S.EditContainer>
+        )}
       </S.ProfileContainer>
 
       <S.RatingContainer>
