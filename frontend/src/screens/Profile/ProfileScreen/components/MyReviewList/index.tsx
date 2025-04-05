@@ -13,24 +13,19 @@ export const MyReviewList = () => {
     setShouldRefreshReviews,
   } = useGlobalStore();
 
-  useEffect(() => {
-    const fetchMyReviews = async () => {
-      try {
-        const response = await getMyReviews({
-          page: 0,
-          size: 3,
-        });
-        const sortedReviews = response.content.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        );
-        setMyReviews(sortedReviews);
-        setShouldRefreshReviews(false);
-      } catch (error) {
-        throw error;
-      }
-    };
+  const fetchMyReviews = async () => {
+    try {
+      const response = await getMyReviews();
+      const lastThreeReviews = response.content.slice(0, 3);
 
+      setMyReviews(lastThreeReviews);
+      setShouldRefreshReviews(false);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  useEffect(() => {
     if (shouldRefreshReviews) {
       fetchMyReviews();
     }
