@@ -15,7 +15,6 @@ export const MyReviewList = () => {
     React.useCallback(() => {
       const fetchMyReviews = async () => {
         try {
-          console.log('리렌더링');
           const response = await getMyReviews({
             page: 0,
             size: 3,
