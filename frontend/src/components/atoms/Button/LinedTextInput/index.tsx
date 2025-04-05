@@ -1,18 +1,20 @@
 import React, {useState} from 'react';
-import {TextInput} from 'react-native';
+import {TextInput, ToastAndroid} from 'react-native';
 import {PrimaryColors, GrayColors} from '../../../../constants/colors';
 import scale from '../../../../utils/scale';
 
 interface LinedTextInputProps {
-  textEditted: (text: string) => void;
+  text: string;
+  setText: (text: string) => void;
   placeholder: string;
+  maxLength?: number;
 }
 const LinedTextInput = (props: LinedTextInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [text, setText] = useState('');
 
   return (
     <TextInput
+      value={props.text}
       placeholder={props.placeholder}
       selectionColor={PrimaryColors[500]}
       placeholderTextColor={GrayColors[300]}
@@ -29,10 +31,17 @@ const LinedTextInput = (props: LinedTextInputProps) => {
         textDecorationColor: GrayColors[800],
       }}
       onChangeText={text => {
-        setText(text);
+        if (props.maxLength && text.length > props.maxLength) {
+          text = text.slice(0, props.maxLength);
+
+          ToastAndroid.show(
+            `최대 ${props.maxLength}자까지 입력 가능합니다.`,
+            500,
+          );
+        }
+        props.setText(text);
       }}
       onBlur={e => {
-        props.textEditted(text);
         setIsFocused(false);
       }}
       onFocus={e => {

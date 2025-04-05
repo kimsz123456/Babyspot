@@ -114,7 +114,7 @@ const StoreBasicInformation = ({
           <S.BusinessHourContainer>
             <S.Day>{DAY[CURRENT_DAY]}</S.Day>
             <S.BusinessHour>
-              {store.businessHour[DAY[CURRENT_DAY]]}
+              {store.businessHour[DAY[CURRENT_DAY].slice(0, 1)]}
             </S.BusinessHour>
           </S.BusinessHourContainer>
         )}
