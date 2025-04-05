@@ -98,6 +98,11 @@ public class ReviewService {
 				imageInfos.add(new ImageInfo(preSignedUrl, s3Key, contentType, imageName, reviewImage.getOrderIndex()));
 			}
 		}
+
+		// int updatedReviewCount = reviewRepository.countByStore_Id(store.getId());
+		// store.setReviewCount(updatedReviewCount);
+		// storeRepository.save(store);
+
 		return new ReviewImagePreSignedUrlDto(imageInfos);
 	}
 
@@ -109,7 +114,7 @@ public class ReviewService {
 			Sort.by("createdAt").descending()
 		);
 
-		Page<Review> reviews = reviewRepository.findAllByStore_Id(storeId, sortedPageable);
+		Page<Review> reviews = reviewRepository.findAllByStore_IdWithStore(storeId, sortedPageable);
 
 		Set<Integer> memberIds = reviews.stream()
 			.map(review -> review.getMember().getId())
