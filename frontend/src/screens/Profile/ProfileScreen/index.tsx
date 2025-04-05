@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import * as S from './styles.ts';
 import {IMG_DEFAULT_PROFILE} from '../../../constants/images.ts';
 import {
@@ -36,8 +36,6 @@ const ProfileScreen = () => {
     if (!babyBirthYears || babyBirthYears.length === 0) {
       return <S.AgeIcons source={IC_AGE3} />;
     }
-
-    const sortedYears = [...babyBirthYears].sort((a, b) => b - a);
 
     const currentYear = new Date().getFullYear();
     return babyBirthYears.map((birthYear, index) => {

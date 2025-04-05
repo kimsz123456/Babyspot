@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import ProfileScreen from '../../screens/Profile/ProfileScreen';
 import scale from '../../utils/scale';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MapStackNavigator from './../MapStackNavigator';
