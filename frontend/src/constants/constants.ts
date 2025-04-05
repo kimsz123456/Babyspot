@@ -64,4 +64,9 @@ export const INITIAL_MAP_CENTER_COORDINATE: Coordinate = {
   longitude: 127.02758183,
 } as const;
 
+export const MAP_ZOOM_SCALE = {
+  basic: 13,
+  recommend: 12,
+};
+
 export const NICKNAME_LENGTH = 10 as const;

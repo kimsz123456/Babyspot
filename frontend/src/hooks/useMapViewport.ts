@@ -1,7 +1,10 @@
 import {useState} from 'react';
 
 import {Camera, Region} from '@mj-studio/react-native-naver-map';
-import {INITIAL_MAP_CENTER_COORDINATE} from '../constants/constants';
+import {
+  INITIAL_MAP_CENTER_COORDINATE,
+  MAP_ZOOM_SCALE,
+} from '../constants/constants';
 
 interface Coordinate {
   latitude: number;
@@ -15,7 +18,7 @@ const useMapViewport = (initialCenter = INITIAL_MAP_CENTER_COORDINATE) => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
-  const [zoom, setZoom] = useState<number | undefined>(15);
+  const [zoom, setZoom] = useState<number | undefined>(MAP_ZOOM_SCALE.basic);
 
   const onCameraIdle = (e: Camera & {region: Region}) => {
     setCenterCoordinate({

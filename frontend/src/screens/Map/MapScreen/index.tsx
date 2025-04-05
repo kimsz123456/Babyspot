@@ -39,6 +39,7 @@ import {
   IC_RECOMMEND_MARKER,
   IC_RESTAURANT_MARKER,
 } from '../../../constants/icons';
+import {MAP_ZOOM_SCALE} from '../../../constants/constants';
 
 import * as S from './styles';
 
@@ -51,6 +52,7 @@ const MapScreen = () => {
 
   const [isReadyToFirstSearch, setIsReadyToFirstSearch] = useState(false);
   const [isPendingResearch, setIsPendingResearch] = useState(false);
+  const [isResearchButtonPressed, setIsResearchButtonPressed] = useState(false);
 
   const {centerCoordinate, mapRegion, zoom, onCameraIdle} = useMapViewport();
   const {isVisible, updateLastSearchedCoordinate} = useResearchButtonVisibility(
@@ -136,20 +138,23 @@ const MapScreen = () => {
     setSelectedAges([]);
     setSelectedChips([]);
 
-    if (!mapRef.current) {
+    if (!mapRef.current || !zoom) {
       return;
     }
 
-    moveToCamera({
-      latitude: centerCoordinate.latitude,
-      longitude: centerCoordinate.longitude,
-      mapRef: mapRef,
-    });
+    if (zoom < MAP_ZOOM_SCALE.basic) {
+      moveToCamera({
+        latitude: centerCoordinate.latitude,
+        longitude: centerCoordinate.longitude,
+        mapRef: mapRef,
+      });
+    }
 
+    setIsResearchButtonPressed(true);
     setIsPendingResearch(true);
   };
 
-  const decreaseZoom = () => {
+  const modifyZoomForRecommend = () => {
     if (!mapRef.current) {
       return;
     }
@@ -158,7 +163,7 @@ const MapScreen = () => {
       latitude: centerCoordinate.latitude,
       longitude: centerCoordinate.longitude,
       mapRef: mapRef,
-      zoom: 13,
+      zoom: MAP_ZOOM_SCALE.recommend,
     });
 
     setIsPendingResearch(true);
@@ -247,10 +252,10 @@ const MapScreen = () => {
       const latitude = parseFloat(response.y);
       const longitude = parseFloat(response.x);
 
-      mapRef.current?.animateCameraTo({
-        latitude,
-        longitude,
-        zoom: 15,
+      moveToCamera({
+        latitude: latitude,
+        longitude: longitude,
+        mapRef: mapRef,
       });
     } catch (error) {
       Alert.alert('위치 이동 중 오류 발생');
@@ -262,24 +267,37 @@ const MapScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (address) {
-      moveToAddress(address);
-    }
-  }, [address]);
-
-  useEffect(() => {
-    if (!isPendingResearch) {
+    if (!address) {
       return;
     }
 
-    if (selectedAges.length > 0 && zoom === 13) {
+    moveToAddress(address);
+  }, [address]);
+
+  useEffect(() => {
+    if (!isPendingResearch || !zoom) {
+      return;
+    }
+
+    // 추천 검색
+    if (selectedAges.length > 0 && zoom === MAP_ZOOM_SCALE.recommend) {
       searchStoresByAge();
       return;
     }
 
-    if (selectedAges.length === 0 && zoom === 15) {
-      searchStoresInRegion();
-      return;
+    if (selectedAges.length === 0) {
+      // zoom > 13 일 때 검색
+      if (isResearchButtonPressed && zoom >= MAP_ZOOM_SCALE.basic) {
+        searchStoresInRegion();
+        setIsReadyToFirstSearch(false);
+        return;
+      }
+
+      // zoom <= 13 일 때 검색
+      else if (zoom === MAP_ZOOM_SCALE.basic) {
+        searchStoresInRegion();
+        return;
+      }
     }
   }, [isPendingResearch, zoom]);
 
@@ -288,7 +306,7 @@ const MapScreen = () => {
       return;
     }
 
-    decreaseZoom();
+    modifyZoomForRecommend();
   }, [selectedAges]);
 
   return (
