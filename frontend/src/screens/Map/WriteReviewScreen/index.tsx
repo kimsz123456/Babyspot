@@ -28,6 +28,7 @@ import {
   postReviews,
   PostReviewsRequest,
 } from '../../../services/mapService';
+import {useGlobalStore} from '../../../stores/globalStore';
 
 const MAX_IMAGE_COUNT = 10;
 
@@ -43,6 +44,7 @@ const WriteReviewScreen = () => {
   const navigation = useMapNavigation();
   const {review} = route.params;
   const isWriteScreen = review.reviewId == -1;
+  const {setShouldRefreshReviews} = useGlobalStore();
 
   const [starRating, setStarRating] = useState(review.rating);
   const [imagePaths, setImagePaths] = useState<ImageProps[]>([]);
@@ -92,13 +94,13 @@ const WriteReviewScreen = () => {
       };
 
       await postReviews(params);
+      setShouldRefreshReviews(true);
 
       navigation.navigate('CompleteScreen', {
         completeType: 'create',
       });
     } catch (error) {
       ToastAndroid.show('작성 중 문제가 발생했습니다.', 500);
-
       throw error;
     }
   };
@@ -129,13 +131,13 @@ const WriteReviewScreen = () => {
   const handleDeleteReview = async () => {
     try {
       await deleteReviews(review.reviewId);
+      setShouldRefreshReviews(true);
 
       navigation.navigate('CompleteScreen', {
         completeType: 'delete',
       });
     } catch (error) {
       ToastAndroid.show('삭제 중 문제가 발생했습니다.', 500);
-
       throw error;
     }
   };
