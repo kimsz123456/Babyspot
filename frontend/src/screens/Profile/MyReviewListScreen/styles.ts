@@ -1,10 +1,9 @@
-import {View, Text, ScrollView} from 'react-native';
+import {View, ScrollView} from 'react-native';
 
 import styled from 'styled-components/native';
 
 import scale from '../../../utils/scale';
 import {GrayColors} from '../../../constants/colors';
-import {FontStyles} from '../../../constants/fonts';
 
 export const BackGround = styled(ScrollView)`
   flex: 1;
