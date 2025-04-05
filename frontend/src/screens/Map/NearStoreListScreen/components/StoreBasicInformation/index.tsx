@@ -1,24 +1,20 @@
 import React, {RefObject, useState} from 'react';
-import {
-  Dimensions,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-} from 'react-native';
+import {NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
 
 import {ScrollView} from 'react-native-gesture-handler';
 import Config from 'react-native-config';
 
-import OKZoneMarker from '../../../../../components/atoms/OKZoneMarker';
-
-import {StoreBasicInformationType} from './types';
-import {AGE_MARKERS, DAY} from '../../../../../constants/constants';
-import {IC_COMMENT, IC_YELLOW_STAR} from '../../../../../constants/icons';
-
-import * as S from './styles';
-import {IMG_DEFAULT_STORE} from '../../../../../constants/images';
 import {useMapStore} from '../../../../../stores/mapStore';
 
-const {width} = Dimensions.get('window');
+import OKZoneMarker from '../../../../../components/atoms/OKZoneMarker';
+import {StoreBasicInformationType} from './types';
+
+import {AGE_MARKERS, DAY} from '../../../../../constants/constants';
+import {IC_COMMENT, IC_YELLOW_STAR} from '../../../../../constants/icons';
+import {IMG_DEFAULT_STORE} from '../../../../../constants/images';
+
+import * as S from './styles';
+import scale from '../../../../../utils/scale';
 
 const CURRENT_DAY = new Date().getDay();
 const CLOUDFRONT_PREFIX = Config.CLOUDFRONT_PREFIX;
@@ -42,7 +38,7 @@ const StoreBasicInformation = ({
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
-    const index = Math.round(contentOffsetX / width);
+    const index = Math.round(contentOffsetX / scale(312));
 
     setCurrentIndex(index);
   };
