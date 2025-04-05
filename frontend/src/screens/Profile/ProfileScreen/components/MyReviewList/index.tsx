@@ -6,31 +6,28 @@ import {
   ReviewType,
 } from '../../../../../services/reviewService.ts';
 import NoDataContainer from '../../../../../components/atoms/NoDataContainer/index.tsx';
-import {useFocusEffect} from '@react-navigation/native';
 
 export const MyReviewList = () => {
   const [reviews, setReviews] = useState<ReviewType[]>([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchMyReviews = async () => {
-        try {
-          const response = await getMyReviews({
-            page: 0,
-            size: 3,
-          });
-          const sortedReviews = response.content.sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-          );
-          setReviews(sortedReviews);
-        } catch (error) {
-          throw error;
-        }
-      };
-      fetchMyReviews();
-    }, []),
-  );
+  useEffect(() => {
+    const fetchMyReviews = async () => {
+      try {
+        const response = await getMyReviews({
+          page: 0,
+          size: 3,
+        });
+        const sortedReviews = response.content.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+        setReviews(sortedReviews);
+      } catch (error) {
+        throw error;
+      }
+    };
+    fetchMyReviews();
+  }, [reviews]);
 
   if (reviews.length === 0) {
     return <NoDataContainer text="작성한 리뷰가 없습니다." />;
