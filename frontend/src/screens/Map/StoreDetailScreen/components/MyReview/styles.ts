@@ -28,3 +28,12 @@ export const MyReviewText = styled(Text)`
 export const StarContainer = styled(View)`
   align-items: center;
 `;
+
+export const ReviewCardContainer = styled(View)`
+  gap: ${scale(16)}px;
+`;
+
+export const ReviewCardTitle = styled(Text)`
+  ${FontStyles.headingMedium};
+  color: ${GrayColors[800]};
+`;
