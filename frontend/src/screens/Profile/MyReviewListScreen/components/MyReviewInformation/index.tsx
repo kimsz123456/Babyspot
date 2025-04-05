@@ -1,5 +1,4 @@
-import React, {RefObject} from 'react';
-import {ScrollView} from 'react-native-gesture-handler';
+import React from 'react';
 import {
   IC_GRAY_STAR,
   IC_HEART,
@@ -11,13 +10,9 @@ import {ReviewType} from '../../../../../services/reviewService';
 
 interface MyReviewInformationProps {
   reviews: ReviewType;
-  imageCarouselRef: RefObject<ScrollView | null>;
 }
 
-const MyReviewInformation = ({
-  reviews,
-  imageCarouselRef,
-}: MyReviewInformationProps) => {
+const MyReviewInformation = ({reviews}: MyReviewInformationProps) => {
   const totalImages = reviews.imgUrls.length;
 
   return (
