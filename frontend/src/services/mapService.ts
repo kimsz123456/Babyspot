@@ -11,43 +11,20 @@ interface RangeInfoParameterType {
   bottomRightLat: number;
   bottomRightLong: number;
 }
-export interface GeocodingResponse {
-  address: Address;
-  address_name: string;
-  address_type: string;
-  road_address: RoadAddress;
-  x: string;
-  y: string;
-}
 
-export interface Address {
+export interface GetGeocodingByKeywordResponse {
   address_name: string;
-  b_code: string;
-  h_code: string;
-  main_address_no: string;
-  mountain_yn: string;
-  region_1depth_name: string;
-  region_2depth_name: string;
-  region_3depth_h_name: string;
-  region_3depth_name: string;
-  sub_address_no: string;
+  category_group_code: string;
+  category_group_name: string;
+  category_name: string;
+  distance: string;
+  id: string;
+  phone: string;
+  place_name: string;
+  place_url: string;
+  road_address_name: string;
   x: string;
   y: string;
-}
-
-export interface RoadAddress {
-  address_name: string;
-  building_name: string;
-  main_building_no: string;
-  region_1depth_name: string;
-  region_2depth_name: string;
-  region_3depth_name: string;
-  road_name: string;
-  sub_building_no: string;
-  underground_yn: string;
-  x: string;
-  y: string;
-  zone_no: string;
 }
 
 export interface StoreDetailResponse {
@@ -133,13 +110,15 @@ export const getRangeInfo = async (
   }
 };
 
-export const getGeocoding = async (
-  address: string,
-): Promise<GeocodingResponse> => {
+export const getGeocodingByKeyword = async (
+  keyword: string,
+): Promise<GetGeocodingByKeywordResponse[]> => {
   try {
-    const response = await axios.get<{documents: GeocodingResponse[]}>(
-      `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(
-        address,
+    const response = await axios.get<{
+      documents: GetGeocodingByKeywordResponse[];
+    }>(
+      `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(
+        keyword,
       )}`,
       {
         headers: {
@@ -147,8 +126,7 @@ export const getGeocoding = async (
         },
       },
     );
-
-    const result = response.data.documents[0];
+    const result = response.data.documents;
 
     return result;
   } catch (error) {

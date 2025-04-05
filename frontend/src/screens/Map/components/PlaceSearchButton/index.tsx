@@ -13,7 +13,7 @@ const PlaceSearchButton = () => {
   const navigation = useMapNavigation();
   const router = useRoute();
 
-  const selectedAddress = useMapStore(state => state.selectedAddress);
+  const selectedPlace = useMapStore(state => state.selectedPlace);
 
   return (
     <S.PlaceSearchButton
@@ -21,7 +21,7 @@ const PlaceSearchButton = () => {
         if (router.name == 'MapMain') {
           navigation.navigate('Search');
         } else if (router.name == 'Search') {
-          navigation.navigate('KakaoPostcode');
+          navigation.navigate('PlaceSearchScreen');
         }
       }}>
       {router.name !== 'MapMain' && (
@@ -30,11 +30,11 @@ const PlaceSearchButton = () => {
         </Pressable>
       )}
       <S.Placeholder
-        isPlaceholder={!(router.name == 'MapMain' && selectedAddress != null)}>
-        {router.name == 'MapMain' && selectedAddress
-          ? selectedAddress.buildingName
-            ? selectedAddress.buildingName + ', ' + selectedAddress.roadAddress
-            : selectedAddress.roadAddress
+        isPlaceholder={!(router.name == 'MapMain' && selectedPlace != null)}>
+        {router.name == 'MapMain' && selectedPlace
+          ? selectedPlace.place_name
+            ? selectedPlace.place_name + ', ' + selectedPlace.road_address_name
+            : selectedPlace.road_address_name
           : `검색할 장소를 입력해주세요`}
       </S.Placeholder>
     </S.PlaceSearchButton>
