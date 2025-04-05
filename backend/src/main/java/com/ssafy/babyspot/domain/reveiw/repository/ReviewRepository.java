@@ -31,5 +31,5 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 	int countByStore_Id(int id);
 
 	@Query("select r from Review r join fetch r.store where r.store.id = :storeId")
-	Page<Review> findAllByStore_IdWithStore(@Param("storeId") int storeId, Pageable pageable);
+	Page<Review> findAllByStore_Store(@Param("storeId") int storeId, Pageable pageable);
 }

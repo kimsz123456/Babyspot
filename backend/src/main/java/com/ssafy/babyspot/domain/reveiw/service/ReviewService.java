@@ -114,7 +114,7 @@ public class ReviewService {
 			Sort.by("createdAt").descending()
 		);
 
-		Page<Review> reviews = reviewRepository.findAllByStore_IdWithStore(storeId, sortedPageable);
+		Page<Review> reviews = reviewRepository.findAllByStore_Store(storeId, sortedPageable);
 
 		Set<Integer> memberIds = reviews.stream()
 			.map(review -> review.getMember().getId())
