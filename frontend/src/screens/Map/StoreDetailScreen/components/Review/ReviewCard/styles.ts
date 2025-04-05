@@ -1,6 +1,6 @@
 import {Image, Pressable, Text, View} from 'react-native';
 import styled from 'styled-components/native';
-import {GrayColors} from '../../../../../../constants/colors';
+import {GrayColors, SecondaryColors} from '../../../../../../constants/colors';
 import {FontStyles} from '../../../../../../constants/fonts';
 import scale from '../../../../../../utils/scale';
 
@@ -132,4 +132,16 @@ export const Likes = styled(Text)`
 export const Date = styled(Text)`
   ${FontStyles.captionSmall};
   color: ${GrayColors[300]};
+`;
+
+export const EditContainer = styled(Pressable)`
+  width: ${scale(24)}px;
+  height: ${scale(24)}px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const EditText = styled(Text)`
+  ${FontStyles.captionMedium};
+  color: ${GrayColors[700]};
 `;

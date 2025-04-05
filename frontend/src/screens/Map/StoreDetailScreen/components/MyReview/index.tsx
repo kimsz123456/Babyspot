@@ -18,9 +18,10 @@ const MyReview = ({storeId, storeName, review}: MyReviewProps) => {
   return (
     <S.MyReviewContainer>
       {review ? (
-        <>
+        <S.ReviewCardContainer>
+          <S.ReviewCardTitle>{`내 리뷰`}</S.ReviewCardTitle>
           <ReviewCard {...review} />
-        </>
+        </S.ReviewCardContainer>
       ) : (
         <>
           <S.ReviewTextContainer>
@@ -56,6 +57,8 @@ const MyReview = ({storeId, storeName, review}: MyReviewProps) => {
                     createdAt: new Date().toDateString(),
                     imgUrls: [],
                     likeCount: 0,
+                    okZone: false,
+                    category: '',
                   };
 
                   navigation.navigate('WriteReviewScreen', {
