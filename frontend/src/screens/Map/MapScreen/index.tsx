@@ -3,7 +3,7 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Alert} from 'react-native';
 
-import {useRoute} from '@react-navigation/native';
+import {RouteProp, useRoute} from '@react-navigation/native';
 import {
   Camera,
   NaverMapMarkerOverlay,
@@ -22,8 +22,10 @@ import RecommendButton from './components/RecommendButton';
 import Chip from './components/Chip';
 import ResearchButton from './components/ResearchButton';
 import StoreBasicScreen from '../StoreBasicScreen';
-import {getRangeInfo} from '../../../services/mapService';
-import {getGeocoding} from '../../../services/mapService';
+import {
+  GetGeocodingByKeywordResponse,
+  getRangeInfo,
+} from '../../../services/mapService';
 import {useMapStore} from '../../../stores/mapStore';
 import {
   ConvenienceType,
@@ -42,6 +44,9 @@ import {
 import {MAP_ZOOM_SCALE} from '../../../constants/constants';
 
 import * as S from './styles';
+import {MapStackParamList} from '../../../navigation/MapStackNavigator';
+
+type MapMainRouteProp = RouteProp<MapStackParamList, 'MapMain'>;
 
 const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
@@ -62,10 +67,10 @@ const MapScreen = () => {
   const {selectedAges, selectedChips, setSelectedAges, setSelectedChips} =
     useMapStore();
 
-  const clearAddress = useMapStore(state => state.clearAddress);
+  const clearSelectedPlace = useMapStore(state => state.clearSelectedPlace);
 
-  const route = useRoute();
-  const address = (route.params as any)?.address as string;
+  const route = useRoute<MapMainRouteProp>();
+  const searchedPlace = route.params?.searchedPlace;
 
   const changeMarkerSize = (idx: number, defaultSize: number) => {
     if (selectedMarker === -1) {
@@ -103,6 +108,7 @@ const MapScreen = () => {
 
     if (!hasPermission) {
       const {latitude, longitude} = centerCoordinate;
+
       moveToCamera({latitude, longitude, mapRef});
 
       setIsReadyToFirstSearch(true);
@@ -133,7 +139,7 @@ const MapScreen = () => {
   };
 
   const handleResearchButtonPress = () => {
-    clearAddress();
+    clearSelectedPlace();
 
     setSelectedAges([]);
     setSelectedChips([]);
@@ -240,39 +246,40 @@ const MapScreen = () => {
     setSelectedMarker(-1);
   };
 
-  const moveToAddress = async (address: string) => {
+  const moveToAddress = async (
+    searchedPlace: GetGeocodingByKeywordResponse,
+  ) => {
     try {
-      const response = await getGeocoding(address);
-
-      if (!response) {
-        Alert.alert('주소를 찾을 수 없습니다.');
-        return;
-      }
-
-      const latitude = parseFloat(response.y);
-      const longitude = parseFloat(response.x);
+      const latitude = parseFloat(searchedPlace.y);
+      const longitude = parseFloat(searchedPlace.x);
 
       moveToCamera({
         latitude: latitude,
         longitude: longitude,
         mapRef: mapRef,
       });
+
+      setIsReadyToFirstSearch(true);
     } catch (error) {
       Alert.alert('위치 이동 중 오류 발생');
     }
   };
 
   useEffect(() => {
+    if (route.params?.searchedPlace) {
+      return;
+    }
+
     initMapToCurrentLocation();
   }, []);
 
   useEffect(() => {
-    if (!address) {
+    if (!searchedPlace) {
       return;
     }
 
-    moveToAddress(address);
-  }, [address]);
+    moveToAddress(searchedPlace);
+  }, [searchedPlace]);
 
   useEffect(() => {
     if (!isPendingResearch || !zoom) {
