@@ -1,6 +1,5 @@
-import React, {RefObject, useState} from 'react';
+import React, {RefObject} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
-import {AGE_MARKERS} from '../../../../../constants/constants';
 import {
   IC_GRAY_STAR,
   IC_HEART,

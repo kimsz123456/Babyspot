@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import * as S from './styles.ts';
 import {IMG_DEFAULT_PROFILE} from '../../../constants/images.ts';
 import {
