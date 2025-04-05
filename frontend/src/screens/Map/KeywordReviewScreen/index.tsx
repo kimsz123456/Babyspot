@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import * as S from './styles';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
@@ -33,17 +33,31 @@ const KeywordReviewScreen = () => {
               [
                 ...keywordInformation.keywordReviews.map((review, index) => {
                   const [isFold, setIsFold] = useState(true);
+                  const keyword = keywordInformation.keyword;
 
                   let iconImage;
                   switch (review.reviewFrom) {
                     case ReviewFromTypes.Blog:
                       iconImage = IC_NAVER_BLOG;
                       break;
-
                     case ReviewFromTypes.Place:
                       iconImage = IC_NAVER_PLACE;
                       break;
                   }
+
+                  const parsedContent = useMemo(() => {
+                    const parts = review.content.split(
+                      new RegExp(`(${keyword})`, 'gi'),
+                    );
+                    return parts.map((part, i) => {
+                      if (part.toLowerCase() === keyword.toLowerCase()) {
+                        return (
+                          <S.HighlightedText key={i}>{part}</S.HighlightedText>
+                        );
+                      }
+                      return <S.ContentText key={i}>{part}</S.ContentText>;
+                    });
+                  }, [review.content, keyword]);
 
                   return (
                     <S.ReviewContainer
@@ -55,7 +69,7 @@ const KeywordReviewScreen = () => {
                       <S.ContentText
                         numberOfLines={isFold ? 2 : undefined}
                         ellipsizeMode="tail">
-                        {review.content}
+                        {parsedContent}
                       </S.ContentText>
                     </S.ReviewContainer>
                   );

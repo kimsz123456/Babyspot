@@ -1,4 +1,4 @@
-import {GrayColors} from './../../../constants/colors';
+import {GrayColors, PrimaryColors} from './../../../constants/colors';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import styled from 'styled-components';
@@ -51,4 +51,9 @@ export const ContentText = styled(Text)`
   flex: 1;
   ${FontStyles.bodyMedium}
   color:${GrayColors[800]}
+`;
+
+export const HighlightedText = styled(Text)`
+  ${FontStyles.bodyMedium};
+  color: ${PrimaryColors[500]};
 `;
