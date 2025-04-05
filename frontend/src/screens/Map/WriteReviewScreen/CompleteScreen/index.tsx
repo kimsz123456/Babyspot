@@ -21,19 +21,19 @@ const CompleteScreen = () => {
       case 'create':
         return {
           completeText: '작성이 완료되었습니다.',
-          completeButtonText: '작성 완료',
+          completeButtonText: '확인',
         };
 
       case 'update':
         return {
           completeText: '수정이 완료되었습니다.',
-          completeButtonText: '수정 완료',
+          completeButtonText: '확인',
         };
 
       case 'delete':
         return {
           completeText: '삭제가 완료되었습니다.',
-          completeButtonText: '삭제 완료',
+          completeButtonText: '확인',
         };
     }
   }, []);
