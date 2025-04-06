@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Alert} from 'react-native';
 
@@ -314,7 +312,9 @@ const MapScreen = () => {
       return;
     }
 
-    modifyZoomForRecommend();
+    requestAnimationFrame(() => {
+      modifyZoomForRecommend();
+    });
   }, [selectedAges]);
 
   return (

@@ -23,24 +23,20 @@ const useChips = () => {
   const {selectedChips, setSelectedChips} = useMapStore();
 
   const handleChipPressed = (selectedIndex: number) => {
-    setChips(prev => {
-      const updated = prev.map((chip, index) =>
-        index === selectedIndex
-          ? {...chip, isSelected: !chip.isSelected}
-          : chip,
-      );
+    const updated = chips.map((chip, index) =>
+      index === selectedIndex ? {...chip, isSelected: !chip.isSelected} : chip,
+    );
 
-      const selected = updated.filter(chip => chip.isSelected);
-      const unselected = initialChips.current.filter(
-        initialChip =>
-          !updated.find(chip => chip.label === initialChip.label)?.isSelected,
-      );
+    const selected = updated.filter(chip => chip.isSelected);
+    const unselected = initialChips.current.filter(
+      initialChip =>
+        !updated.find(chip => chip.label === initialChip.label)?.isSelected,
+    );
 
-      const selectedChipList = selected.map(chip => chip.value);
-      setSelectedChips(selectedChipList);
+    setChips([...selected, ...unselected]);
 
-      return [...selected, ...unselected];
-    });
+    const selectedChipList = selected.map(chip => chip.value);
+    setSelectedChips(selectedChipList);
   };
 
   useEffect(() => {
