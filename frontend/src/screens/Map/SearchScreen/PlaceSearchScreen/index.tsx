@@ -42,21 +42,18 @@ const PlaceSearchScreen = () => {
     keyword: string,
     index: number,
   ) => {
-    if (!keyword) {
-      return <S.PlaceNameRawText>{placeName}</S.PlaceNameRawText>;
-    }
-
     const parts = placeName.split(new RegExp(`(${keyword})`, 'gi'));
 
     return parts.map((part, i) => {
       const key = `${index}-${i}`;
-      const isMatch = part.toLowerCase() === keyword.toLowerCase();
+      const isMatch =
+        part.toLowerCase() === keyword.toLowerCase() && keyword !== '';
 
       return isMatch ? (
         <S.HighlightedText key={`highlight-${key}`}>{part}</S.HighlightedText>
-      ) : (
+      ) : part ? (
         <S.PlaceNameRawText key={`normal-${key}`}>{part}</S.PlaceNameRawText>
-      );
+      ) : null;
     });
   };
 
