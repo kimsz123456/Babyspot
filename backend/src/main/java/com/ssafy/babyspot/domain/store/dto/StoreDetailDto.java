@@ -30,4 +30,6 @@ public class StoreDetailDto {
 	private List<Integer> babyAges;
 
 	private Float rating;
+
+	private int reviewCount;
 }

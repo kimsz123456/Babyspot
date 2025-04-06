@@ -34,6 +34,7 @@ import com.ssafy.babyspot.domain.store.dto.KeywordDto;
 import com.ssafy.babyspot.domain.store.dto.KeywordReviewDto;
 import com.ssafy.babyspot.domain.store.dto.KeywordSectionDto;
 import com.ssafy.babyspot.domain.store.dto.KidsMenuDto;
+import com.ssafy.babyspot.domain.store.dto.RatingInfo;
 import com.ssafy.babyspot.domain.store.dto.SentimentAnalysisDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDefaultInfoDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDetailDto;
@@ -83,12 +84,14 @@ public class StoreService {
 
 		return stores.stream()
 			.map(store -> {
+				RatingInfo ratingInfo = computeRatingInfo(store.getId());
 				StoreDefaultInfoDto dto = new StoreDefaultInfoDto();
 				dto.setStoreId(store.getId());
 				dto.setLatitude(store.getLocation().getY()); // 위도
 				dto.setLongitude(store.getLocation().getX()); // 경도
 				dto.setAddress(store.getAddress());
-				dto.setRating(store.getRating());
+				dto.setRating(Float.valueOf(getRating(store.getId())));
+				dto.setReviewCount(ratingInfo.getReviewCount());
 				dto.setBusinessHour(store.getBusinessHour());
 				dto.setContactNumber(store.getContactNumber());
 				dto.setTitle(store.getTitle());
@@ -263,6 +266,8 @@ public class StoreService {
 		List<KidsMenuDto> kidsMenus = getKidsMenu(storeId);
 		float storeRating = getRating(storeId);
 
+		RatingInfo ratingInfo = computeRatingInfo(storeId);
+
 		Pageable pageable = PageRequest.of(0, 3, Sort.by("createdAt").descending());
 		Page<Review> reviewPage = reviewRepository.findAllByStore_IdOrderByCreatedAtDesc(storeId, pageable);
 		List<ReviewResponseDto> latestReviews = reviewPage.stream().map(review -> {
@@ -302,6 +307,7 @@ public class StoreService {
 			.latestReviews(latestReviews)
 			.babyAges(babyAges)
 			.rating(storeRating)
+			.reviewCount(ratingInfo.getReviewCount())
 			.build();
 	}
 
@@ -361,6 +367,19 @@ public class StoreService {
 			}
 			storeRepository.save(store);
 		}
+	}
+
+	@Transactional
+	public RatingInfo computeRatingInfo(int storeId) {
+		List<Review> reviews = reviewRepository.findAllByStore_Id(storeId, Pageable.unpaged()).getContent();
+
+		int reviewCount = reviews.size();
+		double totalRating = reviews.stream()
+			.mapToDouble(Review::getRating)
+			.sum();
+		float avgRating = reviewCount > 0 ? (float)(totalRating / reviewCount) : 0f;
+
+		return new RatingInfo(avgRating, reviewCount);
 	}
 
 }

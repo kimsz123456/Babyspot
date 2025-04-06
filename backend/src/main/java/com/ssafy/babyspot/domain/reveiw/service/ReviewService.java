@@ -256,7 +256,7 @@ public class ReviewService {
 		List<ReviewImage> existingImages = new ArrayList<>(review.getImages());
 		for (ReviewImage image : existingImages) {
 			s3Component.deleteObject(image.getImageUrl());
-			reviewRepository.delete(review);
+			reviewImageRepository.delete(image);
 		}
 		review.getImages().clear();
 		List<Map<String, String>> preSignedUrlList = new ArrayList<>();
