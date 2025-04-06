@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import * as S from './styles';
 import {IMG_DEFAULT_PROFILE} from '../../../../../constants/images';
 import {IC_IMAGE_EDIT} from '../../../../../constants/icons';
@@ -30,17 +30,21 @@ const ProfileImage = ({onImageSelect}: ProfileImageProps) => {
 
       if (result.assets && result.assets[0]) {
         const asset = result.assets[0];
+        if (!asset.type) {
+          Alert.alert('오류', '이미지 타입을 확인할 수 없습니다.');
+          return;
+        }
         const imageData = {
           uri: asset.uri!,
-          type: asset.type || 'image/jpeg',
+          type: asset.type,
           fileName: asset.fileName || 'profile.jpg',
         };
         setSelectedImage(imageData);
         onImageSelect(imageData);
       }
     } catch (error) {
-      console.error('이미지 선택 실패:', error);
       Alert.alert('오류', '이미지 선택에 실패했습니다.');
+      throw error;
     }
   };
 
@@ -49,11 +53,9 @@ const ProfileImage = ({onImageSelect}: ProfileImageProps) => {
       return {uri: selectedImage.uri};
     }
     if (memberProfile?.profile_img) {
-      // CloudFront URL이 이미 포함되어 있는지 확인
       if (memberProfile.profile_img.startsWith('http')) {
         return {uri: memberProfile.profile_img};
       }
-      // 상대 경로인 경우 CloudFront URL 생성
       const timestamp = Date.now();
       return {
         uri: `${Config.CLOUDFRONT_PREFIX}${memberProfile.profile_img}?v=${timestamp}`,

@@ -56,6 +56,7 @@ const MapScreen = () => {
   const [isReadyToFirstSearch, setIsReadyToFirstSearch] = useState(false);
   const [isPendingResearch, setIsPendingResearch] = useState(false);
   const [isResearchButtonPressed, setIsResearchButtonPressed] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
 
   const {centerCoordinate, mapRegion, zoom, onCameraIdle} = useMapViewport();
   const {isVisible, updateLastSearchedCoordinate} = useResearchButtonVisibility(
@@ -103,7 +104,7 @@ const MapScreen = () => {
 
   const initMapToCurrentLocation = async () => {
     const hasPermission = await checkLocationPermission();
-
+    setHasPermission(hasPermission);
     if (!hasPermission) {
       const {latitude, longitude} = centerCoordinate;
 
@@ -319,14 +320,12 @@ const MapScreen = () => {
   return (
     <S.MapScreenContainer>
       <S.NaverMap
+        isShowLocationButton={hasPermission}
         ref={mapRef}
         onCameraIdle={handleCameraIdle}
         onTapMap={handleNaverMapTab}
         isIndoorEnabled={true}
-        isShowCompass={false}
-        isShowZoomControls={false}
-        isExtentBoundedInKorea={true}
-        isTiltGesturesEnabled={false}>
+        isExtentBoundedInKorea={true}>
         {filteredStores.map((data, idx) => (
           <NaverMapMarkerOverlay
             key={idx}
