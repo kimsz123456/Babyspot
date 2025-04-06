@@ -182,7 +182,7 @@ const StoreDetailScreen = () => {
         contentContainerStyle={{paddingTop: TAB_BAR_HEIGHT}}
         showsVerticalScrollIndicator={false}>
         <S.BasicInformationContainer>
-          <StoreBasicInformation store={storeBasicInformation} />
+          <StoreBasicInformation store={storeBasicInformation} canShowGallery />
         </S.BasicInformationContainer>
 
         {storeDetail && (

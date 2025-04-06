@@ -1,6 +1,5 @@
 import React, {RefObject, useState} from 'react';
-import {NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
-
+import {NativeScrollEvent, NativeSyntheticEvent, Pressable} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import Config from 'react-native-config';
 
@@ -16,6 +15,8 @@ import {IMG_DEFAULT_STORE} from '../../../../../constants/images';
 import * as S from './styles';
 import scale from '../../../../../utils/scale';
 
+import GalleryViewer from '../../../../../components/atoms/GalleryViewer';
+
 const CURRENT_DAY = new Date().getDay();
 const CLOUDFRONT_PREFIX = Config.CLOUDFRONT_PREFIX;
 
@@ -23,14 +24,18 @@ interface StoreBasicInformationProps {
   store: StoreBasicInformationType;
   imageCarouselRef?: RefObject<ScrollView | null>;
   isShownBusinessHour?: boolean;
+  canShowGallery?: boolean;
 }
 
 const StoreBasicInformation = ({
   store,
   imageCarouselRef,
   isShownBusinessHour,
+  canShowGallery = false,
 }: StoreBasicInformationProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isGalleryVisible, setIsGalleryVisible] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
 
   const {selectedAges} = useMapStore();
 
@@ -41,6 +46,17 @@ const StoreBasicInformation = ({
     const index = Math.round(contentOffsetX / scale(312));
 
     setCurrentIndex(index);
+  };
+
+  const galleryImages = store.images
+    .filter(img => !!img.storeImg)
+    .map(img => ({
+      uri: `${CLOUDFRONT_PREFIX}${img.storeImg}`,
+    }));
+
+  const openGallery = (index: number) => {
+    setGalleryIndex(index);
+    setIsGalleryVisible(true);
   };
 
   return (
@@ -54,13 +70,22 @@ const StoreBasicInformation = ({
           onScroll={handleScroll}
           scrollEventThrottle={16}>
           {store.images.length > 0 ? (
-            store.images.map((image, idx) => (
-              <S.ImageContainer key={idx}>
-                <S.StoreImage
-                  source={{uri: `${CLOUDFRONT_PREFIX}${image.storeImg}`}}
-                />
-              </S.ImageContainer>
-            ))
+            store.images.map((image, idx) => {
+              const uri = `${CLOUDFRONT_PREFIX}${image.storeImg}`;
+
+              return (
+                <Pressable
+                  key={idx}
+                  disabled={!canShowGallery}
+                  onPress={() => {
+                    if (uri) openGallery(idx);
+                  }}>
+                  <S.ImageContainer>
+                    <S.StoreImage source={{uri}} />
+                  </S.ImageContainer>
+                </Pressable>
+              );
+            })
           ) : (
             <S.ImageContainer>
               <S.StoreImage source={IMG_DEFAULT_STORE} />
@@ -115,6 +140,14 @@ const StoreBasicInformation = ({
           </S.BusinessHourContainer>
         )}
       </S.DetailContainer>
+      <GalleryViewer
+        visible={isGalleryVisible}
+        images={galleryImages}
+        initialIndex={galleryIndex}
+        currentIndex={galleryIndex}
+        onClose={() => setIsGalleryVisible(false)}
+        onIndexChange={setGalleryIndex}
+      />
     </S.StoreBasicInformationContainer>
   );
 };
