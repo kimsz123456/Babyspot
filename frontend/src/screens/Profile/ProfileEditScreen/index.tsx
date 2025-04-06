@@ -30,7 +30,7 @@ const ProfileEditScreen = () => {
     if (memberProfile?.profile_img) {
       return {
         uri: memberProfile.profile_img,
-        type: 'image/jpeg',
+        type: '',
         fileName: memberProfile.profile_img.split('/').pop() || 'profile.jpg',
       };
     }
@@ -38,20 +38,25 @@ const ProfileEditScreen = () => {
   });
 
   const handleProfileUpdate = async () => {
+    if (!selectedImage?.type) {
+      Alert.alert('오류', '이미지 타입을 확인할 수 없습니다.');
+      return;
+    }
+
     try {
       const response = await patchMemberProfile({
         nickname: nickname.trim(),
-        profileImgUrl: selectedImage?.uri || '',
-        contentType: selectedImage?.type || '',
+        profileImgUrl: selectedImage.uri,
+        contentType: selectedImage.type,
         babyAges: babyAges,
       });
       const {preSignedUrl} = response;
       await uploadImageToS3({
-        imageType: selectedImage?.type || '',
-        imagePath: selectedImage?.uri || '',
+        imageType: selectedImage.type,
+        imagePath: selectedImage.uri,
         preSignedUrl: preSignedUrl || '',
       });
-      // 프로필 업데이트 후 최신 데이터를 가져옴
+
       const updatedProfile = await getMemberProfile();
       setMemberProfile(updatedProfile);
       Alert.alert('성공', '프로필이 수정되었습니다.', [
