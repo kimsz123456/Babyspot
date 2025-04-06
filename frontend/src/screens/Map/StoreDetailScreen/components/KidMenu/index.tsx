@@ -35,15 +35,15 @@ const KidMenu = ({menus}: KidMenuProps) => {
         ) : (
           visibleMenus.map((menu, index) => (
             <S.LineContainer key={index}>
-              <S.BasicText>{menu.babyMenuName}</S.BasicText>
-              <S.BasicText>
-                <S.BoldText>
-                  {menu.babyMenuPrice
-                    ? formatPrice(menu.babyMenuPrice)
-                    : '정보 없음'}
-                </S.BoldText>
-                {menu.babyMenuPrice && '원'}
-              </S.BasicText>
+              <S.BasicText>{menu.babyMenuName.trim()}</S.BasicText>
+              {!menu.babyMenuPrice ? (
+                <></>
+              ) : (
+                <S.BasicText>
+                  <S.BoldText>{formatPrice(menu.babyMenuPrice)}</S.BoldText>
+                  {menu.babyMenuPrice && '원'}
+                </S.BasicText>
+              )}
             </S.LineContainer>
           ))
         )}
