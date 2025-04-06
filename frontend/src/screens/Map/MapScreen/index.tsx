@@ -217,11 +217,21 @@ const MapScreen = () => {
       });
 
       // 음식점 필터링
-      const recommendStores = response.filter(store => {
-        return store.babyAges?.some((age: number) =>
-          selectedAges.includes(age),
-        );
-      });
+      const recommendStores = response
+        .filter(store =>
+          store.babyAges?.some((age: number) => selectedAges.includes(age)),
+        )
+        .map(store => {
+          const matchCount =
+            store.babyAges?.filter((age: number) => selectedAges.includes(age))
+              .length ?? 0;
+
+          return {
+            ...store,
+            matchCount,
+          };
+        })
+        .sort((a, b) => b.matchCount - a.matchCount);
 
       setStores(recommendStores);
 
