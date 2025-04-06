@@ -35,7 +35,7 @@ const KidMenu = ({menus}: KidMenuProps) => {
         ) : (
           visibleMenus.map((menu, index) => (
             <S.LineContainer key={index}>
-              <S.BasicText>{menu.babyMenuName}</S.BasicText>
+              <S.BasicText>{menu.babyMenuName.trim()}</S.BasicText>
               {!menu.babyMenuPrice ? (
                 <></>
               ) : (

@@ -1,4 +1,4 @@
-import {Image, Text, View} from 'react-native';
+import {Image, Pressable, Text, View} from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -6,45 +6,12 @@ import scale from '../../../../../utils/scale';
 import {FontStyles} from '../../../../../constants/fonts';
 import {GrayColors, PrimaryColors} from '../../../../../constants/colors';
 
-export const StoreBasicInformationContainer = styled(View)`
+export const StoreBasicInformationContainer = styled(Pressable)`
   display: flex;
   flex-direction: column;
   gap: ${scale(16)}px;
   padding: ${scale(8)}px 0;
   width: 100%;
-`;
-
-export const CarouselContainer = styled(View)`
-  position: relative;
-`;
-
-export const ImageContainer = styled(View)`
-  width: ${scale(312)}px;
-  height: ${scale(120)}px;
-`;
-
-export const StoreImage = styled(Image)`
-  height: 100%;
-  width: 100%;
-`;
-
-export const ImageIndicatorContainer = styled(View)`
-  position: absolute;
-  bottom: ${scale(4)}px;
-  right: ${scale(4)}px;
-  padding: 0 ${scale(4)}px;
-  border-radius: 100px;
-  background-color: ${GrayColors['900/70']};
-`;
-
-export const ImageIndicator = styled(Text)`
-  ${FontStyles.captionMedium}
-  color: ${GrayColors[300]};
-`;
-
-export const ImageCurrentIndex = styled(Text)`
-  ${FontStyles.captionMedium}
-  color: ${GrayColors[0]};
 `;
 
 export const DetailContainer = styled(View)`
@@ -135,4 +102,32 @@ export const BusinessHour = styled(Text)`
 export const Day = styled(Text)`
   ${FontStyles.captionMedium}
   color: ${GrayColors[800]};
+  font-weight: 700;
+`;
+
+export const ImageContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+export const Images = styled(Image)`
+  width: ${scale(66)}px;
+  height: ${scale(66)}px;
+  border-radius: 10px;
+`;
+export const OverlayWrapper = styled(View)`
+  position: relative;
+  align-items: center;
+  justify-items: center;
+`;
+export const OverlayText = styled(Text)`
+  position: absolute;
+  width: ${scale(66)}px;
+  height: ${scale(66)}px;
+  border-radius: 10px;
+  ${FontStyles.bodyMedium};
+  color: ${GrayColors[0]};
+  text-align: center;
+  text-align-vertical: center;
+  background-color: rgba(0, 0, 0, 0.6);
 `;

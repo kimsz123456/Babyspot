@@ -35,7 +35,7 @@ const Menu = ({menus}: MenuProps) => {
         ) : (
           visibleMenus.map(menu => (
             <S.LineContainer key={menu.name}>
-              <S.StoreName>{menu.name}</S.StoreName>
+              <S.StoreName>{menu.name.trim()}</S.StoreName>
               <S.BasicText>
                 <S.BoldText>{formatPrice(menu.price)}</S.BoldText>원
               </S.BasicText>
