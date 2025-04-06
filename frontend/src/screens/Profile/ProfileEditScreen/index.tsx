@@ -38,22 +38,17 @@ const ProfileEditScreen = () => {
   });
 
   const handleProfileUpdate = async () => {
-    if (!selectedImage?.type) {
-      Alert.alert('오류', '이미지 타입을 확인할 수 없습니다.');
-      return;
-    }
-
     try {
       const response = await patchMemberProfile({
         nickname: nickname.trim(),
-        profileImgUrl: selectedImage.uri,
-        contentType: selectedImage.type,
+        profileImgUrl: selectedImage?.uri || '',
+        contentType: selectedImage?.type || '',
         babyAges: babyAges,
       });
       const {preSignedUrl} = response;
       await uploadImageToS3({
-        imageType: selectedImage.type,
-        imagePath: selectedImage.uri,
+        imageType: selectedImage?.type || '',
+        imagePath: selectedImage?.uri || '',
         preSignedUrl: preSignedUrl || '',
       });
 
