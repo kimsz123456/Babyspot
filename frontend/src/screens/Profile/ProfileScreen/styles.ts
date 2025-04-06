@@ -47,6 +47,11 @@ const AgeIcons = styled(Image)`
   width: ${scale(24)}px;
   height: ${scale(24)}px;
 `;
+const NoAgeIcons = styled(Text)`
+  ${FontStyles.captionMedium};
+  color: ${GrayColors[700]};
+  padding-bottom: ${scale(4)}px;
+`;
 const ProfileEdit = styled(Image)`
   width: ${scale(32)}px;
   height: ${scale(32)}px;
@@ -80,6 +85,7 @@ export {
   Name,
   AgeIconsContainer,
   AgeIcons,
+  NoAgeIcons,
   ProfileEdit,
   ReviewContainer,
   ReviewTitleContainer,

@@ -34,7 +34,7 @@ const ProfileScreen = () => {
 
   const getBabyAgeIcon = (babyBirthYears?: number[]) => {
     if (!babyBirthYears || babyBirthYears.length === 0) {
-      return <S.AgeIcons source={IC_AGE3} />;
+      return <S.NoAgeIcons>자녀 정보가 없습니다.</S.NoAgeIcons>;
     }
 
     const currentYear = new Date().getFullYear();

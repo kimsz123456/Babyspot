@@ -138,7 +138,7 @@ const Setting = () => {
                         ? `${SystemColors.success}`
                         : `${SystemColors.danger}`,
                     }}>
-                    {isGPSEnabled ? '되어있음' : '꺼져있음'}
+                    {isGPSEnabled ? '허용됨' : '거부됨'}
                   </S.GPSState>
                   <S.GPSQuestion source={IC_QUESTION} />
                 </S.GPSStateContainer>
