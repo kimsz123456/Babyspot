@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as S from './styles';
 import {IMG_DEFAULT_PROFILE} from '../../../../../constants/images';
 import {IC_IMAGE_EDIT} from '../../../../../constants/icons';
@@ -43,8 +43,8 @@ const ProfileImage = ({onImageSelect}: ProfileImageProps) => {
         onImageSelect(imageData);
       }
     } catch (error) {
-      Alert.alert('오류', '이미지 선택에 실패했습니다.');
       throw error;
+      Alert.alert('오류', '이미지 선택에 실패했습니다.');
     }
   };
 
