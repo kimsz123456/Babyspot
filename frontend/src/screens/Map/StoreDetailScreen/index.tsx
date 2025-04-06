@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {
   View,
   NativeSyntheticEvent,
   NativeScrollEvent,
   InteractionManager,
 } from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
 
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import StoreBasicInformation from '../NearStoreListScreen/components/StoreBasicInformation';
@@ -74,16 +74,20 @@ const StoreDetailScreen = () => {
 
       if (myReview) {
         setMyReview(myReview);
+      } else {
+        setMyReview(undefined);
       }
     } catch (error) {
       console.error('내 리뷰 조회 실패:', error);
     }
   };
 
-  useEffect(() => {
-    fetchStoreDetail();
-    fetchMyReviewInStore();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchStoreDetail();
+      fetchMyReviewInStore();
+    }, []),
+  );
 
   const handleTabPress = (tabName: string, index: number) => {
     if (isManualScrolling.current) {
