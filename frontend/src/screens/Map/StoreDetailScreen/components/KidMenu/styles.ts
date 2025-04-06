@@ -44,3 +44,8 @@ export const BasicText = styled(Text)`
 export const BoldText = styled(Text)`
   font-weight: 700;
 `;
+
+export const SmallText = styled(Text)`
+  ${FontStyles.captionMedium};
+  color: ${GrayColors[700]};
+`;
