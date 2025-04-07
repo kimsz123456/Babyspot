@@ -129,10 +129,11 @@ class KeywordAnalyzer:
       # 형태소 분석으로 키워드 추출
       keywords = self.extract_keywords_from_text(content, top_n=3)
 
-      processed_review = {
-        "content": content,
-        "keywords": keywords
-      }
+      # 원본 리뷰의 모든 속성 복사 (source 포함)
+      processed_review = review.copy()
+      # 키워드 추가
+      processed_review["keywords"] = keywords
+
       processed_reviews.append(processed_review)
 
       # 결과를 파일에 저장 (추가 모드)
