@@ -9,4 +9,5 @@ public class SignUpResponse {
 	private String message;
 	private String accessToken;
 	private String refreshToken;
+	private String errorDetail;
 }
