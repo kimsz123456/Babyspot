@@ -27,7 +27,7 @@ export const TitleHeaderContainer = styled(View)`
 `;
 
 export const TitleInformationContainer = styled(View)`
-  flex-direction: column;
+  flex-direction: row;
   gap: ${scale(8)}px;
 `;
 
@@ -67,12 +67,17 @@ export const ReviewCardListContainer = styled(View)`
 `;
 
 export const NoReviewText = styled(Text)`
-  ${FontStyles.captionMedium}
+  ${FontStyles.bodySmall}
   color: ${GrayColors[600]};
   text-align: center;
   margin-top: ${scale(24)}px;
 `;
 
 export const DividerWrapper = styled(View)`
-  padding: ${scale(24)}px 0px;
+  padding-top: ${scale(8)}px;
+  padding-bottom: ${scale(16)}px;
+`;
+
+export const NoReviewContainer = styled(View)`
+  padding: ${scale(32)}px ${scale(24)}px;
 `;
