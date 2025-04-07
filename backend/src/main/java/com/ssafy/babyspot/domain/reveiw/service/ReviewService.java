@@ -129,6 +129,8 @@ public class ReviewService {
 
 		return reviews.map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
+			Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
+			String profile = profileOpt.orElse(null);
 			dto.setReviewId(review.getId());
 			dto.setMemberId(review.getMember().getId());
 			dto.setMemberNickname(review.getMember().getNickname());
@@ -138,7 +140,7 @@ public class ReviewService {
 			dto.setContent(review.getContent());
 			dto.setStoreName(review.getStore().getTitle());
 			dto.setBabyAges(review.getBabyAges());
-			dto.setProfile(String.valueOf(memberRepository.findByProfileImg(review.getMember().getId())));
+			dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 
 			List<String> imgUrls = review.getImages().stream()
 				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
@@ -157,6 +159,8 @@ public class ReviewService {
 			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "해당 매장에 나의 리뷰가 없습니다."));
 
 		ReviewResponseDto dto = new ReviewResponseDto();
+		Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
+		String profile = profileOpt.orElse(null);
 		dto.setReviewId(review.getId());
 		dto.setMemberId(review.getMember().getId());
 		dto.setMemberNickname(review.getMember().getNickname());
@@ -166,9 +170,7 @@ public class ReviewService {
 		dto.setContent(review.getContent());
 		dto.setStoreName(review.getStore().getTitle());
 		dto.setBabyAges(review.getBabyAges());
-		dto.setProfile(String.valueOf(
-			Optional.of(CLOUDFRONT_URL + "/" + memberRepository.findByProfileImg(review.getMember().getId()))));
-
+		dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 		List<String> imgUrls = review.getImages().stream()
 			.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
 			.collect(Collectors.toList());
@@ -195,6 +197,8 @@ public class ReviewService {
 
 		return reviews.map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
+			Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
+			String profile = profileOpt.orElse(null);
 			dto.setReviewId(review.getId());
 			dto.setMemberId(review.getMember().getId());
 			dto.setMemberNickname(review.getMember().getNickname());
@@ -206,8 +210,7 @@ public class ReviewService {
 			dto.setBabyAges(review.getBabyAges());
 			dto.setOkZone(review.getStore().getOkZone());
 			dto.setCategory(review.getStore().getCategory());
-			dto.setProfile(String.valueOf(
-				Optional.of(CLOUDFRONT_URL + "/" + memberRepository.findByProfileImg(review.getMember().getId()))));
+			dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 
 			List<String> imgUrls = review.getImages().stream()
 				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
