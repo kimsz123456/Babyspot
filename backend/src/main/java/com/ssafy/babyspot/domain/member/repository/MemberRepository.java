@@ -18,4 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	Optional<Member> findByNicknameAndDeletedFalse(String nickname);
 
 	Optional<Member> findByProviderIdAndDeletedFalse(String providerId);
+
+	Optional<Member> findByProviderId(String providerId);
 }

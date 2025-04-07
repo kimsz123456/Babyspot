@@ -51,6 +51,11 @@ public class MemberService {
 	}
 
 	@Transactional
+	public Optional<Member> findByProviderId(String providerId) {
+		return memberRepository.findByProviderId(providerId);
+	}
+
+	@Transactional
 	public Optional<Member> findById(int memberId) {
 		return memberRepository.findById(memberId);
 	}
