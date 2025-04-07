@@ -12,7 +12,6 @@ const getCurrentLocation = (): Promise<Coordinate> => {
         resolve({latitude, longitude});
       },
       error => {
-        console.log('Geolocation error:', error);
         reject(error);
       },
       {

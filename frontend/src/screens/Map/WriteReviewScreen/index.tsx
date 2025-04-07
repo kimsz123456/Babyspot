@@ -1,10 +1,4 @@
 import React, {useState} from 'react';
-import * as S from './styles';
-import {RouteProp, useRoute} from '@react-navigation/native';
-import {MapStackParamList} from '../../../navigation/MapStackNavigator';
-import StarRating from '../../../components/atoms/StarRating';
-import {IC_DELETE_IMAGE, IC_SECONDARY_PLUS} from '../../../constants/icons';
-import MultilineTextInput from '../../../components/atoms/MultilineTextInput';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -14,13 +8,21 @@ import {
   ToastAndroid,
   TouchableNativeFeedback,
 } from 'react-native';
-import MainButton from '../../../components/atoms/Button/MainButton';
-import {useMapNavigation} from '../../../hooks/useNavigationHooks';
+
+import {RouteProp, useRoute} from '@react-navigation/native';
 import {launchImageLibrary} from 'react-native-image-picker';
-import scale from '../../../utils/scale';
-import {GrayColors, SystemColors} from '../../../constants/colors';
+import Config from 'react-native-config';
+
+import {MapStackParamList} from '../../../navigation/MapStackNavigator';
+import {useMapNavigation} from '../../../hooks/useNavigationHooks';
+import {useGlobalStore} from '../../../stores/globalStore';
+
+import StarRating from '../../../components/atoms/StarRating';
+import MultilineTextInput from '../../../components/atoms/MultilineTextInput';
+import MainButton from '../../../components/atoms/Button/MainButton';
 import SubButton from '../../../components/atoms/Button/SubButton';
 import CenteredModal from '../../../components/atoms/CenterModal';
+
 import {
   deleteReviews,
   patchReviews,
@@ -28,9 +30,16 @@ import {
   postReviews,
   PostReviewsRequest,
 } from '../../../services/mapService';
-import {useGlobalStore} from '../../../stores/globalStore';
+import uploadImageToS3 from '../../../utils/uploadImageToS3';
+import scale from '../../../utils/scale';
+import {IC_DELETE_IMAGE, IC_SECONDARY_PLUS} from '../../../constants/icons';
+import {GrayColors, SystemColors} from '../../../constants/colors';
+
+import * as S from './styles';
 
 const MAX_IMAGE_COUNT = 10;
+
+const CLOUDFRONT_PREFIX = Config.CLOUDFRONT_PREFIX;
 
 type StoreDetailRouteProp = RouteProp<MapStackParamList, 'WriteReviewScreen'>;
 interface ImageProps {
@@ -43,11 +52,17 @@ const WriteReviewScreen = () => {
   const route = useRoute<StoreDetailRouteProp>();
   const navigation = useMapNavigation();
   const {review} = route.params;
-  const isWriteScreen = review.reviewId == -1;
+  const isWriteScreen = review.reviewId === -1;
   const {setShouldRefreshReviews} = useGlobalStore();
 
   const [starRating, setStarRating] = useState(review.rating);
-  const [imagePaths, setImagePaths] = useState<ImageProps[]>([]);
+  const [imagePaths, setImagePaths] = useState<ImageProps[]>(
+    review.imgUrls.map(url => ({
+      fileName: url,
+      type: 'image/jpeg',
+      uri: url,
+    })),
+  );
   const [content, setContent] = useState(review.content);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
@@ -82,18 +97,27 @@ const WriteReviewScreen = () => {
 
   const handleCreateReview = async () => {
     try {
-      // TODO: 이미지 추가 필요
       const params: PostReviewsRequest = {
         memberId: review.memberId,
         storeId: review.storeId,
         rating: starRating,
         content: content.trim(),
         babyAges: review.babyAges,
-        imgNames: [],
-        contentTypes: [],
+        imgNames: imagePaths.map(image => image.fileName),
+        contentTypes: imagePaths.map(image => image.type),
       };
 
-      await postReviews(params);
+      const reviewResponse = await postReviews(params);
+      const {images} = reviewResponse;
+
+      images.map((image, idx) => {
+        uploadImageToS3({
+          imageType: image.contentType,
+          imagePath: imagePaths[idx].uri,
+          preSignedUrl: image.preSignedUrl,
+        });
+      });
+
       setShouldRefreshReviews(true);
 
       navigation.navigate('CompleteScreen', {
@@ -106,23 +130,51 @@ const WriteReviewScreen = () => {
   };
 
   const handleUpdateReview = async () => {
+    const existingImages = imagePaths.filter(image =>
+      image.uri.startsWith('http'),
+    );
+    const newImages = imagePaths.filter(image => !image.uri.startsWith('http'));
+
+    const existingImageKeys = existingImages.map(image => {
+      if (!image.fileName.startsWith(`${CLOUDFRONT_PREFIX}`)) {
+        return image.fileName;
+      }
+
+      return image.fileName.replace(`${CLOUDFRONT_PREFIX}`, '');
+    });
+
     try {
-      // TODO: 이미지 추가 필요
       const params: PatchReviewsRequest = {
         rating: starRating,
         content: content.trim(),
-        images: [],
+        existingImageKeys: existingImageKeys,
+        newImages: newImages.map((image, index) => ({
+          imageName: image.fileName,
+          contentType: image.type,
+          orderIndex: index + existingImageKeys.length,
+        })),
       };
 
-      await patchReviews({
+      const reviewResponse = await patchReviews({
         reviewId: review.reviewId,
         params: params,
+      });
+
+      const {preSignedUrls} = reviewResponse;
+
+      preSignedUrls.map((url, index) => {
+        uploadImageToS3({
+          imageType: imagePaths[index].type,
+          imagePath: imagePaths[index].uri,
+          preSignedUrl: url.reviewImagePresignedUrl,
+        });
       });
 
       navigation.navigate('CompleteScreen', {
         completeType: 'update',
       });
     } catch (error) {
+      console.error(error);
       ToastAndroid.show('수정 중 문제가 발생했습니다.', 500);
       throw error;
     }
@@ -166,10 +218,9 @@ const WriteReviewScreen = () => {
               {imagePaths.length == 0 ? (
                 <S.AddImageButtonContainer
                   onPress={() => {
-                    ToastAndroid.show('서비스 준비 중입니다.', 500);
-                    // handleAddImage();
+                    handleAddImage();
                   }}>
-                  <S.AddImageText>{`사진을 추가해 주세요`}</S.AddImageText>
+                  <S.AddImageText>{'사진을 추가해 주세요'}</S.AddImageText>
                   <S.AddImageSecondaryPlusIcon source={IC_SECONDARY_PLUS} />
                 </S.AddImageButtonContainer>
               ) : (
@@ -246,7 +297,7 @@ const WriteReviewScreen = () => {
                 />
                 <SubButton
                   text={'삭제하기'}
-                  color={SystemColors['danger']}
+                  color={SystemColors.danger}
                   onPress={() => {
                     Keyboard.dismiss();
                     setDeleteModalVisible(true);
@@ -262,7 +313,7 @@ const WriteReviewScreen = () => {
         cancelText={'취소하기'}
         confirmText={'삭제하기'}
         title="정말 리뷰를 삭제할까요?"
-        children={<Text>{`리뷰가 사라지며, 복구할 수 없습니다.`}</Text>}
+        children={<Text>{'리뷰가 사라지며, 복구할 수 없습니다.'}</Text>}
         onCancel={() => {
           setDeleteModalVisible(false);
         }}

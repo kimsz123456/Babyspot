@@ -15,7 +15,7 @@ import ReviewFilterModal from '../../../ReviewListScreen/ReviewFilterModal';
 import NoDataContainer from '../../../../../components/atoms/NoDataContainer';
 
 export interface ReviewProps {
-  totalRating: number;
+  totalRating: string;
   totalReviewCount: number;
   reviews: ReviewCardProps[];
   storeName: string;
@@ -41,7 +41,7 @@ const Review = (props: ReviewProps) => {
       <S.ReviewContainer>
         <S.TitleHeaderContainer>
           <S.TitleInformationContainer>
-            <S.Title>{`리뷰`}</S.Title>
+            <S.Title>{'리뷰'}</S.Title>
             <S.InformationListContainer>
               <S.InformationContainer>
                 <S.InformationIconImage source={IC_YELLOW_STAR} />
