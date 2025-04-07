@@ -7,10 +7,13 @@ const SubButton = ({
   text,
   color = PrimaryColors[500],
   onPress,
+  disabled,
 }: SubButtonTextType) => {
   return (
-    <S.SubButtonContainer onPress={onPress} $color={color}>
-      <S.SubButtonText $color={color}>{text}</S.SubButtonText>
+    <S.SubButtonContainer onPress={onPress} $disabled={disabled} $color={color}>
+      <S.SubButtonText $color={color} $disabled={disabled}>
+        {text}
+      </S.SubButtonText>
     </S.SubButtonContainer>
   );
 };
