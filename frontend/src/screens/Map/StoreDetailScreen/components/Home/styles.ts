@@ -38,6 +38,12 @@ export const BasicText = styled(Text)`
   color: ${GrayColors[800]};
 `;
 
+export const TimeText = styled(Text)`
+  ${FontStyles.captionMedium}
+  color: ${GrayColors[800]};
+  line-height: ${scale(18)}px;
+`;
+
 export const BoldText = styled(Text)`
   ${FontStyles.captionMedium}
   line-height: ${scale(18)}px;

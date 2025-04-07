@@ -88,9 +88,9 @@ const Home = ({basicInformation}: HomeProps) => {
           <S.Icon source={IC_CLOCK} />
           <S.TextContainer>
             <S.BoldText>{DAY[CURRENT_DAY]}</S.BoldText>
-            <S.BasicText>
+            <S.TimeText>
               {basicInformation.businessHour[DAY[CURRENT_DAY].slice(0, 1)]}
-            </S.BasicText>
+            </S.TimeText>
           </S.TextContainer>
         </S.LineContainer>
         <S.Icon source={IC_DOWN_ARROW} />
