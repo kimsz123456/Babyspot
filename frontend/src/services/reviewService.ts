@@ -50,9 +50,18 @@ export interface ReviewRequestParams {
   sort?: string[];
 }
 
-export const getStoreReviews = async (storeId: number) => {
+export const getStoreReviews = async (
+  storeId: number,
+  page: number = 0,
+  size: number = 10,
+) => {
   try {
-    const response = await api.get(`/reviews/${storeId}/list`);
+    const response = await api.get(`/reviews/${storeId}/list`, {
+      params: {
+        page,
+        size,
+      },
+    });
 
     return response.data as ReviewResponseType;
   } catch (error) {
