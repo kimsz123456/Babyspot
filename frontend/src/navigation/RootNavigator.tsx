@@ -9,15 +9,8 @@ import {useGlobalStore} from '../stores/globalStore';
 import {getMemberProfile} from '../services/profileService';
 
 const RootNavigator = () => {
-  const {
-    isLoggedIn,
-    setIsLoggedIn,
-    accessToken,
-    setAccessToken,
-    setMemberProfile,
-  } = useGlobalStore();
-
-  console.log(accessToken);
+  const {isLoggedIn, setIsLoggedIn, setAccessToken, setMemberProfile} =
+    useGlobalStore();
 
   const [loading, setLoading] = useState(true);
 
