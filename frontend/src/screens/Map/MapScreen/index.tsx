@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {Alert} from 'react-native';
+import {ActivityIndicator, Alert} from 'react-native';
 
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {
@@ -44,6 +44,7 @@ import {MAP_ZOOM_SCALE} from '../../../constants/constants';
 import * as S from './styles';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import {useGlobalStore} from '../../../stores/globalStore';
+import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 
 type MapMainRouteProp = RouteProp<MapStackParamList, 'MapMain'>;
 
@@ -57,6 +58,7 @@ const MapScreen = () => {
   const [isReadyToFirstSearch, setIsReadyToFirstSearch] = useState(false);
   const [isPendingResearch, setIsPendingResearch] = useState(false);
   const [isResearchButtonPressed, setIsResearchButtonPressed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {centerCoordinate, mapRegion, zoom, onCameraIdle} = useMapViewport();
   const {isVisible, updateLastSearchedCoordinate} = useResearchButtonVisibility(
@@ -183,6 +185,7 @@ const MapScreen = () => {
         mapRegion,
       );
 
+      setLoading(true);
       const response = await getRangeInfo({
         topLeftLat: topLeft.latitude,
         topLeftLong: topLeft.longitude,
@@ -199,6 +202,7 @@ const MapScreen = () => {
       bottomSheetRef.current?.snapToIndex(1);
 
       setIsPendingResearch(false);
+      setLoading(false);
     }
   };
 
@@ -210,6 +214,7 @@ const MapScreen = () => {
         mapRegion,
       );
 
+      setLoading(true);
       // 주변 음식점 검색
       const response = await getRangeInfo({
         topLeftLat: topLeft.latitude,
@@ -217,6 +222,7 @@ const MapScreen = () => {
         bottomRightLat: bottomRight.latitude,
         bottomRightLong: bottomRight.longitude,
       });
+      setLoading(false);
 
       // 음식점 필터링
       const recommendStores = response
@@ -330,73 +336,76 @@ const MapScreen = () => {
   }, [selectedAges]);
 
   return (
-    <S.MapScreenContainer>
-      <S.NaverMap
-        isShowLocationButton={hasLocationPermission}
-        ref={mapRef}
-        onCameraIdle={handleCameraIdle}
-        onTapMap={handleNaverMapTab}
-        isIndoorEnabled={true}
-        isExtentBoundedInKorea={true}>
-        {filteredStores.map((data, idx) => (
-          <NaverMapMarkerOverlay
-            key={idx}
-            latitude={data.latitude}
-            longitude={data.longitude}
-            width={changeMarkerSize(idx, 30)}
-            height={changeMarkerSize(idx, 40)}
-            image={
-              selectedAges.length > 0 && !isPendingResearch
-                ? IC_RECOMMEND_MARKER
-                : IC_RESTAURANT_MARKER
-            }
-            onTap={() => handleMarkerTab(idx)}
+    <>
+      <S.MapScreenContainer>
+        <S.NaverMap
+          isShowLocationButton={hasLocationPermission}
+          ref={mapRef}
+          onCameraIdle={handleCameraIdle}
+          onTapMap={handleNaverMapTab}
+          isIndoorEnabled={true}
+          isExtentBoundedInKorea={true}>
+          {filteredStores.map((data, idx) => (
+            <NaverMapMarkerOverlay
+              key={idx}
+              latitude={data.latitude}
+              longitude={data.longitude}
+              width={changeMarkerSize(idx, 30)}
+              height={changeMarkerSize(idx, 40)}
+              image={
+                selectedAges.length > 0 && !isPendingResearch
+                  ? IC_RECOMMEND_MARKER
+                  : IC_RESTAURANT_MARKER
+              }
+              onTap={() => handleMarkerTab(idx)}
+            />
+          ))}
+        </S.NaverMap>
+
+        <S.FloatingContainer>
+          <S.SearchAndRecommendContainer>
+            <PlaceSearchButton />
+            <RecommendButton />
+          </S.SearchAndRecommendContainer>
+          <S.ChipContainer
+            horizontal
+            contentContainerStyle={{
+              columnGap: scale(8),
+              paddingHorizontal: scale(24),
+            }}
+            showsHorizontalScrollIndicator={false}>
+            {chips.map((chip, index) => {
+              return (
+                <Chip
+                  key={index}
+                  isSelected={chip.isSelected}
+                  label={chip.label}
+                  onPressed={() => {
+                    if (selectedMarker >= 0) {
+                      setSelectedMarker(-1);
+                    }
+
+                    handleChipPressed(index);
+                  }}
+                />
+              );
+            })}
+          </S.ChipContainer>
+        </S.FloatingContainer>
+
+        {isVisible && <ResearchButton onPress={handleResearchButtonPress} />}
+
+        {selectedMarker >= 0 ? (
+          <StoreBasicScreen store={filteredStores[selectedMarker]} />
+        ) : (
+          <NearStoreListScreen
+            stores={filteredStores}
+            bottomSheetRef={bottomSheetRef}
           />
-        ))}
-      </S.NaverMap>
-
-      <S.FloatingContainer>
-        <S.SearchAndRecommendContainer>
-          <PlaceSearchButton />
-          <RecommendButton />
-        </S.SearchAndRecommendContainer>
-        <S.ChipContainer
-          horizontal
-          contentContainerStyle={{
-            columnGap: scale(8),
-            paddingHorizontal: scale(24),
-          }}
-          showsHorizontalScrollIndicator={false}>
-          {chips.map((chip, index) => {
-            return (
-              <Chip
-                key={index}
-                isSelected={chip.isSelected}
-                label={chip.label}
-                onPressed={() => {
-                  if (selectedMarker >= 0) {
-                    setSelectedMarker(-1);
-                  }
-
-                  handleChipPressed(index);
-                }}
-              />
-            );
-          })}
-        </S.ChipContainer>
-      </S.FloatingContainer>
-
-      {isVisible && <ResearchButton onPress={handleResearchButtonPress} />}
-
-      {selectedMarker >= 0 ? (
-        <StoreBasicScreen store={filteredStores[selectedMarker]} />
-      ) : (
-        <NearStoreListScreen
-          stores={filteredStores}
-          bottomSheetRef={bottomSheetRef}
-        />
-      )}
-    </S.MapScreenContainer>
+        )}
+      </S.MapScreenContainer>
+      {loading ? <LoadingIndicator /> : null}
+    </>
   );
 };
 
