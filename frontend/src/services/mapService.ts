@@ -79,11 +79,15 @@ export interface PostReviewsResponseImages {
   preSignedUrl: string;
   reviewImgKey: string;
   contentType: string;
+  imageName: string;
+  orderIndex: number;
 }
+
 export interface PatchReviewsRequest {
   rating: number;
   content: string;
-  images: PatchReviewsRequestImages[];
+  existingImageKeys: string[];
+  newImages: PatchReviewsRequestImages[];
 }
 export interface PatchReviewsRequestImages {
   contentType: string;
@@ -91,9 +95,14 @@ export interface PatchReviewsRequestImages {
   orderIndex: number;
 }
 
+interface PreSignedUrlsType {
+  reviewImagePresignedUrl: string;
+  reviewImgKey: string;
+}
+
 export interface PatchReviewsResponse {
   reviewId: number;
-  preSignedUrls: string[];
+  preSignedUrls: PreSignedUrlsType[];
 }
 
 export const getRangeInfo = async (
@@ -146,9 +155,11 @@ export const getStoreDetail = async (
   }
 };
 
-export const postReviews = async (params: PostReviewsRequest) => {
+export const postReviews = async (
+  params: PostReviewsRequest,
+): Promise<PostReviewsResponse> => {
   try {
-    const response = await api.post<PostReviewsResponse>(`/reviews`, params);
+    const response = await api.post<PostReviewsResponse>('/reviews', params);
 
     if (response.status == 201) {
       return response.data;

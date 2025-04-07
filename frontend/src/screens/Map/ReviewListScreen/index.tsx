@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, {useEffect, useState} from 'react';
 import * as S from './styles';
 import {RouteProp, useRoute} from '@react-navigation/native';
@@ -42,7 +44,9 @@ const ReviewListScreen = () => {
     reviews: ReviewResponseType['content'],
     ages: number[],
   ) => {
-    if (ages.length === 0) return reviews;
+    if (ages.length === 0) {
+      return reviews;
+    }
     return reviews.filter(review =>
       review.babyAges.some(age => ages.includes(age)),
     );
