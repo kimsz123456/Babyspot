@@ -91,19 +91,13 @@ public class OAuth2Controller {
 		String providerId = oAuth2UserInfoService.extractProviderId("kakao", userInfo);
 		logger.info("Extracted providerId: {}", providerId);
 
-		Optional<Member> existingMemberOpt = memberService.findByProviderId(providerId);
+		Optional<Member> existingMemberOpt = memberService.findByProviderIdAndDeletedFalse(providerId);
 		SignUpToken signUpToken;
 		if (existingMemberOpt.isPresent()) {
 			Member member = existingMemberOpt.get();
-
-			if (member.isDeleted()) {
-				String tempToken = tokenService.createTempToken(providerId, "kakao");
-				signUpToken = new SignUpToken(tempToken, providerId);
-			} else {
-				String newAccessToken = tokenService.createAccessToken(member.getId(), "kakao");
-				String newRefreshToken = tokenService.createRefreshToken(member.getId(), "kakao");
-				signUpToken = new SignUpToken(member, newAccessToken, newRefreshToken);
-			}
+			String newAccessToken = tokenService.createAccessToken(member.getId(), "kakao");
+			String newRefreshToken = tokenService.createRefreshToken(member.getId(), "kakao");
+			signUpToken = new SignUpToken(member, newAccessToken, newRefreshToken);
 		} else {
 			String tempToken = tokenService.createTempToken(providerId, "kakao");
 			signUpToken = new SignUpToken(tempToken, providerId);
