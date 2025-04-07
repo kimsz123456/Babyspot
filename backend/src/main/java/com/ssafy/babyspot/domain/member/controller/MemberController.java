@@ -142,7 +142,7 @@ public class MemberController {
 
 	@GetMapping("/signup/checknickname")
 	public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
-		Optional<Member> memberOptional = memberRepository.findByNickname(nickname);
+		Optional<Member> memberOptional = memberRepository.findByNicknameAndDeletedFalse(nickname);
 		if (memberOptional.isPresent()) {
 			return ResponseEntity.status(HttpStatus.CONFLICT)
 				.body("이미 사용 중인 닉네임입니다.");

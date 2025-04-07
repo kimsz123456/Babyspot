@@ -47,7 +47,7 @@ public class MemberService {
 
 	@Transactional
 	public Optional<Member> findByProviderId(String providerId) {
-		return memberRepository.findByProviderId(providerId);
+		return memberRepository.findByProviderIdAndDeletedFalse(providerId);
 	}
 
 	@Transactional
