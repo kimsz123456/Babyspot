@@ -75,10 +75,8 @@ public class MemberController {
 		if (authentication == null || !authentication.isAuthenticated()) {
 			throw new CustomException(HttpStatus.FORBIDDEN, "인증이 필요합니다.");
 		}
-
 		int authenticatedId = Integer.parseInt(authentication.getName());
 		memberService.deleteMember(authenticatedId);
-
 		return ResponseEntity.noContent().build();
 	}
 

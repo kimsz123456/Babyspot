@@ -17,4 +17,6 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	Optional<String> findByProfileImg(@Param("id") Integer id);
 
 	Optional<Member> findByNickname(String nickname);
+
+	Optional<Member> findByProviderIdAndDeletedFalse(String providerId);
 }

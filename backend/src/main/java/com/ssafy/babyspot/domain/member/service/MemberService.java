@@ -153,10 +153,20 @@ public class MemberService {
 
 	@Transactional
 	public void deleteMember(int memberId) {
-		if (!memberRepository.existsById(memberId)) {
-			throw new EntityNotFoundException("Member with id " + memberId + " does not exist.");
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new EntityNotFoundException("회원정보가 없습니다."));
+
+		List<Baby> babies = babyRepository.findByMember_Id(memberId);
+		for (Baby baby : babies) {
+			baby.setDeleted(true);
+			babyRepository.save(baby);
 		}
-		babyRepository.deleteByMemberId(memberId);
-		memberRepository.deleteById(memberId);
+		member.setDeleted(true);
+		memberRepository.save(member);
+	}
+
+	@Transactional
+	public Optional<Member> findByProviderIdAndDeletedFalse(String providerId) {
+		return memberRepository.findByProviderIdAndDeletedFalse(providerId);
 	}
 }

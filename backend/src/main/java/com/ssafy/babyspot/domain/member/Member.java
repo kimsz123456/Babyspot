@@ -47,6 +47,10 @@ public class Member {
 	@Column(name = "deleted_at")
 	private LocalDate deletedAt;
 
+	@Setter
+	@Column(name = "deleted")
+	private boolean deleted = false;
+
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Baby> babies = new ArrayList<>();
 
