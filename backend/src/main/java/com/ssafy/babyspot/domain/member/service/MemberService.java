@@ -46,7 +46,7 @@ public class MemberService {
 	}
 
 	@Transactional
-	public Optional<Member> findByProviderId(String providerId) {
+	public Optional<Member> findByProviderIdAndDeleted(String providerId) {
 		return memberRepository.findByProviderIdAndDeletedFalse(providerId);
 	}
 
@@ -62,7 +62,7 @@ public class MemberService {
 
 	@Transactional
 	public Member createMember(String providerId, SignUpRequest signUpRequest) {
-		Optional<Member> existingMember = findByProviderId(providerId);
+		Optional<Member> existingMember = findByProviderIdAndDeleted(providerId);
 		if (existingMember.isPresent()) {
 			throw new CustomException(HttpStatus.BAD_REQUEST, "이미 존재하는 사용자입니다.");
 		}

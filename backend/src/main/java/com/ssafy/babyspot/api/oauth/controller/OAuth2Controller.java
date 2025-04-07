@@ -91,7 +91,7 @@ public class OAuth2Controller {
 		String providerId = oAuth2UserInfoService.extractProviderId("kakao", userInfo);
 		logger.info("Extracted providerId: {}", providerId);
 
-		Optional<Member> existingMemberOpt = memberService.findByProviderId(providerId);
+		Optional<Member> existingMemberOpt = memberService.findByProviderIdAndDeleted(providerId);
 		SignUpToken signUpToken;
 		if (existingMemberOpt.isPresent()) {
 			Member member = existingMemberOpt.get();
