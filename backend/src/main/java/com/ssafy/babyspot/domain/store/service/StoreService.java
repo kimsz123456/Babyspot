@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.babyspot.api.s3.S3Component;
+import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.domain.reveiw.Review;
 import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
 import com.ssafy.babyspot.domain.reveiw.repository.ReviewRepository;
@@ -56,6 +57,7 @@ import lombok.RequiredArgsConstructor;
 public class StoreService {
 
 	private final S3Component s3Component;
+	private final MemberRepository memberRepository;
 	@Value("${CLOUDFRONT_URL}")
 	private String CLOUDFRONT_URL;
 
@@ -281,6 +283,10 @@ public class StoreService {
 			dto.setCreatedAt(review.getCreatedAt());
 			dto.setContent(review.getContent());
 			dto.setBabyAges(review.getBabyAges());
+			dto.setStoreName(review.getStore().getTitle());
+			dto.setProfile(String.valueOf(memberRepository.findByProfileImg(memberId)));
+			dto.setOkZone(store.getOkZone());
+			dto.setCategory(store.getCategory());
 			dto.setReviewCount(reviewRepository.countByMember_Id(memberId));
 
 			List<String> imgUrls = review.getImages().stream()
