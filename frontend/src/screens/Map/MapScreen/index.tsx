@@ -374,6 +374,10 @@ const MapScreen = () => {
                 isSelected={chip.isSelected}
                 label={chip.label}
                 onPressed={() => {
+                  if (selectedMarker >= 0) {
+                    setSelectedMarker(-1);
+                  }
+
                   handleChipPressed(index);
                 }}
               />
