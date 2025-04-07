@@ -86,7 +86,8 @@ export interface PostReviewsResponseImages {
 export interface PatchReviewsRequest {
   rating: number;
   content: string;
-  images: PatchReviewsRequestImages[];
+  existingImageKeys: string[];
+  newImages: PatchReviewsRequestImages[];
 }
 export interface PatchReviewsRequestImages {
   contentType: string;

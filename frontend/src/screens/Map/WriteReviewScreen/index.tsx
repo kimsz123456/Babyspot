@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -11,6 +11,7 @@ import {
 
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {launchImageLibrary} from 'react-native-image-picker';
+import Config from 'react-native-config';
 
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import {useMapNavigation} from '../../../hooks/useNavigationHooks';
@@ -29,14 +30,16 @@ import {
   postReviews,
   PostReviewsRequest,
 } from '../../../services/mapService';
+import uploadImageToS3 from '../../../utils/uploadImageToS3';
 import scale from '../../../utils/scale';
 import {IC_DELETE_IMAGE, IC_SECONDARY_PLUS} from '../../../constants/icons';
 import {GrayColors, SystemColors} from '../../../constants/colors';
 
 import * as S from './styles';
-import uploadImageToS3 from '../../../utils/uploadImageToS3';
 
 const MAX_IMAGE_COUNT = 10;
+
+const CLOUDFRONT_PREFIX = Config.CLOUDFRONT_PREFIX;
 
 type StoreDetailRouteProp = RouteProp<MapStackParamList, 'WriteReviewScreen'>;
 interface ImageProps {
@@ -127,25 +130,35 @@ const WriteReviewScreen = () => {
   };
 
   const handleUpdateReview = async () => {
+    const existingImages = imagePaths.filter(image =>
+      image.uri.startsWith('http'),
+    );
+    const newImages = imagePaths.filter(image => !image.uri.startsWith('http'));
+
+    const existingImageKeys = existingImages.map(image => {
+      if (!image.fileName.startsWith(`${CLOUDFRONT_PREFIX}`)) {
+        return image.fileName;
+      }
+
+      return image.fileName.replace(`${CLOUDFRONT_PREFIX}`, '');
+    });
+
     try {
       const params: PatchReviewsRequest = {
         rating: starRating,
         content: content.trim(),
-        images: imagePaths.map((image, index) => ({
+        existingImageKeys: existingImageKeys,
+        newImages: newImages.map((image, index) => ({
           imageName: image.fileName,
           contentType: image.type,
-          orderIndex: index,
+          orderIndex: index + existingImageKeys.length,
         })),
       };
-
-      console.log(params);
 
       const reviewResponse = await patchReviews({
         reviewId: review.reviewId,
         params: params,
       });
-
-      console.log(reviewResponse);
 
       const {preSignedUrls} = reviewResponse;
 
@@ -180,10 +193,6 @@ const WriteReviewScreen = () => {
       throw error;
     }
   };
-
-  useEffect(() => {
-    console.log(review);
-  }, [review]);
 
   return (
     <KeyboardAvoidingView
