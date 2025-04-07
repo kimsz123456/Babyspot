@@ -15,4 +15,6 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 	@Query("SELECT m.profileImg FROM Member m WHERE m.id = :id")
 	Optional<String> findByProfileImg(@Param("id") Integer id);
+
+	Optional<Member> findByNickname(String nickname);
 }
