@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, {useEffect, useState} from 'react';
 import * as S from './styles';
 import {RouteProp, useRoute} from '@react-navigation/native';
@@ -30,7 +32,6 @@ const ReviewListScreen = () => {
     ReviewResponseType['content']
   >([]);
 
-  const reviewInformation = route.params.reviewInformation;
   const filteredAges = route.params.filterAges;
   const PAGE_SIZE = 4;
 
@@ -38,31 +39,36 @@ const ReviewListScreen = () => {
     reviews: ReviewResponseType['content'],
     ages: number[],
   ) => {
-    if (ages.length === 0) return reviews;
+    if (ages.length === 0) {
+      return reviews;
+    }
     return reviews.filter(review =>
       review.babyAges.some(age => ages.includes(age)),
     );
   };
 
   const calculateAverageRating = () => {
-    if (reviews.length === 0) return 0;
+    if (reviews.length === 0) {
+      return 0;
+    }
     const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
     return (sum / reviews.length).toFixed(1);
   };
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const response = await getStoreReviews(storeId);
-        setReviews(response.content);
-        setTotalElements(response.totalElements);
-        setDisplayedReviews(response.content.slice(0, PAGE_SIZE));
-        setFilteredReviews(response.content);
-      } catch (error) {
-        throw error;
-      }
-    };
+  const fetchReviews = async () => {
+    try {
+      const response = await getStoreReviews(storeId);
 
+      setReviews(response.content);
+      setTotalElements(response.totalElements);
+      setDisplayedReviews(response.content.slice(0, PAGE_SIZE));
+      setFilteredReviews(response.content);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  useEffect(() => {
     fetchReviews();
   }, [storeId]);
 
@@ -93,7 +99,7 @@ const ReviewListScreen = () => {
         <S.ReviewContainer>
           <S.TitleHeaderContainer>
             <S.TitleInformationContainer>
-              <S.Title>{`리뷰`}</S.Title>
+              <S.Title>{'리뷰'}</S.Title>
               <S.InformationListContainer>
                 <S.InformationContainer>
                   <S.InformationIconImage source={IC_YELLOW_STAR} />
