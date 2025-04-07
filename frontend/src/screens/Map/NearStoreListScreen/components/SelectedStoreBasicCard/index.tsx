@@ -52,7 +52,7 @@ const SelectedStoreBasicCard = ({store}: StoreBasicInformationProps) => {
         <S.SecondRowContainer>
           <S.RatingContainer>
             <S.SmallIcon source={IC_YELLOW_STAR} />
-            <S.Rating>별점 {store.rating}</S.Rating>
+            <S.Rating>별점 {store.rating.toFixed(1)}</S.Rating>
           </S.RatingContainer>
           <S.ReviewContainer>
             <S.SmallIcon source={IC_COMMENT} />
