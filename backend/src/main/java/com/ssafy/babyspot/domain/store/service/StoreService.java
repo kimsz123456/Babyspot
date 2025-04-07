@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -275,6 +276,9 @@ public class StoreService {
 		List<ReviewResponseDto> latestReviews = reviewPage.stream().map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
 			int memberId = review.getMember().getId();
+			Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
+			String profile = profileOpt.orElse(null);
+			
 			dto.setReviewId(review.getId());
 			dto.setMemberId(review.getMember().getId());
 			dto.setMemberNickname(review.getMember().getNickname());
@@ -284,7 +288,7 @@ public class StoreService {
 			dto.setContent(review.getContent());
 			dto.setBabyAges(review.getBabyAges());
 			dto.setStoreName(review.getStore().getTitle());
-			dto.setProfile(String.valueOf(memberRepository.findByProfileImg(memberId)));
+			dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 			dto.setOkZone(store.getOkZone());
 			dto.setCategory(store.getCategory());
 			dto.setReviewCount(reviewRepository.countByMember_Id(memberId));
