@@ -97,7 +97,7 @@ export const ReviewText = styled(Text).attrs({
 export const ImageContainer = styled(View)`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  gap: ${scale(16)}px;
 `;
 export const Images = styled(Image)`
   width: ${scale(66)}px;
