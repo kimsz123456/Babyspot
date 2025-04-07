@@ -8,6 +8,11 @@ import {withDivider} from '../../../utils/withDivider';
 import {ThinDivider} from '../../../components/atoms/Divider';
 import NoDataContainer from '../../../components/atoms/NoDataContainer';
 import {ScrollView} from 'react-native';
+import {
+  IMG_DINING_CODE,
+  IMG_GOOGLE,
+  IMG_KAKAO_TALK,
+} from '../../../constants/images';
 
 type KeywordReviewScreenRouteProp = RouteProp<
   MapStackParamList,
@@ -44,6 +49,15 @@ const KeywordReviewScreen = () => {
                     break;
                   case ReviewFromTypes.Place:
                     iconImage = IC_NAVER_PLACE;
+                    break;
+                  case ReviewFromTypes.DINING_CODE:
+                    iconImage = IMG_DINING_CODE;
+                    break;
+                  case ReviewFromTypes.GOOGLE:
+                    iconImage = IMG_GOOGLE;
+                    break;
+                  case ReviewFromTypes.KAKAO:
+                    iconImage = IMG_KAKAO_TALK;
                     break;
                 }
 

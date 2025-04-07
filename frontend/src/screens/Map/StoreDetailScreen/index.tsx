@@ -59,6 +59,8 @@ const StoreDetailScreen = () => {
     try {
       const response = await getStoreDetail(storeBasicInformation.storeId);
 
+      console.log(response.keywordSection);
+
       setStoreDetail(response);
     } catch (error) {
       console.error('가게 상세 조회 실패:', error);

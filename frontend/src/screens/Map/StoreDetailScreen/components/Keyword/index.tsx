@@ -23,6 +23,9 @@ export interface KeywordReviewProps {
 export enum ReviewFromTypes {
   Blog = '블로그',
   Place = '플레이스',
+  DINING_CODE = '다이닝코드',
+  KAKAO = '카카오',
+  GOOGLE = '구글',
 }
 
 const MAX_CONTENT_LENGTH = 3;
@@ -43,7 +46,7 @@ const KeywordSection = ({keywords, totalCount}: KeywordSectionProps) => {
   return (
     <S.KeywordSectionContainer>
       <S.TitleContainer>
-        <S.Title>{`키워드`}</S.Title>
+        <S.Title>{'키워드'}</S.Title>
         <S.TotalCountText>{totalCount ?? 0}</S.TotalCountText>
       </S.TitleContainer>
       <S.KeywordListContainer>
