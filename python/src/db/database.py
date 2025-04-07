@@ -17,7 +17,6 @@ class PostgresImporter:
     # PostgreSQL 연결 설정
     postgres_url = os.getenv("POSTGRES_URL")
     # JDBC URL에서 호스트와 데이터베이스 추출
-    # jdbc:postgresql://43.201.34.93:5432/babyspot 형식에서 필요한 정보 추출
     host = postgres_url.split("//")[1].split(":")[0]
     database = postgres_url.split("/")[-1]
 
