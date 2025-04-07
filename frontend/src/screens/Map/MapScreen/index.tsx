@@ -344,7 +344,10 @@ const MapScreen = () => {
           onCameraIdle={handleCameraIdle}
           onTapMap={handleNaverMapTab}
           isIndoorEnabled={true}
-          isExtentBoundedInKorea={true}>
+          isShowCompass={false}
+          isShowZoomControls={false}
+          isExtentBoundedInKorea={true}
+          isTiltGesturesEnabled={false}>
           {filteredStores.map((data, idx) => (
             <NaverMapMarkerOverlay
               key={idx}
