@@ -8,11 +8,13 @@ interface GlobalState {
   memberProfile: MemberProfileType | null;
   myReviews: ReviewType[];
   shouldRefreshReviews: boolean;
+  hasLocationPermission: boolean;
   setAccessToken: (token: string | null) => void;
   setIsLoggedIn: (loggedIn: boolean) => void;
   setMemberProfile: (profile: MemberProfileType | null) => void;
   setMyReviews: (reviews: ReviewType[]) => void;
   setShouldRefreshReviews: (shouldRefresh: boolean) => void;
+  setHasLocationPermission: (hasLocationPermission: boolean) => void;
   resetGlobalState: () => void;
 }
 
@@ -22,6 +24,7 @@ const initialState = {
   memberProfile: null,
   myReviews: [],
   shouldRefreshReviews: true,
+  hasLocationPermission: false,
 };
 
 export const useGlobalStore = create<GlobalState>(set => ({
@@ -33,4 +36,6 @@ export const useGlobalStore = create<GlobalState>(set => ({
   setMyReviews: reviews => set({myReviews: reviews}),
   setShouldRefreshReviews: shouldRefresh =>
     set({shouldRefreshReviews: shouldRefresh}),
+  setHasLocationPermission: hasLocationPermission =>
+    set({hasLocationPermission: hasLocationPermission}),
 }));

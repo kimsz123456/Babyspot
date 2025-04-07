@@ -43,6 +43,7 @@ import {MAP_ZOOM_SCALE} from '../../../constants/constants';
 
 import * as S from './styles';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
+import {useGlobalStore} from '../../../stores/globalStore';
 
 type MapMainRouteProp = RouteProp<MapStackParamList, 'MapMain'>;
 
@@ -56,7 +57,6 @@ const MapScreen = () => {
   const [isReadyToFirstSearch, setIsReadyToFirstSearch] = useState(false);
   const [isPendingResearch, setIsPendingResearch] = useState(false);
   const [isResearchButtonPressed, setIsResearchButtonPressed] = useState(false);
-  const [hasPermission, setHasPermission] = useState(false);
 
   const {centerCoordinate, mapRegion, zoom, onCameraIdle} = useMapViewport();
   const {isVisible, updateLastSearchedCoordinate} = useResearchButtonVisibility(
@@ -67,6 +67,7 @@ const MapScreen = () => {
     useMapStore();
 
   const clearSelectedPlace = useMapStore(state => state.clearSelectedPlace);
+  const {hasLocationPermission, setHasLocationPermission} = useGlobalStore();
 
   const route = useRoute<MapMainRouteProp>();
   const searchedPlace = route.params?.searchedPlace;
@@ -104,7 +105,8 @@ const MapScreen = () => {
 
   const initMapToCurrentLocation = async () => {
     const hasPermission = await checkLocationPermission();
-    setHasPermission(hasPermission);
+    setHasLocationPermission(hasPermission);
+
     if (!hasPermission) {
       const {latitude, longitude} = centerCoordinate;
 
@@ -330,7 +332,7 @@ const MapScreen = () => {
   return (
     <S.MapScreenContainer>
       <S.NaverMap
-        isShowLocationButton={hasPermission}
+        isShowLocationButton={hasLocationPermission}
         ref={mapRef}
         onCameraIdle={handleCameraIdle}
         onTapMap={handleNaverMapTab}
