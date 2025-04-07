@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+
 import React, {useCallback, useRef, useState} from 'react';
 import {
   View,
@@ -218,7 +219,7 @@ const StoreDetailScreen = () => {
               />
               <ThickDivider />
               <Review
-                totalRating={storeBasicInformation.rating}
+                totalRating={storeBasicInformation.rating.toFixed(1)}
                 totalReviewCount={storeBasicInformation.reviewCount}
                 reviews={storeDetail.latestReviews}
                 storeName={storeDetail.storeName}
