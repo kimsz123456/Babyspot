@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ssafy.babyspot.domain.reveiw.Review;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +18,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
@@ -27,12 +30,14 @@ public class Member {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@Setter
 	@Column(name = "profile_img", length = 255)
 	private String profileImg;
 
 	@Column(name = "providerid", length = 100, unique = true, nullable = false)
 	private String providerId;
 
+	@Setter
 	@Column(name = "nickname", length = 20, unique = true, nullable = false)
 	private String nickname;
 
@@ -44,6 +49,9 @@ public class Member {
 
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Baby> babies = new ArrayList<>();
+
+	@OneToMany(mappedBy = "member")
+	private List<Review> reviews = new ArrayList<>();
 
 	@Builder
 	public Member(String providerId, String nickname, String profileImg) {
