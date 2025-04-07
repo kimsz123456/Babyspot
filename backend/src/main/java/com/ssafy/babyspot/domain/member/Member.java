@@ -34,7 +34,7 @@ public class Member {
 	@Column(name = "profile_img", length = 255)
 	private String profileImg;
 
-	@Column(name = "providerid", length = 100, unique = true, nullable = false)
+	@Column(name = "providerid", length = 100, nullable = false)
 	private String providerId;
 
 	@Setter
