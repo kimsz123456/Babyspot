@@ -94,3 +94,26 @@ export const postImgPresignedUrl = async ({
     throw error;
   }
 };
+
+export const getCheckNickname = async ({
+  nickname,
+  tempToken,
+}: {
+  nickname: string;
+  tempToken: string;
+}) => {
+  try {
+    const result = await api.get(
+      `members/signup/checknickname?nickname=${nickname}`,
+      {
+        headers: {
+          'X-Temp-Token': tempToken,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      },
+    );
+
+    return result.data;
+  } catch (error) {}
+};
