@@ -18,7 +18,15 @@ const ReviewCard = (props: ReviewCardProps) => {
   return (
     <S.ReviewCardContainer>
       <S.ProfileContainer>
-        <S.ProfileImage source={{uri: props.profile}} resizeMode="cover" />
+        <S.ProfileImage
+          source={{
+            uri:
+              props.memberId === memberProfile?.id
+                ? memberProfile?.profile_img
+                : props.profile,
+          }}
+          resizeMode="cover"
+        />
         <S.InformationAndAgeContainer>
           <S.NameAndReviewContainer>
             <S.ProfileNameText numberOfLines={1} ellipsizeMode="tail">
