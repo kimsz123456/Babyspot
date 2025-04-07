@@ -8,5 +8,6 @@ import lombok.Data;
 public class UpdateRequestDto {
 	private Float rating;
 	private String content;
-	private List<ImageUpdateDto> images;
+	private List<String> existingImageKeys;
+	private List<ImageUpdateDto> newImages;
 }

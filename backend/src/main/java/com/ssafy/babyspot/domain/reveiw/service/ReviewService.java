@@ -250,21 +250,27 @@ public class ReviewService {
 			throw new CustomException(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.");
 		}
 
-		if (dto.getRating() != null && dto.getRating() != review.getRating()) {
+		if (dto.getRating() != null && !dto.getRating().equals(review.getRating())) {
 			review.setRating(dto.getRating());
 		}
 		if (dto.getContent() != null) {
 			review.setContent(dto.getContent());
 		}
+
+		List<String> keepImageKeys = dto.getExistingImageKeys();
+
 		List<ReviewImage> existingImages = new ArrayList<>(review.getImages());
 		for (ReviewImage image : existingImages) {
-			s3Component.deleteObject(image.getImageUrl());
-			reviewImageRepository.delete(image);
+			if (keepImageKeys == null || !keepImageKeys.contains(image.getImageUrl())) {
+				s3Component.deleteObject(image.getImageUrl());
+				reviewImageRepository.delete(image);
+				review.getImages().remove(image);
+			}
 		}
-		review.getImages().clear();
+
 		List<Map<String, String>> preSignedUrlList = new ArrayList<>();
-		if (dto.getImages() != null) {
-			for (ImageUpdateDto imgUpdate : dto.getImages()) {
+		if (dto.getNewImages() != null) {
+			for (ImageUpdateDto imgUpdate : dto.getNewImages()) {
 				Map<String, String> urlMap = s3Component.generateReviewImagePreSignedUrl(
 					String.valueOf(review.getStore().getId()),
 					String.valueOf(review.getMember().getId()),
@@ -280,6 +286,7 @@ public class ReviewService {
 				reviewImage.setContentType(imgUpdate.getContentType());
 				reviewImage.setImgName(imgUpdate.getImageName());
 				reviewImageRepository.save(reviewImage);
+				review.getImages().add(reviewImage);
 
 				preSignedUrlList.add(urlMap);
 			}
@@ -291,4 +298,5 @@ public class ReviewService {
 
 		return responseDto;
 	}
+
 }
