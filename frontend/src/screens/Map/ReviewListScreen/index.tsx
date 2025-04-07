@@ -161,18 +161,25 @@ const ReviewListScreen = () => {
   return (
     <>
       <S.ReviewListScreenContainer>
-        <FlatList
-          data={filteredReviews}
-          renderItem={renderItem}
-          keyExtractor={item => item.reviewId.toString()}
-          ItemSeparatorComponent={renderSeparator}
-          ListHeaderComponent={ListHeaderComponent}
-          ListFooterComponent={renderFooter}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          scrollEventThrottle={16}
-          contentContainerStyle={{padding: 24}}
-        />
+        {filteredReviews.length > 0 ? (
+          <FlatList
+            data={filteredReviews}
+            renderItem={renderItem}
+            keyExtractor={item => item.reviewId.toString()}
+            ItemSeparatorComponent={renderSeparator}
+            ListHeaderComponent={ListHeaderComponent}
+            ListFooterComponent={renderFooter}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            scrollEventThrottle={16}
+            contentContainerStyle={{padding: 24}}
+          />
+        ) : (
+          <S.NoReviewContainer>
+            <ListHeaderComponent />
+            <S.NoReviewText>등록된 리뷰가 없습니다.</S.NoReviewText>
+          </S.NoReviewContainer>
+        )}
       </S.ReviewListScreenContainer>
       <ReviewFilterModal
         modalOpened={modalOpened}
