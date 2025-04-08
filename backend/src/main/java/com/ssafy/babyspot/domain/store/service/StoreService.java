@@ -21,6 +21,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.babyspot.api.s3.S3Component;
+import com.ssafy.babyspot.domain.convenience.dto.ConveniencePlaceDTO;
+import com.ssafy.babyspot.domain.convenience.service.ConvenienceService;
 import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.domain.reveiw.Review;
 import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
@@ -69,6 +71,7 @@ public class StoreService {
 	private final KeywordReviewRepository keywordReviewRepository;
 	private final SentimentAnalysisRepository sentimentAnalysisRepository;
 	private final ReviewRepository reviewRepository;
+	private final ConvenienceService convenienceService;
 	// private final StoreImageService storeImageService;
 	private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
 
@@ -275,6 +278,7 @@ public class StoreService {
 
 		Pageable pageable = PageRequest.of(0, 3, Sort.by("createdAt").descending());
 		Page<Review> reviewPage = reviewRepository.findAllByStore_IdOrderByCreatedAtDesc(storeId, pageable);
+		List<ConveniencePlaceDTO> conveniencePlace = convenienceService.findNearestConveniences(storeId);
 		List<ReviewResponseDto> latestReviews = reviewPage.stream().map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
 			int memberId = review.getMember().getId();
@@ -320,6 +324,7 @@ public class StoreService {
 			.babyAges(babyAges)
 			.rating(storeRating)
 			.reviewCount(ratingInfo.getReviewCount())
+			.conveniencePlace(conveniencePlace)
 			.build();
 	}
 
