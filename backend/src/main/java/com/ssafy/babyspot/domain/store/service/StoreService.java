@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.babyspot.api.s3.S3Component;
+import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.domain.reveiw.Review;
 import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
 import com.ssafy.babyspot.domain.reveiw.repository.ReviewRepository;
@@ -34,6 +36,7 @@ import com.ssafy.babyspot.domain.store.dto.KeywordDto;
 import com.ssafy.babyspot.domain.store.dto.KeywordReviewDto;
 import com.ssafy.babyspot.domain.store.dto.KeywordSectionDto;
 import com.ssafy.babyspot.domain.store.dto.KidsMenuDto;
+import com.ssafy.babyspot.domain.store.dto.RatingInfo;
 import com.ssafy.babyspot.domain.store.dto.SentimentAnalysisDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDefaultInfoDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDetailDto;
@@ -55,6 +58,7 @@ import lombok.RequiredArgsConstructor;
 public class StoreService {
 
 	private final S3Component s3Component;
+	private final MemberRepository memberRepository;
 	@Value("${CLOUDFRONT_URL}")
 	private String CLOUDFRONT_URL;
 
@@ -83,12 +87,14 @@ public class StoreService {
 
 		return stores.stream()
 			.map(store -> {
+				RatingInfo ratingInfo = computeRatingInfo(store.getId());
 				StoreDefaultInfoDto dto = new StoreDefaultInfoDto();
 				dto.setStoreId(store.getId());
 				dto.setLatitude(store.getLocation().getY()); // 위도
 				dto.setLongitude(store.getLocation().getX()); // 경도
 				dto.setAddress(store.getAddress());
-				dto.setRating(store.getRating());
+				dto.setRating(Float.valueOf(getRating(store.getId())));
+				dto.setReviewCount(ratingInfo.getReviewCount());
 				dto.setBusinessHour(store.getBusinessHour());
 				dto.setContactNumber(store.getContactNumber());
 				dto.setTitle(store.getTitle());
@@ -263,11 +269,16 @@ public class StoreService {
 		List<KidsMenuDto> kidsMenus = getKidsMenu(storeId);
 		float storeRating = getRating(storeId);
 
+		RatingInfo ratingInfo = computeRatingInfo(storeId);
+
 		Pageable pageable = PageRequest.of(0, 3, Sort.by("createdAt").descending());
 		Page<Review> reviewPage = reviewRepository.findAllByStore_IdOrderByCreatedAtDesc(storeId, pageable);
 		List<ReviewResponseDto> latestReviews = reviewPage.stream().map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
 			int memberId = review.getMember().getId();
+			Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
+			String profile = profileOpt.orElse(null);
+
 			dto.setReviewId(review.getId());
 			dto.setMemberId(review.getMember().getId());
 			dto.setMemberNickname(review.getMember().getNickname());
@@ -276,10 +287,14 @@ public class StoreService {
 			dto.setCreatedAt(review.getCreatedAt());
 			dto.setContent(review.getContent());
 			dto.setBabyAges(review.getBabyAges());
+			dto.setStoreName(review.getStore().getTitle());
+			dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
+			dto.setOkZone(store.getOkZone());
+			dto.setCategory(store.getCategory());
 			dto.setReviewCount(reviewRepository.countByMember_Id(memberId));
 
 			List<String> imgUrls = review.getImages().stream()
-				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl() + "?v=" + System.currentTimeMillis())
 				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
@@ -302,6 +317,7 @@ public class StoreService {
 			.latestReviews(latestReviews)
 			.babyAges(babyAges)
 			.rating(storeRating)
+			.reviewCount(ratingInfo.getReviewCount())
 			.build();
 	}
 
@@ -361,6 +377,19 @@ public class StoreService {
 			}
 			storeRepository.save(store);
 		}
+	}
+
+	@Transactional
+	public RatingInfo computeRatingInfo(int storeId) {
+		List<Review> reviews = reviewRepository.findAllByStore_Id(storeId, Pageable.unpaged()).getContent();
+
+		int reviewCount = reviews.size();
+		double totalRating = reviews.stream()
+			.mapToDouble(Review::getRating)
+			.sum();
+		float avgRating = reviewCount > 0 ? (float)(totalRating / reviewCount) : 0f;
+
+		return new RatingInfo(avgRating, reviewCount);
 	}
 
 }
