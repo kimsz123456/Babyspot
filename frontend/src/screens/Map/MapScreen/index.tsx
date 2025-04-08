@@ -1,5 +1,7 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {ActivityIndicator, Alert} from 'react-native';
+/* eslint-disable react-hooks/exhaustive-deps */
+
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert} from 'react-native';
 
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {
@@ -13,6 +15,8 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import useMapViewport from '../../../hooks/useMapViewport';
 import useResearchButtonVisibility from '../../../hooks/useResearchButtonVisibility';
 import useChips from '../../../hooks/useChips';
+import {useGlobalStore} from '../../../stores/globalStore';
+import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 
 import NearStoreListScreen from '../NearStoreListScreen';
 import PlaceSearchButton from '../components/PlaceSearchButton';
@@ -20,18 +24,11 @@ import RecommendButton from './components/RecommendButton';
 import Chip from './components/Chip';
 import ResearchButton from './components/ResearchButton';
 import StoreBasicScreen from '../StoreBasicScreen';
-import {
-  GetGeocodingByKeywordResponse,
-  getRangeInfo,
-} from '../../../services/mapService';
+import {GetGeocodingByKeywordResponse} from '../../../services/mapService';
 import {useMapStore} from '../../../stores/mapStore';
-import {
-  ConvenienceType,
-  StoreBasicInformationType,
-} from '../NearStoreListScreen/components/StoreBasicInformation/types';
+import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 
 import scale from '../../../utils/scale';
-import calculateMapRegion from '../../../utils/calculateMapRegion';
 import checkLocationPermission from '../../../utils/checkLocationPermission';
 import getCurrentLocation from '../../../utils/getCurrentLocation';
 import moveToCamera from '../../../utils/moveToCamera';
@@ -42,9 +39,6 @@ import {
 import {MAP_ZOOM_SCALE} from '../../../constants/constants';
 
 import * as S from './styles';
-import {MapStackParamList} from '../../../navigation/MapStackNavigator';
-import {useGlobalStore} from '../../../stores/globalStore';
-import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 
 type MapMainRouteProp = RouteProp<MapStackParamList, 'MapMain'>;
 
@@ -52,21 +46,30 @@ const MapScreen = () => {
   const mapRef = useRef<NaverMapViewRef>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const [stores, setStores] = useState<StoreBasicInformationType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(-1);
 
   const [isReadyToFirstSearch, setIsReadyToFirstSearch] = useState(false);
   const [isPendingResearch, setIsPendingResearch] = useState(false);
   const [isResearchButtonPressed, setIsResearchButtonPressed] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const {centerCoordinate, mapRegion, zoom, onCameraIdle} = useMapViewport();
+  const {
+    selectedAges,
+    selectedChips,
+    centerCoordinate,
+    zoom,
+    storeBasicInformation,
+    filteredStoreBasicInformation,
+    isLoading,
+    setSelectedAges,
+    fetchStoreBasicInformation,
+    setFilteredStoreBasicInformation,
+    setSelectedStoreIndex,
+  } = useMapStore();
+  const {onCameraIdle} = useMapViewport();
   const {isVisible, updateLastSearchedCoordinate} = useResearchButtonVisibility(
     {centerCoordinate, zoom},
   );
   const {chips, handleChipPressed} = useChips();
-  const {selectedAges, selectedChips, setSelectedAges, setSelectedChips} =
-    useMapStore();
 
   const clearSelectedPlace = useMapStore(state => state.clearSelectedPlace);
   const {hasLocationPermission, setHasLocationPermission} = useGlobalStore();
@@ -85,25 +88,6 @@ const MapScreen = () => {
 
     return defaultSize * 1.3;
   };
-
-  const filteredStores = useMemo(() => {
-    if (selectedChips.length === 0) {
-      return stores;
-    }
-
-    return stores.filter(store => {
-      const conveniences = store.convenience[0].convenienceDetails;
-
-      if (!conveniences) {
-        return false;
-      }
-
-      return selectedChips.every(
-        chip =>
-          conveniences[chip as keyof ConvenienceType['convenienceDetails']],
-      );
-    });
-  }, [selectedChips, stores]);
 
   const initMapToCurrentLocation = async () => {
     const hasPermission = await checkLocationPermission();
@@ -145,7 +129,6 @@ const MapScreen = () => {
     clearSelectedPlace();
 
     setSelectedAges([]);
-    setSelectedChips([]);
 
     if (!mapRef.current || !zoom) {
       return;
@@ -180,20 +163,7 @@ const MapScreen = () => {
 
   const searchStoresInRegion = async () => {
     try {
-      const {topLeft, bottomRight} = calculateMapRegion(
-        centerCoordinate,
-        mapRegion,
-      );
-
-      setLoading(true);
-      const response = await getRangeInfo({
-        topLeftLat: topLeft.latitude,
-        topLeftLong: topLeft.longitude,
-        bottomRightLat: bottomRight.latitude,
-        bottomRightLong: bottomRight.longitude,
-      });
-
-      setStores(response);
+      fetchStoreBasicInformation();
 
       updateLastSearchedCoordinate();
     } catch (e) {
@@ -202,46 +172,12 @@ const MapScreen = () => {
       bottomSheetRef.current?.snapToIndex(1);
 
       setIsPendingResearch(false);
-      setLoading(false);
     }
   };
 
   const searchStoresByAge = async () => {
     try {
-      // 보이는 영역 다시 계산
-      const {topLeft, bottomRight} = calculateMapRegion(
-        centerCoordinate,
-        mapRegion,
-      );
-
-      setLoading(true);
-      // 주변 음식점 검색
-      const response = await getRangeInfo({
-        topLeftLat: topLeft.latitude,
-        topLeftLong: topLeft.longitude,
-        bottomRightLat: bottomRight.latitude,
-        bottomRightLong: bottomRight.longitude,
-      });
-      setLoading(false);
-
-      // 음식점 필터링
-      const recommendStores = response
-        .filter(store =>
-          store.babyAges?.some((age: number) => selectedAges.includes(age)),
-        )
-        .map(store => {
-          const matchCount =
-            store.babyAges?.filter((age: number) => selectedAges.includes(age))
-              .length ?? 0;
-
-          return {
-            ...store,
-            matchCount,
-          };
-        })
-        .sort((a, b) => b.matchCount - a.matchCount);
-
-      setStores(recommendStores);
+      fetchStoreBasicInformation();
 
       updateLastSearchedCoordinate();
     } catch (error) {
@@ -255,20 +191,20 @@ const MapScreen = () => {
 
   const handleMarkerTab = (idx: number) => {
     setSelectedMarker(idx);
+    setSelectedStoreIndex(idx);
   };
 
   const handleNaverMapTab = () => {
     bottomSheetRef.current?.snapToIndex(0);
 
     setSelectedMarker(-1);
+    setSelectedStoreIndex(-1);
   };
 
-  const moveToAddress = async (
-    searchedPlace: GetGeocodingByKeywordResponse,
-  ) => {
+  const moveToAddress = async (place: GetGeocodingByKeywordResponse) => {
     try {
-      const latitude = parseFloat(searchedPlace.y);
-      const longitude = parseFloat(searchedPlace.x);
+      const latitude = parseFloat(place.y);
+      const longitude = parseFloat(place.x);
 
       moveToCamera({
         latitude: latitude,
@@ -335,6 +271,10 @@ const MapScreen = () => {
     });
   }, [selectedAges]);
 
+  useEffect(() => {
+    setFilteredStoreBasicInformation();
+  }, [selectedChips, storeBasicInformation]);
+
   return (
     <>
       <S.MapScreenContainer>
@@ -348,7 +288,7 @@ const MapScreen = () => {
           isShowZoomControls={false}
           isExtentBoundedInKorea={true}
           isTiltGesturesEnabled={false}>
-          {filteredStores.map((data, idx) => (
+          {filteredStoreBasicInformation.map((data, idx) => (
             <NaverMapMarkerOverlay
               key={idx}
               latitude={data.latitude}
@@ -399,15 +339,12 @@ const MapScreen = () => {
         {isVisible && <ResearchButton onPress={handleResearchButtonPress} />}
 
         {selectedMarker >= 0 ? (
-          <StoreBasicScreen store={filteredStores[selectedMarker]} />
+          <StoreBasicScreen />
         ) : (
-          <NearStoreListScreen
-            stores={filteredStores}
-            bottomSheetRef={bottomSheetRef}
-          />
+          <NearStoreListScreen bottomSheetRef={bottomSheetRef} />
         )}
       </S.MapScreenContainer>
-      {loading ? <LoadingIndicator /> : null}
+      {isLoading ? <LoadingIndicator /> : null}
     </>
   );
 };

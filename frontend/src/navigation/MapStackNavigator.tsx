@@ -5,7 +5,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MapScreen from '../screens/Map/MapScreen';
 import SearchScreen from '../screens/Map/SearchScreen';
 import StoreDetailScreen from '../screens/Map/StoreDetailScreen';
-import {StoreBasicInformationType} from '../screens/Map/NearStoreListScreen/components/StoreBasicInformation/types';
 import {KeywordProps} from '../screens/Map/StoreDetailScreen/components/Keyword';
 import KeywordReviewScreen from '../screens/Map/KeywordReviewScreen';
 import {ReviewProps} from '../screens/Map/StoreDetailScreen/components/Review';
@@ -19,12 +18,13 @@ import SelectRecommendationAgeScreen from '../screens/Map/SelectRecommendationAg
 import {ReviewType} from '../services/reviewService';
 import {GetGeocodingByKeywordResponse} from '../services/mapService';
 import PlaceSearchScreen from '../screens/Map/SearchScreen/PlaceSearchScreen';
+import {useMapStore} from '../stores/mapStore';
 
 export type MapStackParamList = {
   MapMain: {searchedPlace: GetGeocodingByKeywordResponse};
   Search: undefined;
   PlaceSearchScreen: undefined;
-  StoreDetail: {storeBasicInformation: StoreBasicInformationType};
+  StoreDetail: undefined;
   KeywordReview: {keywordInformation: KeywordProps};
   ReviewListScreen: {
     reviewInformation: ReviewProps;
@@ -38,6 +38,8 @@ export type MapStackParamList = {
 
 const MapStackNavigator = () => {
   const Stack = createNativeStackNavigator<MapStackParamList>();
+
+  const {filteredStoreBasicInformation, selectedStoreIndex} = useMapStore();
 
   return (
     <Stack.Navigator>
@@ -63,12 +65,14 @@ const MapStackNavigator = () => {
       <Stack.Screen
         name="StoreDetail"
         component={StoreDetailScreen}
-        options={({route}) => ({
+        options={() => ({
           header(props) {
             return (
               <CustomHeader
                 props={props}
-                title={route.params.storeBasicInformation.title}
+                title={
+                  filteredStoreBasicInformation[selectedStoreIndex]?.title || ''
+                }
               />
             );
           },
@@ -121,7 +125,7 @@ const MapStackNavigator = () => {
       <Stack.Screen
         name="SelectRecommendationAgeScreen"
         component={SelectRecommendationAgeScreen}
-        options={({route}) => ({
+        options={() => ({
           header(props) {
             return <CustomHeader props={props} title={'가게 추천'} />;
           },

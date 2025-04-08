@@ -1,9 +1,6 @@
 import React, {useState} from 'react';
 
-import {
-  ConvenienceType,
-  StoreBasicInformationType,
-} from '../../../NearStoreListScreen/components/StoreBasicInformation/types';
+import {ConvenienceType} from '../../../NearStoreListScreen/components/StoreBasicInformation/types';
 
 import {
   IC_CATEGORY,
@@ -21,18 +18,23 @@ import {
 } from '../../../../../constants/constants';
 
 import * as S from './styles';
+import {useMapStore} from '../../../../../stores/mapStore';
 
 const CURRENT_DAY = new Date().getDay();
 
-interface HomeProps {
-  basicInformation: StoreBasicInformationType;
-}
-
-const Home = ({basicInformation}: HomeProps) => {
+const Home = () => {
   const [isBusinessHourOpened, setIsBusinessHourOpened] = useState(false);
 
+  const {filteredStoreBasicInformation, selectedStoreIndex} = useMapStore();
+
+  const store = filteredStoreBasicInformation[selectedStoreIndex];
+
+  if (!store) {
+    return;
+  }
+
   const getParkingInformation = () => {
-    switch (basicInformation.parking) {
+    switch (store.parking) {
       case true:
         return '주차 가능';
       case false:
@@ -58,15 +60,15 @@ const Home = ({basicInformation}: HomeProps) => {
     ];
     return sortedDays.map(day => ({
       day,
-      hours: basicInformation.businessHour[day.slice(0, 1)] || '정보 없음',
+      hours: store.businessHour[day.slice(0, 1)] || '정보 없음',
     }));
   };
 
   const filteredAmenities = (
     Object.keys(
-      basicInformation.convenience[0].convenienceDetails,
+      store.convenience[0].convenienceDetails,
     ) as (keyof ConvenienceType['convenienceDetails'])[]
-  ).filter(key => basicInformation.convenience[0].convenienceDetails[key]);
+  ).filter(key => store.convenience[0].convenienceDetails[key]);
 
   const handleBusinessHourPress = () => {
     setIsBusinessHourOpened(prev => !prev);
@@ -76,11 +78,11 @@ const Home = ({basicInformation}: HomeProps) => {
     <S.HomeContainer>
       <S.LineContainer>
         <S.Icon source={IC_LOCATION} />
-        <S.BasicText>{basicInformation.address}</S.BasicText>
+        <S.BasicText>{store.address}</S.BasicText>
       </S.LineContainer>
       <S.LineContainer>
         <S.Icon source={IC_SUBWAY} />
-        <S.BasicText>{basicInformation.transportationConvenience}</S.BasicText>
+        <S.BasicText>{store.transportationConvenience}</S.BasicText>
       </S.LineContainer>
 
       <S.BusinessHourContainer onPress={handleBusinessHourPress}>
@@ -89,7 +91,7 @@ const Home = ({basicInformation}: HomeProps) => {
           <S.TextContainer>
             <S.BoldText>{DAY[CURRENT_DAY]}</S.BoldText>
             <S.TimeText>
-              {basicInformation.businessHour[DAY[CURRENT_DAY].slice(0, 1)]}
+              {store.businessHour[DAY[CURRENT_DAY].slice(0, 1)]}
             </S.TimeText>
           </S.TextContainer>
         </S.LineContainer>
@@ -108,7 +110,7 @@ const Home = ({basicInformation}: HomeProps) => {
 
       <S.LineContainer>
         <S.Icon source={IC_PHONE} />
-        <S.BasicText>{basicInformation.contactNumber}</S.BasicText>
+        <S.BasicText>{store.contactNumber}</S.BasicText>
       </S.LineContainer>
       <S.LineContainer>
         <S.Icon source={IC_PARKING} />
