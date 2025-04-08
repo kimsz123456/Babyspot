@@ -36,7 +36,6 @@ export const TabBar = styled(View)`
 
 export const TabContainer = styled(TouchableOpacity)<{$isSelected: boolean}>`
   padding: ${scale(8)}px 0px;
-  width: ${scale(66)}px;
   border-bottom-width: ${({$isSelected}) => ($isSelected ? '2px' : '0px')};
   border-bottom-color: ${({$isSelected}) =>
     $isSelected ? GrayColors[800] : 'transparent'};
