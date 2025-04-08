@@ -3,7 +3,7 @@ import {FontStyles} from '../../../constants/fonts';
 import {PrimaryColors} from '../../../constants/colors';
 import {GrayColors} from '../../../constants/colors';
 import scale from '../../../utils/scale';
-import {ScrollView, Image, Text, View} from 'react-native';
+import {ScrollView, Image, Text, View, TouchableOpacity} from 'react-native';
 
 const BackGround = styled(ScrollView)`
   flex: 1;
@@ -71,6 +71,7 @@ const ReviewTitle = styled(Text)`
   ${FontStyles.headingMedium};
   color: ${GrayColors[800]};
 `;
+const MoreReviewContainer = styled(TouchableOpacity)``;
 const MoreReview = styled(Text)`
   ${FontStyles.captionMedium};
   color: ${GrayColors[700]};
@@ -90,5 +91,6 @@ export {
   ReviewContainer,
   ReviewTitleContainer,
   ReviewTitle,
+  MoreReviewContainer,
   MoreReview,
 };
