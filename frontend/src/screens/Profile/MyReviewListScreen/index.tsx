@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {ActivityIndicator, View} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import * as S from './styles';
 import MyReviewInformation from './components/MyReviewInformation';
 import {ThinDivider} from '../../../components/atoms/Divider';
@@ -11,7 +12,7 @@ const MyReviewListScreen = () => {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-
+  console.log('reviews', reviews);
   const fetchReviews = async (pageNumber: number) => {
     if (loading || !hasMore) return;
 
@@ -25,7 +26,16 @@ const MyReviewListScreen = () => {
       if (pageNumber === 0) {
         setReviews(response.content);
       } else {
-        setReviews(prev => [...prev, ...response.content]);
+        setReviews(prev => {
+          const newReviews = response.content.filter(
+            newReview =>
+              !prev.some(
+                existingReview =>
+                  existingReview.reviewId === newReview.reviewId,
+              ),
+          );
+          return [...prev, ...newReviews];
+        });
       }
 
       setHasMore(response.content.length === 6);
@@ -37,9 +47,13 @@ const MyReviewListScreen = () => {
     }
   };
 
-  useEffect(() => {
-    fetchReviews(0);
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      setPage(0);
+      setHasMore(true);
+      fetchReviews(0);
+    }, []),
+  );
 
   const handleLoadMore = () => {
     if (!loading && hasMore) {
@@ -63,7 +77,7 @@ const MyReviewListScreen = () => {
   );
 
   const renderItem = ({item}: {item: ReviewType}) => (
-    <MyReviewInformation reviews={item} />
+    <MyReviewInformation review={item} />
   );
 
   if (reviews.length === 0 && !loading) {
