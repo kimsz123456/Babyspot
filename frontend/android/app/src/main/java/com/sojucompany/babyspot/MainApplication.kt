@@ -1,4 +1,4 @@
-package com.littlewaterdrops.babyspot
+package com.sojucompany.babyspot
 
 import android.app.Application
 import com.facebook.react.PackageList
