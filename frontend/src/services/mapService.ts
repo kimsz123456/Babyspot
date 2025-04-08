@@ -5,7 +5,7 @@ import {StoreBasicInformationType} from '../screens/Map/NearStoreListScreen/comp
 import {KeywordSectionProps} from '../screens/Map/StoreDetailScreen/components/Keyword';
 import {ReviewType} from './reviewService';
 
-// SW8: 지하철역, SC4: 학교, BK9: 은행행
+// PO3: 공공기관, SW8: 지하철역, SC4: 학교, BK9: 은행행
 const IMPORTANT_CATEGORIES = ['PO3', 'SC4', 'SW8', 'BK9'];
 
 interface RangeInfoParameterType {
