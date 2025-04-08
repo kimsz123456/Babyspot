@@ -68,9 +68,10 @@ const ProfileScreen = () => {
       <S.ReviewContainer>
         <S.ReviewTitleContainer>
           <S.ReviewTitle>내 리뷰</S.ReviewTitle>
-          <S.MoreReview onPress={() => navigation.navigate('MyReviewList')}>
-            더보기
-          </S.MoreReview>
+          <S.MoreReviewContainer
+            onPress={() => navigation.navigate('MyReviewList')}>
+            <S.MoreReview>더보기</S.MoreReview>
+          </S.MoreReviewContainer>
         </S.ReviewTitleContainer>
         <MyReviewList />
       </S.ReviewContainer>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   IC_GRAY_STAR,
   IC_HEART,
@@ -14,6 +14,7 @@ interface MyReviewInformationProps {
 
 const MyReviewInformation = ({reviews}: MyReviewInformationProps) => {
   const totalImages = reviews.imgUrls.length;
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <S.MyReviewInformationContainer>
@@ -39,7 +40,11 @@ const MyReviewInformation = ({reviews}: MyReviewInformationProps) => {
             ))}
           </S.RatingContainer>
         </S.SecondRowContainer>
-        <S.ReviewText>{reviews.content}</S.ReviewText>
+        <S.ReviewTextContainer onPress={() => setIsExpanded(!isExpanded)}>
+          <S.ReviewText numberOfLines={isExpanded ? undefined : 2}>
+            {reviews.content}
+          </S.ReviewText>
+        </S.ReviewTextContainer>
       </S.DetailContainer>
 
       <S.ImageContainer>

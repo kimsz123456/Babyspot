@@ -1,4 +1,4 @@
-import {Image, Text, View} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -86,10 +86,9 @@ export const SmallIcon = styled(Image)`
   height: ${scale(16)}px;
 `;
 
-export const ReviewText = styled(Text).attrs({
-  numberOfLines: 2,
-  ellipsizeMode: 'tail',
-})`
+export const ReviewTextContainer = styled(TouchableOpacity)``;
+
+export const ReviewText = styled(Text)`
   ${FontStyles.captionMedium};
   color: ${GrayColors[800]};
 `;
@@ -103,6 +102,7 @@ export const Images = styled(Image)`
   width: ${scale(66)}px;
   height: ${scale(66)}px;
   border-radius: 10px;
+  border: 1px solid ${GrayColors[200]};
 `;
 export const OverlayWrapper = styled(View)`
   position: relative;
