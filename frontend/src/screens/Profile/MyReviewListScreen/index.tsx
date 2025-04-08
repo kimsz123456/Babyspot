@@ -16,7 +16,9 @@ const MyReviewListScreen = () => {
   const [sortedReviews, setSortedReviews] = useState<ReviewType[]>([]);
 
   const fetchReviews = async (pageNumber: number) => {
-    if (loading || !hasMore) return;
+    if (loading || !hasMore) {
+      return;
+    }
 
     try {
       setLoading(true);
@@ -69,7 +71,9 @@ const MyReviewListScreen = () => {
   };
 
   const renderFooter = () => {
-    if (!loading) return null;
+    if (!loading) {
+      return null;
+    }
     return (
       <S.LoadingContainer>
         <ActivityIndicator size="large" />
