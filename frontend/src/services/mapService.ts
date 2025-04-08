@@ -121,6 +121,8 @@ export const getRangeInfo = async (
 
 export const getGeocodingByKeyword = async (
   keyword: string,
+  x: number,
+  y: number,
 ): Promise<GetGeocodingByKeywordResponse[]> => {
   try {
     const response = await axios.get<{
@@ -128,7 +130,7 @@ export const getGeocodingByKeyword = async (
     }>(
       `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(
         keyword,
-      )}`,
+      )}&x=${x}&y=${y}&sort=${`distance`}`,
       {
         headers: {
           Authorization: `KakaoAK ${Config.KAKAO_REST_API_KEY}`,
