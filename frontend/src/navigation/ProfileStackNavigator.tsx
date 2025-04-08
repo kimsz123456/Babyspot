@@ -5,6 +5,12 @@ import ProfileEditScreen from '../screens/Profile/ProfileEditScreen';
 import DeleteAccountScreen from '../screens/Profile/DeleteAccountScreen';
 import MyReviewListScreen from '../screens/Profile/MyReviewListScreen';
 import PrivacyPolicyScreen from '../screens/Profile/PrivacyPolicyScreen';
+import WriteReviewScreen from '../screens/Map/WriteReviewScreen';
+import CompleteScreen, {
+  CompleteTypes,
+} from '../screens/Map/WriteReviewScreen/CompleteScreen';
+import {ReviewType} from '../services/reviewService';
+import CustomHeader from './CustomHeader';
 
 export type ProfileStackParamList = {
   ProfileMain: undefined;
@@ -12,10 +18,12 @@ export type ProfileStackParamList = {
   MyReviewList: undefined;
   PrivacyPolicy: undefined;
   DeleteAccount: undefined;
+  WriteReviewScreen: {review: ReviewType};
+  CompleteScreen: {completeType: CompleteTypes};
 };
 
 const ProfileStackNavigator = () => {
-  const Stack = createNativeStackNavigator();
+  const Stack = createNativeStackNavigator<ProfileStackParamList>();
 
   return (
     <Stack.Navigator>
@@ -27,12 +35,20 @@ const ProfileStackNavigator = () => {
       <Stack.Screen
         name="ProfileEdit"
         component={ProfileEditScreen}
-        options={{title: '프로필 수정'}}
+        options={() => ({
+          header(props) {
+            return <CustomHeader props={props} title={'프로필 수정'} />;
+          },
+        })}
       />
       <Stack.Screen
         name="MyReviewList"
         component={MyReviewListScreen}
-        options={{title: '내 리뷰'}}
+        options={() => ({
+          header(props) {
+            return <CustomHeader props={props} title={'내 리뷰'} />;
+          },
+        })}
       />
       <Stack.Screen
         name="PrivacyPolicy"
@@ -43,6 +59,27 @@ const ProfileStackNavigator = () => {
         name="DeleteAccount"
         component={DeleteAccountScreen}
         options={{title: '회원탈퇴'}}
+      />
+      <Stack.Screen
+        name="WriteReviewScreen"
+        component={WriteReviewScreen}
+        options={({route}) => ({
+          header(props) {
+            return (
+              <CustomHeader
+                props={props}
+                title={route.params.review.storeName}
+              />
+            );
+          },
+        })}
+      />
+      <Stack.Screen
+        name="CompleteScreen"
+        component={CompleteScreen}
+        options={() => ({
+          headerShown: false,
+        })}
       />
     </Stack.Navigator>
   );
