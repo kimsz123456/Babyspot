@@ -278,7 +278,7 @@ public class StoreService {
 			int memberId = review.getMember().getId();
 			Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
 			String profile = profileOpt.orElse(null);
-			
+
 			dto.setReviewId(review.getId());
 			dto.setMemberId(review.getMember().getId());
 			dto.setMemberNickname(review.getMember().getNickname());
@@ -294,7 +294,7 @@ public class StoreService {
 			dto.setReviewCount(reviewRepository.countByMember_Id(memberId));
 
 			List<String> imgUrls = review.getImages().stream()
-				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl() + "?v=" + System.currentTimeMillis())
 				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
