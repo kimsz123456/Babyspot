@@ -5,7 +5,7 @@ import {
   IC_FILTER,
   IC_YELLOW_STAR,
 } from '../../../../../constants/icons';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import ReviewCard, {ReviewCardProps} from './ReviewCard';
 import {withDivider} from '../../../../../utils/withDivider';
 import {ThinDivider} from '../../../../../components/atoms/Divider';
@@ -13,10 +13,9 @@ import MoreButtonWithDivider from '../../../../../components/atoms/MoreButtonWit
 import {useMapNavigation} from '../../../../../hooks/useNavigationHooks';
 import ReviewFilterModal from '../../../ReviewListScreen/ReviewFilterModal';
 import NoDataContainer from '../../../../../components/atoms/NoDataContainer';
+import {useMapStore} from '../../../../../stores/mapStore';
 
 export interface ReviewProps {
-  totalRating: string;
-  totalReviewCount: number;
   reviews: ReviewCardProps[];
   storeName: string;
   storeId: number;
@@ -34,9 +33,17 @@ export const sortReviewsByDate = (reviews: ReviewCardProps[]) => {
 };
 
 const Review = (props: ReviewProps) => {
-  const navigation = useMapNavigation();
   const [modalOpened, setModalOpened] = useState(false);
   const [sortedReview, setSortedReview] = useState<ReviewCardProps[]>([]);
+
+  const navigation = useMapNavigation();
+  const {filteredStoreBasicInformation, selectedStoreIndex} = useMapStore();
+
+  const store = filteredStoreBasicInformation[selectedStoreIndex];
+
+  if (!store) {
+    return;
+  }
 
   const handleMoreButtonPress = () => {
     navigation.navigate('ReviewListScreen', {
@@ -47,6 +54,8 @@ const Review = (props: ReviewProps) => {
   };
 
   useEffect(() => {
+    console.log('useEffect 실행');
+
     const sortedReviews = sortReviewsByDate(
       props.reviews.filter(review => {
         return review.memberId != props.myReview?.memberId;
@@ -71,12 +80,12 @@ const Review = (props: ReviewProps) => {
                 <S.InformationContainer>
                   <S.InformationIconImage source={IC_YELLOW_STAR} />
                   <S.InformationText
-                    $isStar>{`별점 ${props.totalRating}`}</S.InformationText>
+                    $isStar>{`별점 ${store.rating}`}</S.InformationText>
                 </S.InformationContainer>
                 <S.InformationContainer>
                   <S.InformationIconImage source={IC_COMMENT} />
                   <S.InformationText $isStar={false}>
-                    {`리뷰 ${props.totalReviewCount}개`}
+                    {`리뷰 ${store.reviewCount}개`}
                   </S.InformationText>
                 </S.InformationContainer>
               </S.InformationListContainer>
@@ -88,7 +97,7 @@ const Review = (props: ReviewProps) => {
               <S.FilterIconImage source={IC_FILTER} />
             </TouchableOpacity>
           </S.TitleHeaderContainer>
-          <S.CaptionText>{`내 리뷰가 상위에 노출됩니다.`}</S.CaptionText>
+          <S.CaptionText>{'내 리뷰가 상위에 노출됩니다.'}</S.CaptionText>
         </S.TitleCaptionContainer>
         <S.ReviewCardListContainer>
           {sortedReview.length > 0 ? (

@@ -6,7 +6,6 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {useMapStore} from '../../../stores/mapStore';
 
 import StoreBasicInformation from './components/StoreBasicInformation';
-import {StoreBasicInformationType} from './components/StoreBasicInformation/types';
 import NoContent from './components/NoContent';
 import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 
@@ -17,21 +16,19 @@ import * as S from './styles';
 const SNAP_POINTS = [scale(32), scale(280), '80%'];
 
 interface NearStoreListScreenProps {
-  stores: StoreBasicInformationType[];
   bottomSheetRef: Ref<BottomSheet>;
 }
 
-const NearStoreListScreen = ({
-  stores,
-  bottomSheetRef,
-}: NearStoreListScreenProps) => {
+const NearStoreListScreen = ({bottomSheetRef}: NearStoreListScreenProps) => {
   const imageCarouselRef = useRef<ScrollView>(null);
 
   const navigation = useMapNavigation();
-  const {selectedAges} = useMapStore();
+  const {selectedAges, filteredStoreBasicInformation, setSelectedStoreIndex} =
+    useMapStore();
 
-  const handleStorePress = (store: StoreBasicInformationType) => {
-    navigation.navigate('StoreDetail', {storeBasicInformation: store});
+  const handleStorePress = (idx: number) => {
+    setSelectedStoreIndex(idx);
+    navigation.navigate('StoreDetail');
   };
 
   return (
@@ -49,13 +46,13 @@ const NearStoreListScreen = ({
           <S.Title>
             {selectedAges.length > 0 ? '추천 음식점' : '주변 음식점'}
           </S.Title>
-          {stores.length === 0 ? (
+          {filteredStoreBasicInformation.length === 0 ? (
             <NoContent />
           ) : (
-            stores.map(store => (
+            filteredStoreBasicInformation.map((store, idx) => (
               <TouchableWithoutFeedback
                 key={store.storeId}
-                onPress={() => handleStorePress(store)}>
+                onPress={() => handleStorePress(idx)}>
                 <StoreBasicInformation
                   store={store}
                   imageCarouselRef={imageCarouselRef}
