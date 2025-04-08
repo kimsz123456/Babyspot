@@ -184,7 +184,11 @@ const AddChildScreen = () => {
           </S.SingUpInputSection>
         </ScrollView>
 
-        <MainButton text={'다음'} onPress={handleSignUp} />
+        <MainButton
+          text={'다음'}
+          onPress={handleSignUp}
+          disabled={children.length == 0}
+        />
       </S.SignUpScreenView>
 
       <CenteredModal
