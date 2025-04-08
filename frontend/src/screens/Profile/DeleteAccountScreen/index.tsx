@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Image, Text, View} from 'react-native';
+import {Image, Text, ToastAndroid, View} from 'react-native';
 
-import {
-  useOnboardingNavigation,
-  useProfileNavigation,
-} from '../../../hooks/useNavigationHooks';
+import {useProfileNavigation} from '../../../hooks/useNavigationHooks';
 
 import MainButton from '../../../components/atoms/Button/MainButton';
 import SubButton from '../../../components/atoms/Button/SubButton';
@@ -15,10 +12,12 @@ import {deleteMember} from '../../../services/profileService';
 import {IC_COMPLETE} from '../../../constants/icons';
 
 import * as S from './styles';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import resetAllStores from '../../../utils/resetAllStores';
+import {useGlobalStore} from '../../../stores/globalStore';
 
 const DeleteAccountScreen = () => {
   const profileNavigation = useProfileNavigation();
-  const onboardingNavigation = useOnboardingNavigation();
   const [firstModalVisible, setFirstModalVisible] = useState(false);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
   const [text, setText] = useState('');
@@ -38,9 +37,17 @@ const DeleteAccountScreen = () => {
   const handleFirstConfirm = async () => {
     setFirstModalVisible(false);
 
-    await deleteMember();
+    try {
+      await deleteMember();
 
-    setSecondModalVisible(true);
+      EncryptedStorage.clear();
+      setSecondModalVisible(true);
+    } catch (error) {
+      ToastAndroid.show(
+        '회원탈퇴 중 오류가 발생했습니다. 관리자에게 문의해주세요.',
+        500,
+      );
+    }
   };
 
   const handleFirstCancel = () => {
@@ -48,9 +55,9 @@ const DeleteAccountScreen = () => {
   };
 
   const handleSecondConfirm = () => {
-    setSecondModalVisible(false);
+    resetAllStores();
 
-    onboardingNavigation.navigate('SignIn');
+    setSecondModalVisible(false);
   };
 
   const handleSecondCancel = () => {
