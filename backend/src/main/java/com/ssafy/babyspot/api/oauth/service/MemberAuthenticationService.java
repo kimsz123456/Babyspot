@@ -30,9 +30,10 @@ public class MemberAuthenticationService {
 
 	public void processMemberLogin(String providerId, String registrationId, HttpServletResponse response,
 		String baseUrl) throws IOException {
-		Member member = memberService.findByProviderId(providerId).orElse(null);
+		Member member = memberService.findByProviderIdAndDeletedFalse(providerId)
+			.orElse(null);
 		if (member != null) {
-			// 기존 회원 로그인 처리: member 객체를 넘겨 토큰 생성
+			// 기존 회원 로그인 처리
 			String jwtAccessToken = tokenService.createAccessToken(member.getId(), registrationId);
 			String jwtRefreshToken = tokenService.createRefreshToken(member.getId(), registrationId);
 			Cookie accessCookie = CookieUtil.createAccessCookie(jwtAccessToken, false);

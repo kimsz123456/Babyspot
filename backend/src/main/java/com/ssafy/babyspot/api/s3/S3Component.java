@@ -3,7 +3,9 @@ package com.ssafy.babyspot.api.s3;
 import java.net.URL;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,8 @@ import com.ssafy.babyspot.exception.CustomException;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
@@ -107,5 +111,20 @@ public class S3Component {
 			.build();
 
 		DeleteObjectResponse deleteResponse = s3Client.deleteObject(deleteRequest);
+	}
+
+	public List<String> getUploadedImageKeys(int storeId) {
+		String s3Prefix = "store/storeImg/" + storeId + "/";
+
+		ListObjectsV2Request listObjects = ListObjectsV2Request.builder()
+			.bucket(bucket)
+			.prefix(s3Prefix)
+			.build();
+
+		ListObjectsV2Response response = s3Client.listObjectsV2(listObjects);
+
+		return response.contents().stream()
+			.map(s3Object -> s3Object.key())
+			.collect(Collectors.toList());
 	}
 }

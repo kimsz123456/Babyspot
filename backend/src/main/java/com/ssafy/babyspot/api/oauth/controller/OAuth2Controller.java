@@ -72,7 +72,7 @@ public class OAuth2Controller {
 		Member member = memberOpt.get();
 		String newAccessToken = tokenService.createAccessToken(member.getId(), registrationId);
 		String newRefreshToken = tokenService.createRefreshToken(member.getId(), registrationId);
-		
+
 		logger.info("New access token: " + newAccessToken);
 		logger.info("New refresh token: " + newRefreshToken);
 
@@ -91,19 +91,15 @@ public class OAuth2Controller {
 		String providerId = oAuth2UserInfoService.extractProviderId("kakao", userInfo);
 		logger.info("Extracted providerId: {}", providerId);
 
-		Optional<Member> existingMember = memberService.findByProviderId(providerId);
+		Optional<Member> existingMemberOpt = memberService.findByProviderIdAndDeletedFalse(providerId);
 		SignUpToken signUpToken;
-		if (existingMember.isPresent()) {
-			Member member = existingMember.get();
-
+		if (existingMemberOpt.isPresent()) {
+			Member member = existingMemberOpt.get();
 			String newAccessToken = tokenService.createAccessToken(member.getId(), "kakao");
 			String newRefreshToken = tokenService.createRefreshToken(member.getId(), "kakao");
-
 			signUpToken = new SignUpToken(member, newAccessToken, newRefreshToken);
 		} else {
-			// 신규 회원인 경우, 추가 정보를 위한 임시 토큰 발급
 			String tempToken = tokenService.createTempToken(providerId, "kakao");
-			// 신규 회원은 아직 회원가입을 완료하지 않았으므로 액세스, 리프레시 토큰은 null
 			signUpToken = new SignUpToken(tempToken, providerId);
 		}
 
@@ -115,4 +111,5 @@ public class OAuth2Controller {
 		);
 		return ResponseEntity.ok(responsePayload);
 	}
+
 }

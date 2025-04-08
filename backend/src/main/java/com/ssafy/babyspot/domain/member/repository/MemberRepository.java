@@ -11,8 +11,15 @@ import com.ssafy.babyspot.domain.member.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
+
+	@Query("SELECT m.profileImg FROM Member m WHERE m.id = :id AND m.deleted = false")
+	Optional<String> findByProfileImg(@Param("id") Integer id);
+
+	Optional<Member> findByNicknameAndDeletedFalse(String nickname);
+
+	Optional<Member> findByProviderIdAndDeletedFalse(String providerId);
+
 	Optional<Member> findByProviderId(String providerId);
 
-	@Query("SELECT m.profileImg FROM Member m WHERE m.id = :id")
-	Optional<String> findByProfileImg(@Param("id") Integer id);
+	Optional<Member> findByNickname(String nickname);
 }

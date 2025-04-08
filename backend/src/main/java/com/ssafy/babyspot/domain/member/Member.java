@@ -34,7 +34,7 @@ public class Member {
 	@Column(name = "profile_img", length = 255)
 	private String profileImg;
 
-	@Column(name = "providerid", length = 100, unique = true, nullable = false)
+	@Column(name = "providerid", length = 100, nullable = false)
 	private String providerId;
 
 	@Setter
@@ -46,6 +46,10 @@ public class Member {
 
 	@Column(name = "deleted_at")
 	private LocalDate deletedAt;
+
+	@Setter
+	@Column(name = "deleted")
+	private boolean deleted = false;
 
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Baby> babies = new ArrayList<>();

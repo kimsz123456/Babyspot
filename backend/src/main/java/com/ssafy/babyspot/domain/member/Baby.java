@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -30,6 +31,10 @@ public class Baby {
 
 	@Column(name = "birth_year", nullable = false)
 	private int birthYear;
+
+	@Setter
+	@Column(name = "deleted")
+	private boolean deleted = false;
 
 	@Builder
 	public Baby(Member member, int birthYear) {
