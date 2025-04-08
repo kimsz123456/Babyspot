@@ -54,8 +54,6 @@ const Review = (props: ReviewProps) => {
   };
 
   useEffect(() => {
-    console.log('useEffect 실행');
-
     const sortedReviews = sortReviewsByDate(
       props.reviews.filter(review => {
         return review.memberId != props.myReview?.memberId;
