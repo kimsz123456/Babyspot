@@ -10,7 +10,10 @@ const MAX_CONTENT_LENGTH = 5;
 const FamilyReview = (props: FamilyReviewProps) => {
   return (
     <S.FamilyReviewContainer>
-      <S.Title>{`패밀리 리뷰`}</S.Title>
+      <S.TitleContainer>
+        <S.Title>{`패밀리 리뷰`}</S.Title>
+        <S.TitleCaption>{`아이와 함께한 가족의 리뷰에요.`}</S.TitleCaption>
+      </S.TitleContainer>
       <S.ReviewByEmotionSection>
         <S.EmotionTitle $isPositive={true}>{`긍정`}</S.EmotionTitle>
         {props.positive.length == 0 ? (
