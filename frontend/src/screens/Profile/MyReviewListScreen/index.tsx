@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import * as S from './styles';
@@ -6,13 +6,15 @@ import MyReviewInformation from './components/MyReviewInformation';
 import {ThinDivider} from '../../../components/atoms/Divider';
 import {getMyReviews, ReviewType} from '../../../services/reviewService';
 import NoDataContainer from '../../../components/atoms/NoDataContainer';
+import {sortReviewsByDate} from '../../../screens/Map/StoreDetailScreen/components/Review';
 
 const MyReviewListScreen = () => {
   const [reviews, setReviews] = useState<ReviewType[]>([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  console.log('reviews', reviews);
+  const [sortedReviews, setSortedReviews] = useState<ReviewType[]>([]);
+
   const fetchReviews = async (pageNumber: number) => {
     if (loading || !hasMore) return;
 
@@ -55,6 +57,11 @@ const MyReviewListScreen = () => {
     }, []),
   );
 
+  useEffect(() => {
+    const sorted = sortReviewsByDate(reviews);
+    setSortedReviews(sorted);
+  }, [reviews]);
+
   const handleLoadMore = () => {
     if (!loading && hasMore) {
       fetchReviews(page + 1);
@@ -80,7 +87,7 @@ const MyReviewListScreen = () => {
     <MyReviewInformation review={item} />
   );
 
-  if (reviews.length === 0 && !loading) {
+  if (sortedReviews.length === 0 && !loading) {
     return (
       <S.BackGround>
         <NoDataContainer text="작성한 리뷰가 없습니다." />
@@ -92,7 +99,7 @@ const MyReviewListScreen = () => {
     <S.BackGround>
       <View style={{flex: 1}}>
         <S.Wrapper
-          data={reviews}
+          data={sortedReviews}
           renderItem={renderItem}
           keyExtractor={item => item.reviewId.toString()}
           ItemSeparatorComponent={renderSeparator}
