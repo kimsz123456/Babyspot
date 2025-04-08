@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import * as S from './styles';
 import {AGE_MARKERS} from '../../../../../../constants/constants';
 import {IC_HEART} from '../../../../../../constants/icons';
@@ -7,13 +7,14 @@ import StarRating from '../../../../../../components/atoms/StarRating';
 import {ReviewType} from '../../../../../../services/reviewService';
 import {useGlobalStore} from '../../../../../../stores/globalStore';
 import {useMapNavigation} from '../../../../../../hooks/useNavigationHooks';
-import {ToastAndroid} from 'react-native';
+import {ToastAndroid, TouchableOpacity} from 'react-native';
 
 export interface ReviewCardProps extends ReviewType {}
 
 const ReviewCard = (props: ReviewCardProps) => {
   const {memberProfile} = useGlobalStore();
   const navigation = useMapNavigation();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <S.ReviewCardContainer>
@@ -59,7 +60,11 @@ const ReviewCard = (props: ReviewCardProps) => {
         <S.RatingText>{props.rating.toFixed(1)}</S.RatingText>
       </S.RatingContainer>
 
-      <S.ReviewText>{props.content}</S.ReviewText>
+      <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
+        <S.ReviewText numberOfLines={isExpanded ? undefined : 2}>
+          {props.content}
+        </S.ReviewText>
+      </TouchableOpacity>
 
       <S.ImageContainer>
         {props.imgUrls.length > 4 ? (
