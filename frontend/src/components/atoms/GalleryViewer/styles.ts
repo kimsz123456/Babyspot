@@ -11,14 +11,14 @@ export const FullscreenImage = styled(Image)`
 
 export const GalleryHeader = styled(View)`
   position: absolute;
-  top: ${scale(40)}px;
+  /* top: ${scale(40)}px; */
   left: 0;
   right: 0;
   z-index: 10;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0px ${scale(24)}px;
+  padding: ${scale(40)}px ${scale(24)}px 0px;
   background-color: linear-gradient(rgba(0, 0, 0, 0.6), transparent);
 `;
 
