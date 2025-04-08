@@ -65,7 +65,7 @@ const Review = (props: ReviewProps) => {
     } else {
       setSortedReview(sortedReviews);
     }
-  }, [props]);
+  }, [props.reviews]);
 
   return (
     <>

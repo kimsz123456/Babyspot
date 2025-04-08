@@ -77,6 +77,11 @@ const IC_NAVER_CAFE: ImageRequireSource = require('../../assets/icons/naver-cafe
 const IC_FILTER: ImageRequireSource = require('../../assets/icons/filter.png');
 const IC_NO_CONTENT: ImageRequireSource = require('../../assets/icons/no-content.png');
 
+const IC_MOVIE: ImageRequireSource = require('../../assets/icons/movie.png');
+const IC_MUSEUM: ImageRequireSource = require('../../assets/icons/museum.png');
+const IC_TOURIST: ImageRequireSource = require('../../assets/icons/tourist.png');
+const IC_SCENIC: ImageRequireSource = require('../../assets/icons/scenic.png');
+
 export {
   IC_AGE1,
   IC_AGE2,
@@ -139,4 +144,8 @@ export {
   IC_NAVER_PLACE,
   IC_FILTER,
   IC_NO_CONTENT,
+  IC_MOVIE,
+  IC_MUSEUM,
+  IC_TOURIST,
+  IC_SCENIC,
 };
