@@ -238,14 +238,12 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public UpdateReviewResponseDto updateReview(Authentication authentication, UpdateRequestDto dto,
-		int reviewId) {
+	public UpdateReviewResponseDto updateReview(Authentication authentication, UpdateRequestDto dto, int reviewId) {
 		Review review = reviewRepository.findById(reviewId)
 			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "리뷰가 없습니다."));
 
 		int reviewMemberId = review.getMember().getId();
 		int authenticatedMemberId = Integer.parseInt(authentication.getName());
-
 		if (reviewMemberId != authenticatedMemberId) {
 			throw new CustomException(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.");
 		}
@@ -259,14 +257,14 @@ public class ReviewService {
 
 		List<String> keepImageKeys = dto.getExistingImageKeys();
 
-		List<ReviewImage> existingImages = new ArrayList<>(review.getImages());
-		for (ReviewImage image : existingImages) {
+		review.getImages().removeIf(image -> {
 			if (keepImageKeys == null || !keepImageKeys.contains(image.getImageUrl())) {
 				s3Component.deleteObject(image.getImageUrl());
 				reviewImageRepository.delete(image);
-				review.getImages().remove(image);
+				return true;
 			}
-		}
+			return false;
+		});
 
 		List<Map<String, String>> preSignedUrlList = new ArrayList<>();
 		if (dto.getNewImages() != null) {
