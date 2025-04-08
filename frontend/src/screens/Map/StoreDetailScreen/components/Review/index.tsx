@@ -24,6 +24,14 @@ export interface ReviewProps {
 
 const MAX_CONTENT_LENGTH = 2;
 
+const sortReviewsByDate = (reviews: ReviewCardProps[]) => {
+  return [...reviews].sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+    return dateB - dateA;
+  });
+};
+
 const Review = (props: ReviewProps) => {
   const navigation = useMapNavigation();
   const [modalOpened, setModalOpened] = useState(false);
@@ -35,6 +43,8 @@ const Review = (props: ReviewProps) => {
       filterAges: [],
     });
   };
+
+  const sortedReviews = sortReviewsByDate(props.reviews);
 
   return (
     <>
@@ -64,9 +74,9 @@ const Review = (props: ReviewProps) => {
           </TouchableOpacity>
         </S.TitleHeaderContainer>
         <S.ReviewCardListContainer>
-          {props.reviews.length > 0 ? (
+          {sortedReviews.length > 0 ? (
             withDivider(
-              props.reviews
+              sortedReviews
                 .slice(0, MAX_CONTENT_LENGTH)
                 .map((review, index) => <ReviewCard key={index} {...review} />),
               <ThinDivider />,
@@ -76,7 +86,7 @@ const Review = (props: ReviewProps) => {
           )}
         </S.ReviewCardListContainer>
 
-        {props.reviews.length > 0 && (
+        {sortedReviews.length > 0 && (
           <MoreButtonWithDivider
             onPressed={handleMoreButtonPress}
             isOpened={false}
