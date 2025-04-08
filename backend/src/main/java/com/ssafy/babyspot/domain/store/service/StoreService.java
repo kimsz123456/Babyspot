@@ -76,13 +76,15 @@ public class StoreService {
 	public List<StoreDefaultInfoDto> getStoresInRange(Double topLeftLat, Double topLeftLong,
 		Double bottomRightLat, Double bottomRightLong) {
 
-		// topLeft와 bottomRight 좌표를 받아 최소/최대 위도와 경도
 		double minLat = Math.min(topLeftLat, bottomRightLat);
 		double maxLat = Math.max(topLeftLat, bottomRightLat);
 		double minLong = Math.min(topLeftLong, bottomRightLong);
 		double maxLong = Math.max(topLeftLong, bottomRightLong);
 
-		List<Store> stores = storeRepository.findStoresInRange(minLong, minLat, maxLong, maxLat);
+		double centerLong = (minLong + maxLong) / 2;
+		double centerLat = (minLat + maxLat) / 2;
+
+		List<Store> stores = storeRepository.findStoresInRange(minLong, minLat, maxLong, maxLat, centerLong, centerLat);
 		logger.info("Number of stores found: " + stores.size());
 
 		return stores.stream()
