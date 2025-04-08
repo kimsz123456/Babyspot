@@ -1,4 +1,4 @@
-package com.littlewaterdrops.babyspot
+package com.sojucompany.babyspot
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
