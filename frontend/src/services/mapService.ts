@@ -5,6 +5,9 @@ import {StoreBasicInformationType} from '../screens/Map/NearStoreListScreen/comp
 import {KeywordSectionProps} from '../screens/Map/StoreDetailScreen/components/Keyword';
 import {ReviewType} from './reviewService';
 
+// SW8: 지하철역, SC4: 학교, BK9: 은행행
+const IMPORTANT_CATEGORIES = ['PO3', 'SC4', 'SW8', 'BK9'];
+
 interface RangeInfoParameterType {
   topLeftLat: number;
   topLeftLong: number;
@@ -130,16 +133,42 @@ export const getGeocodingByKeyword = async (
     }>(
       `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(
         keyword,
-      )}&x=${x}&y=${y}&sort=${`distance`}`,
+      )}&x=${x}&y=${y}&sort=distance`,
       {
         headers: {
           Authorization: `KakaoAK ${Config.KAKAO_REST_API_KEY}`,
         },
       },
     );
-    const result = response.data.documents;
 
-    return result;
+    const categoryResponse = IMPORTANT_CATEGORIES.map(code =>
+      axios.get<{documents: GetGeocodingByKeywordResponse[]}>(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(
+          keyword,
+        )}&category_group_code=${code}`,
+        {
+          headers: {
+            Authorization: `KakaoAK ${Config.KAKAO_REST_API_KEY}`,
+          },
+        },
+      ),
+    );
+
+    const categoryResults = await Promise.all(categoryResponse);
+
+    const mergedMap = new Map<string, GetGeocodingByKeywordResponse>();
+
+    categoryResults.forEach(response =>
+      response.data.documents.forEach(document =>
+        mergedMap.set(document.id, document),
+      ),
+    );
+
+    response.data.documents.forEach(document =>
+      mergedMap.set(document.id, document),
+    );
+
+    return Array.from(mergedMap.values());
   } catch (error) {
     throw error;
   }

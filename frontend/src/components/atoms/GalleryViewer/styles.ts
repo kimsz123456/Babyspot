@@ -11,7 +11,6 @@ export const FullscreenImage = styled(Image)`
 
 export const GalleryHeader = styled(View)`
   position: absolute;
-  /* top: ${scale(40)}px; */
   left: 0;
   right: 0;
   z-index: 10;
