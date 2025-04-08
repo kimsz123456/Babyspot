@@ -75,10 +75,8 @@ public class MemberController {
 		if (authentication == null || !authentication.isAuthenticated()) {
 			throw new CustomException(HttpStatus.FORBIDDEN, "인증이 필요합니다.");
 		}
-
 		int authenticatedId = Integer.parseInt(authentication.getName());
 		memberService.deleteMember(authenticatedId);
-
 		return ResponseEntity.noContent().build();
 	}
 
@@ -88,25 +86,31 @@ public class MemberController {
 		@RequestHeader(value = "X-Temp-Token", required = false) String tempToken
 	) {
 		if (tempToken == null || !tokenService.validateToken(tempToken)) {
+			String errorDetail = "tempToken is null or invalid. Provided value: " + tempToken;
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new SignUpResponse("유효한 인증정보가 없습니다. 다시 로그인해주세요.", null, null));
+				.body(new SignUpResponse("유효한 인증정보가 없습니다. 다시 로그인해주세요.", null, null, errorDetail));
 		}
 
 		String providerId = tokenService.getProviderId(tempToken);
 		String registrationId = tokenService.getRegistrationId(tempToken);
-		logger.info("provider id: " + providerId + ", registration id: " + registrationId);
+		logger.info("provider id: {}, registration id: {}", providerId, registrationId);
 
 		try {
 			SignUpToken result = memberService.signUpToken(providerId, signUpRequest, registrationId);
-			logger.info("signup result: " + result);
+			logger.info("회원가입 성공, 결과 토큰: {}", result);
 			return ResponseEntity.ok(
-				new SignUpResponse("회원가입 완료", result.getAccessToken(), result.getRefreshToken()));
+				new SignUpResponse("회원가입 완료", result.getAccessToken(), result.getRefreshToken(), null)
+			);
 		} catch (IllegalArgumentException e) {
+			String errorDetail = e.getClass().getSimpleName() + " : " + e.getMessage();
+			logger.error("회원가입 오류 발생: {}", errorDetail, e);
 			return ResponseEntity.badRequest()
-				.body(new SignUpResponse(e.getMessage(), null, null));
+				.body(new SignUpResponse(e.getMessage(), null, null, errorDetail));
 		} catch (Exception e) {
+			String errorDetail = e.getClass().getSimpleName() + " : " + e.getMessage();
+			logger.error("회원가입 처리 중 예외 발생: {}", errorDetail, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(new SignUpResponse("회원가입 실패", null, null));
+				.body(new SignUpResponse("회원가입 실패", null, null, errorDetail));
 		}
 	}
 
@@ -134,5 +138,15 @@ public class MemberController {
 		UpdateProfileResponse response = memberService.updateProfile(memberId, request);
 
 		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/signup/checknickname")
+	public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
+		Optional<Member> memberOptional = memberRepository.findByNickname(nickname);
+		if (memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+				.body("이미 사용 중인 닉네임입니다.");
+		}
+		return ResponseEntity.ok("사용 가능한 닉네임입니다.");
 	}
 }
