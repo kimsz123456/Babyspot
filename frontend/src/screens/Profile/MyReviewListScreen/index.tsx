@@ -12,9 +12,10 @@ const MyReviewListScreen = () => {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  console.log('reviews', reviews);
   const fetchReviews = async (pageNumber: number) => {
-    if (loading || !hasMore) return;
+    if (loading || !hasMore) {
+      return;
+    }
 
     try {
       setLoading(true);
@@ -62,7 +63,9 @@ const MyReviewListScreen = () => {
   };
 
   const renderFooter = () => {
-    if (!loading) return null;
+    if (!loading) {
+      return null;
+    }
     return (
       <S.LoadingContainer>
         <ActivityIndicator size="large" />
