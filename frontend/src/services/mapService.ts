@@ -40,6 +40,7 @@ export interface StoreDetailResponse {
   kidsMenu: KidsMenu[];
   latestReviews: ReviewType[];
   babyAges: number[];
+  conveniencePlace: ConveniencePlace[];
 }
 
 export interface Image {
@@ -62,6 +63,20 @@ export interface Sentiment {
   positive: string[];
   negativeSummary: string;
   negative: string[];
+}
+
+export interface ConveniencePlace {
+  title: string;
+  category: ConvenienceCategoryTypes;
+  distance: number;
+  link: string | null;
+}
+
+export enum ConvenienceCategoryTypes {
+  Performance = '영화/연극/공연',
+  Museum = '전시/기념관',
+  Tourist = '관광지',
+  ScenicSpot = '명승지',
 }
 
 export interface PostReviewsRequest {

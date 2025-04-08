@@ -28,8 +28,9 @@ import {getStoreReviews, ReviewType} from '../../../services/reviewService';
 
 import * as S from './styles';
 import {useGlobalStore} from '../../../stores/globalStore';
+import NearCultureSpot from './components/NearCultureSpot';
 
-const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
+const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰', '주변시설'];
 const TAB_BAR_HEIGHT = 48;
 const EPSILON = 5;
 
@@ -53,6 +54,7 @@ const StoreDetailScreen = () => {
     메뉴: useRef<View>(null),
     키워드: useRef<View>(null),
     리뷰: useRef<View>(null),
+    주변시설: useRef<View>(null),
   };
 
   const fetchStoreDetail = async () => {
@@ -228,6 +230,14 @@ const StoreDetailScreen = () => {
                 storeName={storeDetail.storeName}
                 storeId={storeDetail.storeId}
                 myReview={myReview}
+              />
+            </View>
+            <ThickDivider />
+            <View
+              ref={sectionRefs['주변시설']}
+              onLayout={handleLayout('주변시설')}>
+              <NearCultureSpot
+                conveniencePlaces={storeDetail.conveniencePlace}
               />
             </View>
           </>
