@@ -39,7 +39,7 @@ export type MapStackParamList = {
 const MapStackNavigator = () => {
   const Stack = createNativeStackNavigator<MapStackParamList>();
 
-  const {storeBasicInformation, selectedStoreIndex} = useMapStore();
+  const {filteredStoreBasicInformation, selectedStoreIndex} = useMapStore();
 
   return (
     <Stack.Navigator>
@@ -70,7 +70,9 @@ const MapStackNavigator = () => {
             return (
               <CustomHeader
                 props={props}
-                title={storeBasicInformation[selectedStoreIndex]?.title || ''}
+                title={
+                  filteredStoreBasicInformation[selectedStoreIndex]?.title || ''
+                }
               />
             );
           },

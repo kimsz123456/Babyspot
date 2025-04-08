@@ -17,10 +17,10 @@ const CLOUDFRONT_PREFIX = Config.CLOUDFRONT_PREFIX;
 
 const SelectedStoreBasicCard = () => {
   const navigation = useMapNavigation();
-  const {selectedAges, storeBasicInformation, selectedStoreIndex} =
+  const {selectedAges, filteredStoreBasicInformation, selectedStoreIndex} =
     useMapStore();
 
-  const store = storeBasicInformation[selectedStoreIndex];
+  const store = filteredStoreBasicInformation[selectedStoreIndex];
 
   const haveBabyAges = store?.babyAges && store.babyAges.length > 0;
 

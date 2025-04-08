@@ -25,9 +25,9 @@ const CURRENT_DAY = new Date().getDay();
 const Home = () => {
   const [isBusinessHourOpened, setIsBusinessHourOpened] = useState(false);
 
-  const {storeBasicInformation, selectedStoreIndex} = useMapStore();
+  const {filteredStoreBasicInformation, selectedStoreIndex} = useMapStore();
 
-  const store = storeBasicInformation[selectedStoreIndex];
+  const store = filteredStoreBasicInformation[selectedStoreIndex];
 
   if (!store) {
     return;

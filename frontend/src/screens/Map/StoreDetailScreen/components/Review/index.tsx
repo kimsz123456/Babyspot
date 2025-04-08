@@ -5,7 +5,7 @@ import {
   IC_FILTER,
   IC_YELLOW_STAR,
 } from '../../../../../constants/icons';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import ReviewCard, {ReviewCardProps} from './ReviewCard';
 import {withDivider} from '../../../../../utils/withDivider';
 import {ThinDivider} from '../../../../../components/atoms/Divider';
@@ -37,9 +37,9 @@ const Review = (props: ReviewProps) => {
   const [sortedReview, setSortedReview] = useState<ReviewCardProps[]>([]);
 
   const navigation = useMapNavigation();
-  const {storeBasicInformation, selectedStoreIndex} = useMapStore();
+  const {filteredStoreBasicInformation, selectedStoreIndex} = useMapStore();
 
-  const store = storeBasicInformation[selectedStoreIndex];
+  const store = filteredStoreBasicInformation[selectedStoreIndex];
 
   if (!store) {
     return;
@@ -54,6 +54,8 @@ const Review = (props: ReviewProps) => {
   };
 
   useEffect(() => {
+    console.log('useEffect 실행');
+
     const sortedReviews = sortReviewsByDate(
       props.reviews.filter(review => {
         return review.memberId != props.myReview?.memberId;
@@ -95,7 +97,7 @@ const Review = (props: ReviewProps) => {
               <S.FilterIconImage source={IC_FILTER} />
             </TouchableOpacity>
           </S.TitleHeaderContainer>
-          <S.CaptionText>{`내 리뷰가 상위에 노출됩니다.`}</S.CaptionText>
+          <S.CaptionText>{'내 리뷰가 상위에 노출됩니다.'}</S.CaptionText>
         </S.TitleCaptionContainer>
         <S.ReviewCardListContainer>
           {sortedReview.length > 0 ? (

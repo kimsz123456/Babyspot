@@ -23,7 +23,7 @@ const NearStoreListScreen = ({bottomSheetRef}: NearStoreListScreenProps) => {
   const imageCarouselRef = useRef<ScrollView>(null);
 
   const navigation = useMapNavigation();
-  const {selectedAges, storeBasicInformation, setSelectedStoreIndex} =
+  const {selectedAges, filteredStoreBasicInformation, setSelectedStoreIndex} =
     useMapStore();
 
   const handleStorePress = (idx: number) => {
@@ -46,10 +46,10 @@ const NearStoreListScreen = ({bottomSheetRef}: NearStoreListScreenProps) => {
           <S.Title>
             {selectedAges.length > 0 ? '추천 음식점' : '주변 음식점'}
           </S.Title>
-          {storeBasicInformation.length === 0 ? (
+          {filteredStoreBasicInformation.length === 0 ? (
             <NoContent />
           ) : (
-            storeBasicInformation.map((store, idx) => (
+            filteredStoreBasicInformation.map((store, idx) => (
               <TouchableWithoutFeedback
                 key={store.storeId}
                 onPress={() => handleStorePress(idx)}>

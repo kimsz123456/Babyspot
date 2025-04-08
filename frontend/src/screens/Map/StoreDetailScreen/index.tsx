@@ -39,7 +39,7 @@ const StoreDetailScreen = () => {
   const [myReview, setMyReview] = useState<ReviewType>();
 
   const {memberProfile} = useGlobalStore();
-  const {storeBasicInformation, selectedStoreIndex} = useMapStore();
+  const {filteredStoreBasicInformation, selectedStoreIndex} = useMapStore();
 
   const scrollRef = useRef<any>(null);
   const sectionLayouts = useRef<Record<string, number>>({});
@@ -53,7 +53,7 @@ const StoreDetailScreen = () => {
     리뷰: useRef<View>(null),
   };
 
-  const store = storeBasicInformation[selectedStoreIndex];
+  const store = filteredStoreBasicInformation[selectedStoreIndex];
 
   const fetchStoreDetail = async () => {
     if (!store) {
