@@ -16,6 +16,17 @@ export const Title = styled(Text)`
   color: ${GrayColors[800]};
 `;
 
+export const TitleCaption = styled(Text)`
+  ${FontStyles.captionMedium}
+  color: ${GrayColors[400]};
+`;
+
+export const TitleContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  gap: ${scale(8)}px;
+`;
+
 export const ReviewByEmotionSection = styled(View)`
   gap: ${scale(8)}px;
 `;
