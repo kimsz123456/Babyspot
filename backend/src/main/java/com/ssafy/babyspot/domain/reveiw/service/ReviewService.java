@@ -247,7 +247,6 @@ public class ReviewService {
 		if (reviewMemberId != authenticatedMemberId) {
 			throw new CustomException(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.");
 		}
-
 		if (dto.getRating() != null && !dto.getRating().equals(review.getRating())) {
 			review.setRating(dto.getRating());
 		}
