@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import * as S from './styles';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {RouteProp, useRoute, useFocusEffect} from '@react-navigation/native';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import ReviewCard from '../StoreDetailScreen/components/Review/ReviewCard';
 import {
@@ -90,6 +90,15 @@ const ReviewListScreen = () => {
       setLoading(false);
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setPage(0);
+      setAllReviews([]);
+      setFilteredReviews([]);
+      fetchReviews(0);
+    }, [storeId]),
+  );
 
   useEffect(() => {
     fetchReviews(0);
