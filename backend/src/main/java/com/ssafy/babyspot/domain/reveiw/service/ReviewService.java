@@ -143,7 +143,7 @@ public class ReviewService {
 			dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 
 			List<String> imgUrls = review.getImages().stream()
-				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl() + "?v=" + System.currentTimeMillis())
 				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
@@ -172,7 +172,7 @@ public class ReviewService {
 		dto.setBabyAges(review.getBabyAges());
 		dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 		List<String> imgUrls = review.getImages().stream()
-			.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+			.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl() + "?v=" + System.currentTimeMillis())
 			.collect(Collectors.toList());
 		dto.setImgUrls(imgUrls);
 		dto.setLikeCount(review.getReviewLikes().size());
@@ -213,7 +213,7 @@ public class ReviewService {
 			dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 
 			List<String> imgUrls = review.getImages().stream()
-				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl() + "?v=" + System.currentTimeMillis())
 				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
