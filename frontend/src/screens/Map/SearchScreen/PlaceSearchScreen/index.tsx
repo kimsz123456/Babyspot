@@ -14,7 +14,7 @@ const PlaceSearchScreen = () => {
   const [keyword, setKeyword] = useState('');
   const [results, setResults] = useState<GetGeocodingByKeywordResponse[]>([]);
   const navigation = useMapNavigation();
-  const setSelectedPlace = useMapStore(state => state.setSelectedPlace);
+  const {centerCoordinate, setSelectedPlace} = useMapStore();
 
   const searchPlaces = async (text: string) => {
     setKeyword(text);
@@ -25,7 +25,12 @@ const PlaceSearchScreen = () => {
     }
 
     try {
-      const response = await getGeocodingByKeyword(text);
+      const response = await getGeocodingByKeyword(
+        text,
+        centerCoordinate.longitude,
+        centerCoordinate.latitude,
+      );
+
       setResults(response);
     } catch (error) {
       console.error('장소 검색 오류:', error);
