@@ -16,6 +16,7 @@ import Config from 'react-native-config';
 import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 import {useGlobalStore} from '../../../stores/globalStore';
+import {useMapStore} from '../../../stores/mapStore';
 
 import StarRating from '../../../components/atoms/StarRating';
 import MultilineTextInput from '../../../components/atoms/MultilineTextInput';
@@ -53,7 +54,6 @@ const WriteReviewScreen = () => {
   const navigation = useMapNavigation();
   const {review} = route.params;
   const isWriteScreen = review.reviewId === -1;
-  const {setShouldRefreshReviews} = useGlobalStore();
 
   const [starRating, setStarRating] = useState(review.rating);
   const [imagePaths, setImagePaths] = useState<ImageProps[]>(
@@ -65,6 +65,10 @@ const WriteReviewScreen = () => {
   );
   const [content, setContent] = useState(review.content);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  const {setShouldRefreshReviews} = useGlobalStore();
+  const {fetchStoreBasicInformation, setFilteredStoreBasicInformation} =
+    useMapStore();
 
   const handleAddImage = async () => {
     try {
@@ -120,6 +124,9 @@ const WriteReviewScreen = () => {
 
       setShouldRefreshReviews(true);
 
+      fetchStoreBasicInformation();
+      setFilteredStoreBasicInformation();
+
       navigation.navigate('CompleteScreen', {
         completeType: 'create',
       });
@@ -173,6 +180,9 @@ const WriteReviewScreen = () => {
 
       setShouldRefreshReviews(true);
 
+      fetchStoreBasicInformation();
+      setFilteredStoreBasicInformation();
+
       navigation.navigate('CompleteScreen', {
         completeType: 'update',
       });
@@ -186,7 +196,11 @@ const WriteReviewScreen = () => {
   const handleDeleteReview = async () => {
     try {
       await deleteReviews(review.reviewId);
+
       setShouldRefreshReviews(true);
+
+      fetchStoreBasicInformation();
+      setFilteredStoreBasicInformation();
 
       navigation.navigate('CompleteScreen', {
         completeType: 'delete',
