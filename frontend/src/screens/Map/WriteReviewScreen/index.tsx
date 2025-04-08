@@ -133,6 +133,7 @@ const WriteReviewScreen = () => {
     const existingImages = imagePaths.filter(image =>
       image.uri.startsWith('http'),
     );
+
     const newImages = imagePaths.filter(image => !image.uri.startsWith('http'));
 
     const existingImageKeys = existingImages.map(image => {
@@ -147,7 +148,7 @@ const WriteReviewScreen = () => {
       const params: PatchReviewsRequest = {
         rating: starRating,
         content: content.trim(),
-        existingImageKeys: existingImageKeys,
+        existingImageKeys: existingImageKeys.map(image => image.split('?')[0]),
         newImages: newImages.map((image, index) => ({
           imageName: image.fileName,
           contentType: image.type,
@@ -164,8 +165,8 @@ const WriteReviewScreen = () => {
 
       preSignedUrls.map((url, index) => {
         uploadImageToS3({
-          imageType: imagePaths[index].type,
-          imagePath: imagePaths[index].uri,
+          imageType: newImages[index].type,
+          imagePath: newImages[index].uri,
           preSignedUrl: url.reviewImagePresignedUrl,
         });
       });
