@@ -20,6 +20,11 @@ export const DetailContainer = styled(View)`
   gap: ${scale(8)}px;
 `;
 
+export const TitleContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
 export const FirstRowContainer = styled(View)`
   flex-direction: row;
   align-items: center;
@@ -58,6 +63,11 @@ export const OKZoneMarker = styled(View)`
 export const OKZoneText = styled(Text)`
   ${FontStyles.captionSmall}
   color: ${SecondaryColors[500]};
+`;
+export const EditTextContainer = styled(TouchableOpacity)``;
+export const EditText = styled(Text)`
+  ${FontStyles.captionMedium};
+  color: ${GrayColors[700]};
 `;
 
 export const SecondRowContainer = styled(View)`

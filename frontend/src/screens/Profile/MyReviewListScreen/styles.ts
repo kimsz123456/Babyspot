@@ -15,14 +15,6 @@ export const Wrapper = styled(FlatList<ReviewType>)`
   padding: ${scale(32)}px ${scale(24)}px;
 `;
 
-export const MyReviewListScreenContainer = styled(View)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: ${scale(32)}px ${scale(24)}px;
-  background-color: ${GrayColors[0]};
-`;
-
 export const Divider = styled(View)`
   padding: ${scale(8)}px 0px;
   width: 100%;
