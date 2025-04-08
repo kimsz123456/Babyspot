@@ -10,11 +10,14 @@ const MAX_CONTENT_LENGTH = 5;
 const FamilyReview = (props: FamilyReviewProps) => {
   return (
     <S.FamilyReviewContainer>
-      <S.Title>{`패밀리 리뷰`}</S.Title>
+      <S.TitleContainer>
+        <S.Title>{`패밀리 리뷰`}</S.Title>
+        <S.TitleCaption>{`아이와 함께한 가족의 리뷰에요.`}</S.TitleCaption>
+      </S.TitleContainer>
       <S.ReviewByEmotionSection>
         <S.EmotionTitle $isPositive={true}>{`긍정`}</S.EmotionTitle>
         {props.positive.length == 0 ? (
-          <NoDataContainer text="해당 가게는 데이터를 준비 중입니다." />
+          <NoDataContainer text="리뷰가 없습니다." />
         ) : (
           <>
             <S.SummaryText>{`❝ ${props.positiveSummary} ❞`}</S.SummaryText>
@@ -46,7 +49,7 @@ const FamilyReview = (props: FamilyReviewProps) => {
       <S.ReviewByEmotionSection>
         <S.EmotionTitle $isPositive={false}>{`부정`}</S.EmotionTitle>
         {props.negative.length == 0 ? (
-          <NoDataContainer text="해당 가게는 데이터를 준비 중입니다." />
+          <NoDataContainer text="리뷰가 없습니다." />
         ) : (
           <>
             <S.SummaryText>{`❝ ${props.negativeSummary} ❞`}</S.SummaryText>
