@@ -56,14 +56,16 @@ const MapScreen = () => {
     selectedAges,
     selectedChips,
     centerCoordinate,
+    zoom,
     storeBasicInformation,
     filteredStoreBasicInformation,
     isLoading,
     setSelectedAges,
     fetchStoreBasicInformation,
     setFilteredStoreBasicInformation,
+    setSelectedStoreIndex,
   } = useMapStore();
-  const {mapRegion, zoom, onCameraIdle} = useMapViewport();
+  const {onCameraIdle} = useMapViewport();
   const {isVisible, updateLastSearchedCoordinate} = useResearchButtonVisibility(
     {centerCoordinate, zoom},
   );
@@ -161,7 +163,7 @@ const MapScreen = () => {
 
   const searchStoresInRegion = async () => {
     try {
-      fetchStoreBasicInformation(mapRegion);
+      fetchStoreBasicInformation();
 
       updateLastSearchedCoordinate();
     } catch (e) {
@@ -175,7 +177,7 @@ const MapScreen = () => {
 
   const searchStoresByAge = async () => {
     try {
-      fetchStoreBasicInformation(mapRegion);
+      fetchStoreBasicInformation();
 
       updateLastSearchedCoordinate();
     } catch (error) {
@@ -189,20 +191,20 @@ const MapScreen = () => {
 
   const handleMarkerTab = (idx: number) => {
     setSelectedMarker(idx);
+    setSelectedStoreIndex(idx);
   };
 
   const handleNaverMapTab = () => {
     bottomSheetRef.current?.snapToIndex(0);
 
     setSelectedMarker(-1);
+    setSelectedStoreIndex(-1);
   };
 
-  const moveToAddress = async (
-    searchedPlace: GetGeocodingByKeywordResponse,
-  ) => {
+  const moveToAddress = async (place: GetGeocodingByKeywordResponse) => {
     try {
-      const latitude = parseFloat(searchedPlace.y);
-      const longitude = parseFloat(searchedPlace.x);
+      const latitude = parseFloat(place.y);
+      const longitude = parseFloat(place.x);
 
       moveToCamera({
         latitude: latitude,
@@ -337,14 +339,9 @@ const MapScreen = () => {
         {isVisible && <ResearchButton onPress={handleResearchButtonPress} />}
 
         {selectedMarker >= 0 ? (
-          <StoreBasicScreen
-            store={filteredStoreBasicInformation[selectedMarker]}
-          />
+          <StoreBasicScreen />
         ) : (
-          <NearStoreListScreen
-            stores={filteredStoreBasicInformation}
-            bottomSheetRef={bottomSheetRef}
-          />
+          <NearStoreListScreen bottomSheetRef={bottomSheetRef} />
         )}
       </S.MapScreenContainer>
       {isLoading ? <LoadingIndicator /> : null}

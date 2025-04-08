@@ -10,7 +10,10 @@ import {
 } from '../services/mapService';
 
 import calculateMapRegion from '../utils/calculateMapRegion';
-import {INITIAL_MAP_CENTER_COORDINATE} from '../constants/constants';
+import {
+  INITIAL_MAP_CENTER_COORDINATE,
+  MAP_ZOOM_SCALE,
+} from '../constants/constants';
 
 export interface Coordinate {
   latitude: number;
@@ -24,24 +27,32 @@ interface MapRegionType {
 
 interface MapState {
   selectedPlace: GetGeocodingByKeywordResponse | null;
-  setSelectedPlace: (selectedPlace: GetGeocodingByKeywordResponse) => void;
 
   selectedAges: number[];
-  setSelectedAges: (ages: number[]) => void;
-
   selectedChips: string[];
-  setSelectedChips: (chips: string[]) => void;
 
   centerCoordinate: Coordinate;
-  setCenterCoordinate: (centerCoordinate: Coordinate) => void;
+  mapRegion: MapRegionType;
+  zoom: number;
 
   storeBasicInformation: StoreBasicInformationType[];
-  fetchStoreBasicInformation: (mapRegion: MapRegionType) => Promise<void>;
-
   filteredStoreBasicInformation: StoreBasicInformationType[];
-  setFilteredStoreBasicInformation: () => void;
+  selectedStoreIndex: number;
 
   isLoading: boolean;
+
+  setSelectedPlace: (selectedPlace: GetGeocodingByKeywordResponse) => void;
+
+  setSelectedAges: (ages: number[]) => void;
+  setSelectedChips: (chips: string[]) => void;
+
+  setCenterCoordinate: (centerCoordinate: Coordinate) => void;
+  setMapRegion: (region: MapRegionType) => void;
+  setZoom: (zoom: number | undefined) => void;
+
+  fetchStoreBasicInformation: () => Promise<void>;
+  setFilteredStoreBasicInformation: () => void;
+  setSelectedStoreIndex: (storeIndex: number) => void;
 
   clearSelectedPlace: () => void;
   resetMapState: () => void;
@@ -52,13 +63,20 @@ const initialState = {
   selectedAges: [],
   selectedChips: [],
   centerCoordinate: INITIAL_MAP_CENTER_COORDINATE,
+  mapRegion: {
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  },
+  zoom: MAP_ZOOM_SCALE.basic,
   storeBasicInformation: [],
   filteredStoreBasicInformation: [],
+  selectedStoreIndex: -1,
   isLoading: false,
 };
 
 export const useMapStore = create<MapState>((set, get) => ({
   ...initialState,
+
   setSelectedPlace: selectedPlace => set({selectedPlace: selectedPlace}),
 
   setSelectedAges: ages => set({selectedAges: ages}),
@@ -68,9 +86,13 @@ export const useMapStore = create<MapState>((set, get) => ({
   setCenterCoordinate: centerCoordinate =>
     set({centerCoordinate: centerCoordinate}),
 
-  fetchStoreBasicInformation: async mapRegion => {
+  setMapRegion: region => set({mapRegion: region}),
+
+  setZoom: zoom => set({zoom: zoom}),
+
+  fetchStoreBasicInformation: async () => {
     try {
-      const {selectedAges, centerCoordinate} = get();
+      const {selectedAges, centerCoordinate, mapRegion} = get();
 
       const {topLeft, bottomRight} = calculateMapRegion(
         centerCoordinate,
@@ -140,6 +162,8 @@ export const useMapStore = create<MapState>((set, get) => ({
 
     set({filteredStoreBasicInformation: filteredStores});
   },
+
+  setSelectedStoreIndex: storeIndex => set({selectedStoreIndex: storeIndex}),
 
   clearSelectedPlace: () => set({selectedPlace: null}),
   resetMapState: () => set({...initialState}),

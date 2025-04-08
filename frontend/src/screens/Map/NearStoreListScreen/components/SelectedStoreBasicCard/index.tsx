@@ -10,31 +10,29 @@ import {AGE_MARKERS, DAY} from '../../../../../constants/constants';
 import {IC_COMMENT, IC_YELLOW_STAR} from '../../../../../constants/icons';
 
 import * as S from './styles';
-import {StoreBasicInformationType} from '../StoreBasicInformation/types';
 import {useMapNavigation} from '../../../../../hooks/useNavigationHooks';
 
 const CURRENT_DAY = new Date().getDay();
 const CLOUDFRONT_PREFIX = Config.CLOUDFRONT_PREFIX;
 
-interface StoreBasicInformationProps {
-  store: StoreBasicInformationType;
-}
-
-const SelectedStoreBasicCard = ({store}: StoreBasicInformationProps) => {
+const SelectedStoreBasicCard = () => {
   const navigation = useMapNavigation();
-  const {selectedAges} = useMapStore();
+  const {selectedAges, storeBasicInformation, selectedStoreIndex} =
+    useMapStore();
 
-  const haveBabyAges = store.babyAges && store.babyAges.length > 0;
+  const store = storeBasicInformation[selectedStoreIndex];
+
+  const haveBabyAges = store?.babyAges && store.babyAges.length > 0;
 
   return (
     <S.StoreBasicInformationContainer
       onPress={() => {
-        navigation.navigate('StoreDetail', {storeBasicInformation: store});
+        navigation.navigate('StoreDetail');
       }}>
       <S.DetailContainer>
         <S.FirstRowContainer>
-          <S.StoreName>{store.title}</S.StoreName>
-          <S.StoreCategory>{store.category}</S.StoreCategory>
+          <S.StoreName>{store?.title}</S.StoreName>
+          <S.StoreCategory>{store?.category}</S.StoreCategory>
           {selectedAges.length > 0 && haveBabyAges && (
             <S.AgeMarkerContainer>
               {store.babyAges.map((age, idx) => (
@@ -46,32 +44,32 @@ const SelectedStoreBasicCard = ({store}: StoreBasicInformationProps) => {
               ))}
             </S.AgeMarkerContainer>
           )}
-          {store.okZone && <OKZoneMarker />}
+          {store?.okZone && <OKZoneMarker />}
         </S.FirstRowContainer>
 
         <S.SecondRowContainer>
           <S.RatingContainer>
             <S.SmallIcon source={IC_YELLOW_STAR} />
-            <S.Rating>별점 {store.rating.toFixed(1)}</S.Rating>
+            <S.Rating>별점 {store?.rating.toFixed(1)}</S.Rating>
           </S.RatingContainer>
           <S.ReviewContainer>
             <S.SmallIcon source={IC_COMMENT} />
-            <S.ReviewCount>리뷰 {store.reviewCount}개</S.ReviewCount>
+            <S.ReviewCount>리뷰 {store?.reviewCount}개</S.ReviewCount>
           </S.ReviewContainer>
         </S.SecondRowContainer>
 
         <S.BusinessHourContainer>
           <S.Day>{DAY[CURRENT_DAY]}</S.Day>
           <S.BusinessHour>
-            {store.businessHour[DAY[CURRENT_DAY].slice(0, 1)]}
+            {store?.businessHour[DAY[CURRENT_DAY].slice(0, 1)]}
           </S.BusinessHour>
         </S.BusinessHourContainer>
       </S.DetailContainer>
 
       <S.ImageContainer>
-        {store.images.length > 4 ? (
+        {store?.images && store.images.length > 4 ? (
           <>
-            {store.images.slice(0, 3).map((imageUrl, idx) => (
+            {store?.images.slice(0, 3).map((imageUrl, idx) => (
               <S.Images
                 key={idx}
                 source={{uri: `${CLOUDFRONT_PREFIX}${imageUrl.storeImg}`}}
@@ -80,14 +78,14 @@ const SelectedStoreBasicCard = ({store}: StoreBasicInformationProps) => {
             <S.OverlayWrapper key="overlay">
               <S.Images
                 source={{
-                  uri: `${CLOUDFRONT_PREFIX}${store.images[3].storeImg}`,
+                  uri: `${CLOUDFRONT_PREFIX}${store?.images[3].storeImg}`,
                 }}
               />
               <S.OverlayText>+{store.images.length - 4}</S.OverlayText>
             </S.OverlayWrapper>
           </>
         ) : (
-          store.images.map((imageUrl, idx) => (
+          store?.images.map((imageUrl, idx) => (
             <S.Images
               key={idx}
               source={{uri: `${CLOUDFRONT_PREFIX}${imageUrl.storeImg}`}}

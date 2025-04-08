@@ -13,10 +13,9 @@ import MoreButtonWithDivider from '../../../../../components/atoms/MoreButtonWit
 import {useMapNavigation} from '../../../../../hooks/useNavigationHooks';
 import ReviewFilterModal from '../../../ReviewListScreen/ReviewFilterModal';
 import NoDataContainer from '../../../../../components/atoms/NoDataContainer';
+import {useMapStore} from '../../../../../stores/mapStore';
 
 export interface ReviewProps {
-  totalRating: string;
-  totalReviewCount: number;
   reviews: ReviewCardProps[];
   storeName: string;
   storeId: number;
@@ -33,8 +32,16 @@ const sortReviewsByDate = (reviews: ReviewCardProps[]) => {
 };
 
 const Review = (props: ReviewProps) => {
-  const navigation = useMapNavigation();
   const [modalOpened, setModalOpened] = useState(false);
+
+  const navigation = useMapNavigation();
+  const {storeBasicInformation, selectedStoreIndex} = useMapStore();
+
+  const store = storeBasicInformation[selectedStoreIndex];
+
+  if (!store) {
+    return;
+  }
 
   const handleMoreButtonPress = () => {
     navigation.navigate('ReviewListScreen', {
@@ -56,12 +63,12 @@ const Review = (props: ReviewProps) => {
               <S.InformationContainer>
                 <S.InformationIconImage source={IC_YELLOW_STAR} />
                 <S.InformationText
-                  $isStar>{`별점 ${props.totalRating}`}</S.InformationText>
+                  $isStar>{`별점 ${store.rating}`}</S.InformationText>
               </S.InformationContainer>
               <S.InformationContainer>
                 <S.InformationIconImage source={IC_COMMENT} />
                 <S.InformationText $isStar={false}>
-                  {`리뷰 ${props.totalReviewCount}개`}
+                  {`리뷰 ${store.reviewCount}개`}
                 </S.InformationText>
               </S.InformationContainer>
             </S.InformationListContainer>

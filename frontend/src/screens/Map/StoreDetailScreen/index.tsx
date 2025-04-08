@@ -7,9 +7,8 @@ import {
   NativeScrollEvent,
   InteractionManager,
 } from 'react-native';
-import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
-import {MapStackParamList} from '../../../navigation/MapStackNavigator';
 import StoreBasicInformation from '../NearStoreListScreen/components/StoreBasicInformation';
 import Home from './components/Home';
 import Menu from './components/Menu';
@@ -28,20 +27,19 @@ import {getStoreReviews, ReviewType} from '../../../services/reviewService';
 
 import * as S from './styles';
 import {useGlobalStore} from '../../../stores/globalStore';
+import {useMapStore} from '../../../stores/mapStore';
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰'];
 const TAB_BAR_HEIGHT = 48;
 const EPSILON = 5;
 
-type StoreDetailRouteProp = RouteProp<MapStackParamList, 'StoreDetail'>;
-
 const StoreDetailScreen = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [storeDetail, setStoreDetail] = useState<StoreDetailResponse>();
   const [myReview, setMyReview] = useState<ReviewType>();
-  const route = useRoute<StoreDetailRouteProp>();
+
   const {memberProfile} = useGlobalStore();
-  const {storeBasicInformation} = route.params;
+  const {storeBasicInformation, selectedStoreIndex} = useMapStore();
 
   const scrollRef = useRef<any>(null);
   const sectionLayouts = useRef<Record<string, number>>({});
@@ -55,9 +53,15 @@ const StoreDetailScreen = () => {
     리뷰: useRef<View>(null),
   };
 
+  const store = storeBasicInformation[selectedStoreIndex];
+
   const fetchStoreDetail = async () => {
+    if (!store) {
+      return;
+    }
+
     try {
-      const response = await getStoreDetail(storeBasicInformation.storeId);
+      const response = await getStoreDetail(store.storeId);
 
       setStoreDetail(response);
     } catch (error) {
@@ -66,8 +70,12 @@ const StoreDetailScreen = () => {
   };
 
   const fetchMyReviewInStore = async () => {
+    if (!store) {
+      return;
+    }
+
     try {
-      const response = await getStoreReviews(storeBasicInformation.storeId);
+      const response = await getStoreReviews(store.storeId);
 
       const myReview = response.content.find(
         review => review.memberId === memberProfile?.id,
@@ -187,13 +195,13 @@ const StoreDetailScreen = () => {
         contentContainerStyle={{paddingTop: TAB_BAR_HEIGHT}}
         showsVerticalScrollIndicator={false}>
         <S.BasicInformationContainer>
-          <StoreBasicInformation store={storeBasicInformation} canShowGallery />
+          {store && <StoreBasicInformation store={store} canShowGallery />}
         </S.BasicInformationContainer>
 
         {storeDetail && (
           <>
             <View ref={sectionRefs['홈']} onLayout={handleLayout('홈')}>
-              <Home basicInformation={storeBasicInformation} />
+              <Home />
             </View>
             <ThickDivider />
 
@@ -219,8 +227,6 @@ const StoreDetailScreen = () => {
               />
               <ThickDivider />
               <Review
-                totalRating={storeBasicInformation.rating.toFixed(1)}
-                totalReviewCount={storeBasicInformation.reviewCount}
                 reviews={storeDetail.latestReviews}
                 storeName={storeDetail.storeName}
                 storeId={storeDetail.storeId}
