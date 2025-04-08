@@ -111,6 +111,7 @@ const MyReviewListScreen = () => {
           onEndReachedThreshold={0.5}
           ListFooterComponent={renderFooter}
           scrollEventThrottle={16}
+          contentContainerStyle={{paddingBottom: 50}}
         />
       </View>
     </S.BackGround>
