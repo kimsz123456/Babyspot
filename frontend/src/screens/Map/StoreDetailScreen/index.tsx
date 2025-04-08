@@ -212,18 +212,22 @@ const StoreDetailScreen = () => {
             <ThickDivider />
 
             <View ref={sectionRefs['리뷰']} onLayout={handleLayout('리뷰')}>
-              <MyReview
-                storeId={storeDetail.storeId}
-                storeName={storeDetail.storeName}
-                review={myReview}
-              />
-              <ThickDivider />
+              {myReview ? undefined : (
+                <>
+                  <MyReview
+                    storeId={storeDetail.storeId}
+                    storeName={storeDetail.storeName}
+                  />
+                  <ThickDivider />
+                </>
+              )}
               <Review
                 totalRating={storeBasicInformation.rating.toFixed(1)}
                 totalReviewCount={storeBasicInformation.reviewCount}
                 reviews={storeDetail.latestReviews}
                 storeName={storeDetail.storeName}
                 storeId={storeDetail.storeId}
+                myReview={myReview}
               />
             </View>
           </>

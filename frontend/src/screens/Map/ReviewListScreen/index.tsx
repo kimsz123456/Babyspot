@@ -18,6 +18,7 @@ import {
   getStoreReviews,
   ReviewResponseType,
 } from '../../../services/reviewService';
+import {sortReviewsByDate} from '../StoreDetailScreen/components/Review';
 
 type StoreDetailRouteProp = RouteProp<MapStackParamList, 'ReviewListScreen'>;
 
@@ -36,6 +37,9 @@ const ReviewListScreen = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
+  const [sortedReviews, setSortedReviews] = useState<
+    ReviewResponseType['content']
+  >([]);
 
   const filteredAges = route.params.filterAges;
   const PAGE_SIZE = 10;
@@ -119,6 +123,12 @@ const ReviewListScreen = () => {
     setFilteredReviews(filtered);
   }, [selectedAges, allReviews]);
 
+  useEffect(() => {
+    const sortedReviews = sortReviewsByDate(filteredReviews);
+
+    setSortedReviews(sortedReviews);
+  }, [filteredReviews]);
+
   const handleLoadMore = () => {
     if (!loading && hasMore) {
       fetchReviews(page + 1);
@@ -174,9 +184,9 @@ const ReviewListScreen = () => {
   return (
     <>
       <S.ReviewListScreenContainer>
-        {filteredReviews.length > 0 ? (
+        {sortedReviews.length > 0 ? (
           <FlatList
-            data={filteredReviews}
+            data={sortedReviews}
             renderItem={renderItem}
             keyExtractor={item => item.reviewId.toString()}
             ItemSeparatorComponent={renderSeparator}
