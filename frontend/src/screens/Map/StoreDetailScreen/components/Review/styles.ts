@@ -61,7 +61,7 @@ export const FilterIconImage = styled(Image)`
 
 export const CaptionText = styled(Text)`
   ${FontStyles.captionMedium};
-  color: ${GrayColors[500]};
+  color: ${GrayColors[400]};
 `;
 
 export const ReviewCardListContainer = styled(View)`
