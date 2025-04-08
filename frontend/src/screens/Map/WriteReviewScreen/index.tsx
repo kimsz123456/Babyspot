@@ -170,6 +170,8 @@ const WriteReviewScreen = () => {
         });
       });
 
+      setShouldRefreshReviews(true);
+
       navigation.navigate('CompleteScreen', {
         completeType: 'update',
       });
