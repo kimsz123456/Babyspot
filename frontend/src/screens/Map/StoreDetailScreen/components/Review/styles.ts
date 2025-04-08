@@ -11,6 +11,10 @@ export const ReviewContainer = styled(View)`
   padding: ${scale(16)}px ${scale(24)}px;
 `;
 
+export const TitleCaptionContainer = styled(View)`
+  gap: ${scale(4)}px;
+`;
+
 export const TitleHeaderContainer = styled(View)`
   flex-direction: row;
   align-items: center;
@@ -53,6 +57,11 @@ export const Title = styled(Text)`
 export const FilterIconImage = styled(Image)`
   width: ${scale(24)}px;
   height: ${scale(24)}px;
+`;
+
+export const CaptionText = styled(Text)`
+  ${FontStyles.captionMedium};
+  color: ${GrayColors[500]};
 `;
 
 export const ReviewCardListContainer = styled(View)`
