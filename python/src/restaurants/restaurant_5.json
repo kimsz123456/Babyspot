@@ -1,0 +1,11 @@
+{
+  "restaurant_id": "5",
+  "address": "서울 중랑구 봉화산로 94 오선빌딩 7",
+  "transportation_convenience": "중화역 2번 출구에서 487m",
+  "contact_number": "02-2209-2890",
+  "business_hours": "월~금 10:00 - 21:30, 토 11:00 - 21:00, 일 10:00 - 22:00",
+  "title": "부대닭",
+  "parking": true,
+  "kids_menu": "닭한마리 국밥",
+  "location": "POINT(127.0849247 37.6020979)"
+}
