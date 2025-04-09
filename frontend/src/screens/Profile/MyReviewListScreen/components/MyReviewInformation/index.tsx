@@ -95,10 +95,6 @@ const MyReviewInformation = ({review}: MyReviewInformationProps) => {
       </S.ImageContainer>
 
       <S.LastRowContainer>
-        <S.LikesContainer>
-          <S.LikeIcon source={IC_HEART} />
-          <S.Likes>{review.likeCount}</S.Likes>
-        </S.LikesContainer>
         <S.Date>{review.createdAt.slice(0, 10)}</S.Date>
       </S.LastRowContainer>
 
