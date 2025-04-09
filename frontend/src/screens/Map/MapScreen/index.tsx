@@ -39,6 +39,7 @@ import {
 import {MAP_ZOOM_SCALE} from '../../../constants/constants';
 
 import * as S from './styles';
+import {GrayColors} from '../../../constants/colors';
 
 type MapMainRouteProp = RouteProp<MapStackParamList, 'MapMain'>;
 
@@ -307,6 +308,10 @@ const MapScreen = () => {
                   ? IC_RECOMMEND_MARKER
                   : IC_RESTAURANT_MARKER
               }
+              caption={{
+                text: data.title,
+                haloColor: GrayColors[0],
+              }}
               onTap={() => handleMarkerTab(idx)}
             />
           ))}
