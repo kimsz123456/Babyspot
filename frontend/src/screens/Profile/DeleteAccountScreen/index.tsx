@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, Text, ToastAndroid, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 
 import {useProfileNavigation} from '../../../hooks/useNavigationHooks';
 
@@ -14,7 +14,7 @@ import {IC_COMPLETE} from '../../../constants/icons';
 import * as S from './styles';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import resetAllStores from '../../../utils/resetAllStores';
-import {useGlobalStore} from '../../../stores/globalStore';
+import showToastMessage from '../../../utils/showToastMessage';
 
 const DeleteAccountScreen = () => {
   const profileNavigation = useProfileNavigation();
@@ -43,10 +43,7 @@ const DeleteAccountScreen = () => {
       EncryptedStorage.clear();
       setSecondModalVisible(true);
     } catch (error) {
-      ToastAndroid.show(
-        '회원탈퇴 중 오류가 발생했습니다. 관리자에게 문의해주세요.',
-        500,
-      );
+      showToastMessage('탈퇴 처리 중 오류가 발생했습니다.');
     }
   };
 
