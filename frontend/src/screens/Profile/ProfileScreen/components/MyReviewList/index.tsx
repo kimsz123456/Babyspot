@@ -2,16 +2,10 @@ import React, {useEffect} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import MyReview from '../MyReview';
 import * as S from './styles.ts';
-import {
-  getMyReviews,
-  ReviewType,
-} from '../../../../../services/reviewService.ts';
+import {getMyReviews} from '../../../../../services/reviewService.ts';
 import NoDataContainer from '../../../../../components/atoms/NoDataContainer/index.tsx';
 import {useGlobalStore} from '../../../../../stores/globalStore';
-
-const sortReviewsById = (reviews: ReviewType[]) => {
-  return [...reviews].sort((a, b) => b.reviewId - a.reviewId);
-};
+import {sortReview} from '../../../../../utils/sortReview';
 
 export const MyReviewList = () => {
   const {
@@ -24,8 +18,8 @@ export const MyReviewList = () => {
   const fetchMyReviews = async () => {
     try {
       const response = await getMyReviews();
-      const lastThreeReviews = sortReviewsById(response.content).slice(0, 3);
-
+      const lastThreeReviews = sortReview(response.content).slice(0, 3);
+      console.log(lastThreeReviews);
       setMyReviews(lastThreeReviews);
       setShouldRefreshReviews(false);
     } catch (error) {

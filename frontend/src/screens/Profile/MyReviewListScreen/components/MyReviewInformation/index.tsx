@@ -8,6 +8,8 @@ import {
 import * as S from './styles';
 import {ReviewType} from '../../../../../services/reviewService';
 import {useProfileNavigation} from '../../../../../hooks/useNavigationHooks';
+import GalleryViewer from '../../../../../components/atoms/GalleryViewer';
+import {TouchableOpacity} from 'react-native';
 
 interface MyReviewInformationProps {
   review: ReviewType;
@@ -17,6 +19,15 @@ const MyReviewInformation = ({review}: MyReviewInformationProps) => {
   const totalImages = review.imgUrls.length;
   const navigation = useProfileNavigation();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isGalleryVisible, setIsGalleryVisible] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+
+  const openGallery = (index: number) => {
+    setGalleryIndex(index);
+    setIsGalleryVisible(true);
+  };
+
+  const galleryImages = review.imgUrls.map(imgUrl => ({uri: imgUrl}));
 
   return (
     <S.MyReviewInformationContainer>
@@ -61,10 +72,11 @@ const MyReviewInformation = ({review}: MyReviewInformationProps) => {
         {totalImages > 4 ? (
           <>
             {review.imgUrls.slice(0, 3).map((imageUrl, idx) => (
-              <S.Images
+              <TouchableOpacity
                 key={`image-${review.reviewId}-${idx}`}
-                source={{uri: imageUrl}}
-              />
+                onPress={() => openGallery(idx)}>
+                <S.Images source={{uri: imageUrl}} />
+              </TouchableOpacity>
             ))}
             <S.OverlayWrapper key={`overlay-${review.reviewId}`}>
               <S.Images source={{uri: review.imgUrls[3]}} />
@@ -73,10 +85,11 @@ const MyReviewInformation = ({review}: MyReviewInformationProps) => {
           </>
         ) : (
           review.imgUrls.map((imageUrl, idx) => (
-            <S.Images
+            <TouchableOpacity
               key={`image-${review.reviewId}-${idx}`}
-              source={{uri: imageUrl}}
-            />
+              onPress={() => openGallery(idx)}>
+              <S.Images source={{uri: imageUrl}} />
+            </TouchableOpacity>
           ))
         )}
       </S.ImageContainer>
@@ -86,8 +99,17 @@ const MyReviewInformation = ({review}: MyReviewInformationProps) => {
           <S.LikeIcon source={IC_HEART} />
           <S.Likes>{review.likeCount}</S.Likes>
         </S.LikesContainer>
-        <S.Date>{review.createdAt}</S.Date>
+        <S.Date>{review.createdAt.slice(0, 10)}</S.Date>
       </S.LastRowContainer>
+
+      <GalleryViewer
+        visible={isGalleryVisible}
+        images={galleryImages}
+        initialIndex={galleryIndex}
+        currentIndex={galleryIndex}
+        onClose={() => setIsGalleryVisible(false)}
+        onIndexChange={setGalleryIndex}
+      />
     </S.MyReviewInformationContainer>
   );
 };
