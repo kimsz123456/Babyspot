@@ -67,7 +67,7 @@ const StoreDetailScreen = () => {
 
       setStoreDetail(response);
     } catch (error) {
-      console.error('가게 상세 조회 실패:', error);
+      throw error;
     }
   };
 
@@ -89,7 +89,7 @@ const StoreDetailScreen = () => {
         setMyReview(undefined);
       }
     } catch (error) {
-      console.error('내 리뷰 조회 실패:', error);
+      throw error;
     }
   };
 
