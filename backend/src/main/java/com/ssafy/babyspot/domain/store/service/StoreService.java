@@ -328,7 +328,7 @@ public class StoreService {
 			.build();
 	}
 
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "0/10 * * * * *")
 	@Transactional
 	public void updateStoreRecommendedBabyAges() {
 		List<Store> stores = storeRepository.findAll();
