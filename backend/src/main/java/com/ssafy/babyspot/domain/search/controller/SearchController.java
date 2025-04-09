@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.babyspot.domain.search.dto.SearchHistoryDto;
 import com.ssafy.babyspot.domain.search.service.SearchService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,11 +32,11 @@ public class SearchController {
 	}
 
 	@GetMapping("/recent")
-	public ResponseEntity<List<String>> getRecentSearches(Authentication authentication,
+	public ResponseEntity<List<SearchHistoryDto>> getRecentSearches(Authentication authentication,
 		@RequestParam(defaultValue = "20") int limit) {
 
 		int memberId = Integer.parseInt(authentication.getName());
-		List<String> recentSearches = searchService.getRecentSearches(memberId, limit);
+		List<SearchHistoryDto> recentSearches = searchService.getRecentSearches(memberId, limit);
 		return ResponseEntity.ok(recentSearches);
 	}
 
