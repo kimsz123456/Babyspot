@@ -44,8 +44,9 @@ export const ReviewContainer = styled(TouchableOpacity)`
 `;
 
 export const IconImage = styled(Image)`
-  width: ${scale(32)}px;
-  height: ${scale(32)}px;
+  width: ${scale(26)}px;
+  height: ${scale(26)}px;
+  border-radius: ${scale(5)}px;
 `;
 export const ContentText = styled(Text)`
   flex: 1;
