@@ -357,6 +357,10 @@ const MapScreen = () => {
         )}
       </S.MapScreenContainer>
       {isLoading ? <LoadingIndicator /> : null}
+
+      {/* 이미지 pre-load */}
+      <S.InvisibleImage source={IC_RECOMMEND_MARKER} />
+      <S.InvisibleImage source={IC_RESTAURANT_MARKER} />
     </>
   );
 };

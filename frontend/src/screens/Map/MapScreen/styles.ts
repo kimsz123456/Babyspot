@@ -1,4 +1,4 @@
-import {ScrollView, View} from 'react-native';
+import {Image, ScrollView, View} from 'react-native';
 
 import styled from 'styled-components/native';
 import {NaverMapView} from '@mj-studio/react-native-naver-map';
@@ -31,4 +31,10 @@ export const ChipContainer = styled(ScrollView)``;
 
 export const NaverMap = styled(NaverMapView)`
   flex: 1;
+`;
+
+export const InvisibleImage = styled(Image)`
+  z-index: -1;
+  position: absolute;
+  opacity: 0;
 `;
