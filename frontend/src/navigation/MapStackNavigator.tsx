@@ -17,13 +17,11 @@ import CompleteScreen, {
 import SelectRecommendationAgeScreen from '../screens/Map/SelectRecommendationAgeScreen';
 import {ReviewType} from '../services/reviewService';
 import {GetGeocodingByKeywordResponse} from '../services/mapService';
-import PlaceSearchScreen from '../screens/Map/SearchScreen/PlaceSearchScreen';
 import {useMapStore} from '../stores/mapStore';
 
 export type MapStackParamList = {
   MapMain: {searchedPlace: GetGeocodingByKeywordResponse};
   Search: undefined;
-  PlaceSearchScreen: undefined;
   StoreDetail: undefined;
   KeywordReview: {keywordInformation: KeywordProps};
   ReviewListScreen: {
@@ -52,15 +50,6 @@ const MapStackNavigator = () => {
         name="Search"
         component={SearchScreen}
         options={{presentation: 'modal', headerShown: false}}
-      />
-      <Stack.Screen
-        name="PlaceSearchScreen"
-        component={PlaceSearchScreen}
-        options={() => ({
-          header(props) {
-            return <CustomHeader props={props} title={'장소 검색'} />;
-          },
-        })}
       />
       <Stack.Screen
         name="StoreDetail"
