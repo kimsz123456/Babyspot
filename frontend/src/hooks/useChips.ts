@@ -28,12 +28,8 @@ const useChips = () => {
     );
 
     const selected = updated.filter(chip => chip.isSelected);
-    const unselected = initialChips.current.filter(
-      initialChip =>
-        !updated.find(chip => chip.label === initialChip.label)?.isSelected,
-    );
 
-    setChips([...selected, ...unselected]);
+    setChips(updated);
 
     const selectedChipList = selected.map(chip => chip.value);
     setSelectedChips(selectedChipList);
