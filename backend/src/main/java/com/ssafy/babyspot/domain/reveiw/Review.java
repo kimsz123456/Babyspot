@@ -1,6 +1,6 @@
 package com.ssafy.babyspot.domain.reveiw;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,15 +51,15 @@ public class Review {
 	@ElementCollection
 	private List<Integer> babyAges = new ArrayList<>();
 
-	private LocalDate createdAt;
-	private LocalDate modifyAt;
-	private LocalDate deletedAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifyAt;
+	private LocalDateTime deletedAt;
 	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ReviewLike> reviewLikes = new ArrayList<>();
 
 	@PrePersist
 	protected void onCreate() {
-		this.createdAt = LocalDate.now();
+		this.createdAt = LocalDateTime.now();
 	}
 
 	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
