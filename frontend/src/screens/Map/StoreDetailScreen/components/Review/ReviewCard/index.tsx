@@ -7,8 +7,9 @@ import StarRating from '../../../../../../components/atoms/StarRating';
 import {ReviewType} from '../../../../../../services/reviewService';
 import {useGlobalStore} from '../../../../../../stores/globalStore';
 import {useMapNavigation} from '../../../../../../hooks/useNavigationHooks';
-import {ToastAndroid, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import GalleryViewer from '../../../../../../components/atoms/GalleryViewer';
+import showToastMessage from '../../../../../../utils/showToastMessage';
 
 export interface ReviewCardProps extends ReviewType {}
 
@@ -107,7 +108,7 @@ const ReviewCard = (props: ReviewCardProps) => {
       <S.LastRowContainer>
         <S.LikesContainer
           onPress={() => {
-            ToastAndroid.show('서비스 준비 중입니다.', 500);
+            showToastMessage('서비스 준비 중입니다.');
           }}>
           <S.LikeIcon source={IC_HEART} />
           <S.Likes>{props.likeCount}</S.Likes>
