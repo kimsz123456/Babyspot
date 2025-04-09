@@ -4,7 +4,7 @@ import {
   ConvenienceCategoryTypes,
   ConveniencePlace,
 } from '../../../../../services/mapService';
-import {ImageRequireSource, Linking, ToastAndroid} from 'react-native';
+import {ImageRequireSource, Linking} from 'react-native';
 import {
   IC_MOVIE,
   IC_MUSEUM,
@@ -12,6 +12,7 @@ import {
   IC_SCENIC,
   IC_TOURIST,
 } from '../../../../../constants/icons';
+import showToastMessage from '../../../../../utils/showToastMessage';
 
 interface NearCultureSpotProps {
   conveniencePlaces: ConveniencePlace[];
@@ -24,7 +25,7 @@ const NearCultureSpot = ({conveniencePlaces}: NearCultureSpotProps) => {
     if (supported) {
       await Linking.openURL(link);
     } else {
-      ToastAndroid.show('링크를 열 수 없습니다.', 500);
+      showToastMessage('링크를 열 수 없습니다.');
     }
   };
 
@@ -73,10 +74,7 @@ const NearCultureSpot = ({conveniencePlaces}: NearCultureSpotProps) => {
                 if (places.link) {
                   places.link && handleCardPress(places.link);
                 } else {
-                  ToastAndroid.show(
-                    '해당 가게는 링크를 제공하지 않습니다.',
-                    500,
-                  );
+                  showToastMessage('해당 가게는 링크를 제공하지 않습니다.');
                 }
               }}>
               <S.CategoryTypeContainer>

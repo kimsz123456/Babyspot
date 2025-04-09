@@ -5,7 +5,6 @@ import {
   Platform,
   ScrollView,
   Text,
-  ToastAndroid,
   TouchableNativeFeedback,
 } from 'react-native';
 
@@ -37,6 +36,7 @@ import {IC_DELETE_IMAGE, IC_SECONDARY_PLUS} from '../../../constants/icons';
 import {GrayColors, SystemColors} from '../../../constants/colors';
 
 import * as S from './styles';
+import showToastMessage from '../../../utils/showToastMessage';
 
 const MAX_IMAGE_COUNT = 10;
 
@@ -95,7 +95,7 @@ const WriteReviewScreen = () => {
         setImagePaths(prev => [...prev, ...newImages]);
       }
     } catch (error) {
-      console.error('이미지 선택 실패:', error);
+      throw error;
     }
   };
 
@@ -131,7 +131,7 @@ const WriteReviewScreen = () => {
         completeType: 'create',
       });
     } catch (error) {
-      ToastAndroid.show('작성 중 문제가 발생했습니다.', 500);
+      showToastMessage('리뷰 작성 중 문제가 발생했습니다.');
       throw error;
     }
   };
@@ -187,8 +187,7 @@ const WriteReviewScreen = () => {
         completeType: 'update',
       });
     } catch (error) {
-      console.error(error);
-      ToastAndroid.show('수정 중 문제가 발생했습니다.', 500);
+      showToastMessage('리뷰 수정 중 문제가 발생했습니다.');
       throw error;
     }
   };
@@ -206,7 +205,7 @@ const WriteReviewScreen = () => {
         completeType: 'delete',
       });
     } catch (error) {
-      ToastAndroid.show('삭제 중 문제가 발생했습니다.', 500);
+      showToastMessage('리뷰 삭제 중 문제가 발생했습니다.');
       throw error;
     }
   };

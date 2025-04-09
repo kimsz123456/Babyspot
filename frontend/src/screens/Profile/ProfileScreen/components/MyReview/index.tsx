@@ -8,14 +8,6 @@ interface MyReviewProps {
 }
 
 const MyReview = ({review}: MyReviewProps) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(
-      2,
-      '0',
-    )}.${String(date.getDate()).padStart(2, '0')}`;
-  };
-
   return (
     <S.ReviewContainer>
       <S.ReviewTitleContainer>
@@ -24,7 +16,7 @@ const MyReview = ({review}: MyReviewProps) => {
           <S.ReviewStar source={IC_YELLOW_STAR} />
           <S.ReviewScore>{review.rating}</S.ReviewScore>
         </S.ReviewScoreContainer>
-        <S.ReviewDate>{formatDate(review.createdAt)}</S.ReviewDate>
+        <S.ReviewDate>{review.createdAt.slice(0, 10)}</S.ReviewDate>
       </S.ReviewTitleContainer>
       <S.ReviewContents>{review.content}</S.ReviewContents>
     </S.ReviewContainer>

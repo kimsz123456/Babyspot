@@ -39,6 +39,7 @@ import {
 import {MAP_ZOOM_SCALE} from '../../../constants/constants';
 
 import * as S from './styles';
+import {GrayColors} from '../../../constants/colors';
 
 type MapMainRouteProp = RouteProp<MapStackParamList, 'MapMain'>;
 
@@ -48,7 +49,7 @@ const MapScreen = () => {
 
   const [selectedMarker, setSelectedMarker] = useState(-1);
 
-  const [isReadyToFirstSearch, setIsReadyToFirstSearch] = useState(false);
+  const [isReadyToFirstSearch, setIsReadyToFirstSearch] = useState(true);
   const [isPendingResearch, setIsPendingResearch] = useState(false);
   const [isResearchButtonPressed, setIsResearchButtonPressed] = useState(false);
 
@@ -98,8 +99,6 @@ const MapScreen = () => {
 
       moveToCamera({latitude, longitude, mapRef});
 
-      setIsReadyToFirstSearch(true);
-
       return;
     }
 
@@ -107,8 +106,6 @@ const MapScreen = () => {
       const {latitude, longitude} = await getCurrentLocation();
 
       moveToCamera({latitude, longitude, mapRef});
-
-      setIsReadyToFirstSearch(true);
     } catch (e) {
       throw new Error('위치 정보 가져오기 실패');
     }
@@ -125,11 +122,7 @@ const MapScreen = () => {
     setIsPendingResearch(true);
   };
 
-  const handleResearchButtonPress = () => {
-    clearSelectedPlace();
-
-    setSelectedAges([]);
-
+  const modifyZoomForSearch = () => {
     if (!mapRef.current || !zoom) {
       return;
     }
@@ -141,6 +134,14 @@ const MapScreen = () => {
         mapRef: mapRef,
       });
     }
+  };
+
+  const handleResearchButtonPress = () => {
+    clearSelectedPlace();
+
+    setSelectedAges([]);
+
+    modifyZoomForSearch();
 
     setIsResearchButtonPressed(true);
     setIsPendingResearch(true);
@@ -263,6 +264,13 @@ const MapScreen = () => {
 
   useEffect(() => {
     if (selectedAges.length === 0) {
+      if (!isReadyToFirstSearch) {
+        modifyZoomForSearch();
+
+        setIsResearchButtonPressed(true);
+        setIsPendingResearch(true);
+      }
+
       return;
     }
 
@@ -300,6 +308,10 @@ const MapScreen = () => {
                   ? IC_RECOMMEND_MARKER
                   : IC_RESTAURANT_MARKER
               }
+              caption={{
+                text: data.title,
+                haloColor: GrayColors[0],
+              }}
               onTap={() => handleMarkerTab(idx)}
             />
           ))}
