@@ -35,4 +35,6 @@ public class StoreDetailDto {
 	private int reviewCount;
 
 	private List<ConveniencePlaceDTO> conveniencePlace;
+
+	private StoreDefaultInfoDto defaultInfo;
 }
