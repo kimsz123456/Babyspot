@@ -22,7 +22,7 @@ import {useMapStore} from '../stores/mapStore';
 export type MapStackParamList = {
   MapMain: {searchedPlace: GetGeocodingByKeywordResponse};
   Search: undefined;
-  StoreDetail: undefined;
+  StoreDetail: {storeId: number};
   KeywordReview: {keywordInformation: KeywordProps};
   ReviewListScreen: {
     reviewInformation: ReviewProps;

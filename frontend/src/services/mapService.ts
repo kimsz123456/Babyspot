@@ -41,6 +41,7 @@ export interface StoreDetailResponse {
   latestReviews: ReviewType[];
   babyAges: number[];
   conveniencePlace: ConveniencePlace[];
+  defaultInfo: StoreBasicInformationType;
 }
 
 export interface Image {

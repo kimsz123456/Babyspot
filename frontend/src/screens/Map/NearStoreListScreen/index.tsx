@@ -28,7 +28,9 @@ const NearStoreListScreen = ({bottomSheetRef}: NearStoreListScreenProps) => {
 
   const handleStorePress = (idx: number) => {
     setSelectedStoreIndex(idx);
-    navigation.navigate('StoreDetail');
+    navigation.navigate('StoreDetail', {
+      storeId: filteredStoreBasicInformation[idx].storeId,
+    });
   };
 
   return (
