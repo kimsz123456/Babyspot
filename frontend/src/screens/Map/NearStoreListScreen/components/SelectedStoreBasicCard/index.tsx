@@ -27,7 +27,7 @@ const SelectedStoreBasicCard = () => {
   return (
     <S.StoreBasicInformationContainer
       onPress={() => {
-        navigation.navigate('StoreDetail');
+        navigation.navigate('StoreDetail', {storeId: store.storeId});
       }}>
       <S.DetailContainer>
         <S.FirstRowContainer>
