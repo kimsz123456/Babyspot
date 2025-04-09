@@ -7,6 +7,7 @@ import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 import AgeButton from '../../../components/atoms/AgeButton';
 import MainButton from '../../../components/atoms/Button/MainButton';
 import {AgeProps} from '../ReviewListScreen/ReviewFilterModal';
+import SubButton from '../../../components/atoms/Button/SubButton';
 
 import scale from '../../../utils/scale';
 
@@ -54,6 +55,12 @@ const SelectRecommendationAgeScreen = () => {
     navigation.pop();
   };
 
+  const handleSubButtonPress = () => {
+    setSelectedAges([]);
+
+    navigation.pop();
+  };
+
   return (
     <S.SelectRecommendationAgeScreenContainer>
       <View>
@@ -85,11 +92,14 @@ const SelectRecommendationAgeScreen = () => {
           )}
         />
       </View>
-      <MainButton
-        disabled={selectedCount === 0}
-        text={'추천 받기'}
-        onPress={handleMainButtonPress}
-      />
+      <S.ButtonContainer>
+        <MainButton
+          disabled={selectedCount === 0}
+          text={'추천 받기'}
+          onPress={handleMainButtonPress}
+        />
+        <SubButton text={'초기화'} onPress={handleSubButtonPress} />
+      </S.ButtonContainer>
     </S.SelectRecommendationAgeScreenContainer>
   );
 };
