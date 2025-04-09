@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.babyspot.domain.member.Member;
 import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.domain.search.SearchHistory;
+import com.ssafy.babyspot.domain.search.dto.SearchHistoryDto;
 import com.ssafy.babyspot.domain.search.repository.SearchHistoryRepository;
 import com.ssafy.babyspot.exception.CustomException;
 
@@ -43,10 +44,13 @@ public class SearchService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<String> getRecentSearches(int memberId, int limit) {
+	public List<SearchHistoryDto> getRecentSearches(int memberId, int limit) {
 		Pageable pageable = PageRequest.of(0, limit);
 		List<SearchHistory> history = searchHistoryRepository.findByMember_IdOrderByCreatedAtDesc(memberId, pageable);
-		return history.stream().map(SearchHistory::getSearchTerm).collect(Collectors.toList());
+
+		return history.stream()
+			.map(h -> new SearchHistoryDto(h.getId(), h.getSearchTerm(), h.getCreatedAt()))
+			.collect(Collectors.toList());
 	}
 
 	@Transactional

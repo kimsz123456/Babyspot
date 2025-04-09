@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.babyspot.api.s3.S3Component;
 import com.ssafy.babyspot.domain.convenience.dto.ConveniencePlaceDTO;
@@ -52,7 +53,6 @@ import com.ssafy.babyspot.domain.store.repository.StoreMenuRepository;
 import com.ssafy.babyspot.domain.store.repository.StoreRepository;
 import com.ssafy.babyspot.exception.CustomException;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -126,6 +126,43 @@ public class StoreService {
 				return dto;
 			})
 			.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public StoreDefaultInfoDto getStoreInfo(int storeId) {
+		Store store = storeRepository.findById(storeId)
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "해당 매장이 없습니다."));
+
+		RatingInfo ratingInfo = computeRatingInfo(storeId);
+
+		StoreDefaultInfoDto dto = new StoreDefaultInfoDto();
+		dto.setStoreId(store.getId());
+		dto.setLatitude(store.getLocation().getY());
+		dto.setLongitude(store.getLocation().getX());
+		dto.setAddress(store.getAddress());
+		dto.setRating(Float.valueOf(getRating(store.getId())));
+		dto.setReviewCount(ratingInfo.getReviewCount());
+		dto.setBusinessHour(store.getBusinessHour());
+		dto.setContactNumber(store.getContactNumber());
+		dto.setTitle(store.getTitle());
+		dto.setTransportationConvenience(store.getTransportationConvenience());
+		dto.setParking(store.getParking());
+		dto.setOkZone(store.getOkZone());
+		dto.setCategory(store.getCategory());
+		dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : new ArrayList<>());
+
+		ConvenienceDto convenienceDto = new ConvenienceDto();
+		convenienceDto.getConvenienceDetails().put("babyChair", store.getBabyChair());
+		convenienceDto.getConvenienceDetails().put("babyTableware", store.getBabyTableware());
+		convenienceDto.getConvenienceDetails().put("playZone", store.getPlayZone());
+		convenienceDto.getConvenienceDetails().put("nursingRoom", store.getNursingRoom());
+		convenienceDto.getConvenienceDetails().put("groupTable", store.getGroupTable());
+		dto.setConvenience(List.of(convenienceDto));
+
+		List<StoreImageDto> storeImages = getStoreImages(store.getId());
+		dto.setImages(storeImages);
+
+		return dto;
 	}
 
 	@Transactional
@@ -307,6 +344,8 @@ public class StoreService {
 			return dto;
 		}).collect(Collectors.toList());
 
+		StoreDefaultInfoDto defaultInfo = getStoreInfo(storeId);
+
 		List<Integer> babyAges = store.getBabyAges();
 		if (babyAges == null) {
 			babyAges = new ArrayList<>();
@@ -325,10 +364,11 @@ public class StoreService {
 			.rating(storeRating)
 			.reviewCount(ratingInfo.getReviewCount())
 			.conveniencePlace(conveniencePlace)
+			.defaultInfo(defaultInfo)
 			.build();
 	}
 
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "0 0 * * * *")
 	@Transactional
 	public void updateStoreRecommendedBabyAges() {
 		List<Store> stores = storeRepository.findAll();
