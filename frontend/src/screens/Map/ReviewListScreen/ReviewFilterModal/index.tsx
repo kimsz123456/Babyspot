@@ -3,7 +3,7 @@ import * as S from './styles';
 import CenteredModal from '../../../../components/atoms/CenterModal';
 import AgeButton from '../../../../components/atoms/AgeButton';
 import scale from '../../../../utils/scale';
-import {ToastAndroid} from 'react-native';
+import showToastMessage from '../../../../utils/showToastMessage';
 
 const MAX_SELECT_COUNT = 3;
 
@@ -83,10 +83,7 @@ const ReviewFilterModal = ({
                   ).length;
 
                   if (selectedCount >= MAX_SELECT_COUNT && !item.isSelected) {
-                    ToastAndroid.show(
-                      '최대 3개만 선택 가능합니다.',
-                      ToastAndroid.SHORT,
-                    );
+                    showToastMessage('최대 3개만 선택 가능합니다.');
 
                     return;
                   }
