@@ -4,19 +4,28 @@ import * as S from './styles';
 
 import {formatDateToString} from '../../../../../utils/format';
 import {IC_CLOSE, IC_SEARCH} from '../../../../../constants/icons';
+import {GetRecentSearchPlacesResponse} from '../../../../../services/mapService';
 
-interface SearchHistoryProps {
-  address: string;
-  date: Date;
+interface SearchHistoryProps extends GetRecentSearchPlacesResponse {
+  itemPressed: (id: number) => void;
+  deletePressed: (id: number) => void;
 }
 
-const SearchHistory = ({address, date}: SearchHistoryProps) => {
+const SearchHistory = ({
+  itemPressed,
+  deletePressed,
+  id,
+  searchTerm,
+  createAt,
+}: SearchHistoryProps) => {
   return (
-    <S.SearchHistoryContainer>
+    <S.SearchHistoryContainer onPress={() => itemPressed(id)}>
       <S.Icon source={IC_SEARCH} />
-      <S.Address>{address}</S.Address>
-      <S.SearchDate>{formatDateToString(date)}</S.SearchDate>
-      <S.Icon source={IC_CLOSE} />
+      <S.Address>{searchTerm}</S.Address>
+      <S.SearchDate>{formatDateToString(new Date(createAt))}</S.SearchDate>
+      <S.IconContainer onPress={() => deletePressed(id)}>
+        <S.Icon source={IC_CLOSE} />
+      </S.IconContainer>
     </S.SearchHistoryContainer>
   );
 };
