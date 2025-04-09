@@ -95,7 +95,7 @@ const WriteReviewScreen = () => {
         setImagePaths(prev => [...prev, ...newImages]);
       }
     } catch (error) {
-      console.error('이미지 선택 실패:', error);
+      throw error;
     }
   };
 
@@ -187,7 +187,6 @@ const WriteReviewScreen = () => {
         completeType: 'update',
       });
     } catch (error) {
-      console.error(error);
       ToastAndroid.show('수정 중 문제가 발생했습니다.', 500);
       throw error;
     }
