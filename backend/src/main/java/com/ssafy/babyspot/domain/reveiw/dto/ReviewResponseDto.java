@@ -1,6 +1,6 @@
 package com.ssafy.babyspot.domain.reveiw.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Data;
@@ -14,7 +14,7 @@ public class ReviewResponseDto {
 	private int storeId;
 	private float rating;
 	private String content;
-	private LocalDate createdAt;
+	private LocalDateTime createdAt;
 	private List<String> imgUrls;
 	private int likeCount;
 	private String profile;

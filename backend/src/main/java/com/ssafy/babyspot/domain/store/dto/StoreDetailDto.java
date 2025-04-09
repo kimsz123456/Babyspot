@@ -2,6 +2,7 @@ package com.ssafy.babyspot.domain.store.dto;
 
 import java.util.List;
 
+import com.ssafy.babyspot.domain.convenience.dto.ConveniencePlaceDTO;
 import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
 
 import lombok.Builder;
@@ -32,4 +33,6 @@ public class StoreDetailDto {
 	private Float rating;
 
 	private int reviewCount;
+
+	private List<ConveniencePlaceDTO> conveniencePlace;
 }

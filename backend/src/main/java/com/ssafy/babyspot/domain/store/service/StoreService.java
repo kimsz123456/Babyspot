@@ -21,6 +21,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.babyspot.api.s3.S3Component;
+import com.ssafy.babyspot.domain.convenience.dto.ConveniencePlaceDTO;
+import com.ssafy.babyspot.domain.convenience.service.ConvenienceService;
 import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.domain.reveiw.Review;
 import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
@@ -69,6 +71,7 @@ public class StoreService {
 	private final KeywordReviewRepository keywordReviewRepository;
 	private final SentimentAnalysisRepository sentimentAnalysisRepository;
 	private final ReviewRepository reviewRepository;
+	private final ConvenienceService convenienceService;
 	// private final StoreImageService storeImageService;
 	private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
 
@@ -76,13 +79,15 @@ public class StoreService {
 	public List<StoreDefaultInfoDto> getStoresInRange(Double topLeftLat, Double topLeftLong,
 		Double bottomRightLat, Double bottomRightLong) {
 
-		// topLeft와 bottomRight 좌표를 받아 최소/최대 위도와 경도
 		double minLat = Math.min(topLeftLat, bottomRightLat);
 		double maxLat = Math.max(topLeftLat, bottomRightLat);
 		double minLong = Math.min(topLeftLong, bottomRightLong);
 		double maxLong = Math.max(topLeftLong, bottomRightLong);
 
-		List<Store> stores = storeRepository.findStoresInRange(minLong, minLat, maxLong, maxLat);
+		double centerLong = (minLong + maxLong) / 2;
+		double centerLat = (minLat + maxLat) / 2;
+
+		List<Store> stores = storeRepository.findStoresInRange(minLong, minLat, maxLong, maxLat, centerLong, centerLat);
 		logger.info("Number of stores found: " + stores.size());
 
 		return stores.stream()
@@ -273,6 +278,7 @@ public class StoreService {
 
 		Pageable pageable = PageRequest.of(0, 3, Sort.by("createdAt").descending());
 		Page<Review> reviewPage = reviewRepository.findAllByStore_IdOrderByCreatedAtDesc(storeId, pageable);
+		List<ConveniencePlaceDTO> conveniencePlace = convenienceService.findNearestConveniences(storeId);
 		List<ReviewResponseDto> latestReviews = reviewPage.stream().map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
 			int memberId = review.getMember().getId();
@@ -318,6 +324,7 @@ public class StoreService {
 			.babyAges(babyAges)
 			.rating(storeRating)
 			.reviewCount(ratingInfo.getReviewCount())
+			.conveniencePlace(conveniencePlace)
 			.build();
 	}
 
