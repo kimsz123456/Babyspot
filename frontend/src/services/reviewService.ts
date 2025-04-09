@@ -65,7 +65,6 @@ export const getStoreReviews = async (
 
     return response.data as ReviewResponseType;
   } catch (error) {
-    console.error('리뷰 목록 조회 실패:', error);
     throw error;
   }
 };

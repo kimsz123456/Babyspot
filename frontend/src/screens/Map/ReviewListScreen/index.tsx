@@ -88,7 +88,7 @@ const ReviewListScreen = () => {
       setHasMore(!response.last);
       setPage(pageNumber);
     } catch (error) {
-      console.error('리뷰 조회 에러:', error);
+      throw error;
     } finally {
       setLoading(false);
     }
