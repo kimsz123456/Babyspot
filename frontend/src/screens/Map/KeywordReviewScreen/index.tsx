@@ -11,7 +11,7 @@ import {ScrollView} from 'react-native';
 import {
   IMG_DINING_CODE,
   IMG_GOOGLE,
-  IMG_KAKAO_TALK,
+  IMG_KAKAO_MAP,
 } from '../../../constants/images';
 
 type KeywordReviewScreenRouteProp = RouteProp<
@@ -57,7 +57,7 @@ const KeywordReviewScreen = () => {
                     iconImage = IMG_GOOGLE;
                     break;
                   case ReviewFromTypes.KAKAO:
-                    iconImage = IMG_KAKAO_TALK;
+                    iconImage = IMG_KAKAO_MAP;
                     break;
                 }
 
