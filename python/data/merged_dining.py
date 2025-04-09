@@ -127,4 +127,4 @@ with open(json_file, "w", encoding="utf-8-sig") as f:
     json.dump(merged_data, f, ensure_ascii=False, indent=4)
 
 driver.quit()
-print(f"✅ '{json_file}' 파일이 store_dining_id와 rest_review_dining 필드로 업데이트되었습니다.")
+print(f"'{json_file}' 파일이 store_dining_id와 rest_review_dining 필드로 업데이트되었습니다.")

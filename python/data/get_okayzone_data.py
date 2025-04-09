@@ -26,7 +26,7 @@ try:
     df = pd.read_csv(input_csv, encoding="cp949")
     df = df.dropna(subset=["cot_conts_name", "cot_addr_full_new"])
 except FileNotFoundError:
-    print(f"❌ 파일 `{input_csv}`을 찾을 수 없습니다.")
+    print(f"파일 `{input_csv}`을 찾을 수 없습니다.")
     exit()
 
 result_dict = {}
@@ -72,9 +72,9 @@ for new_index, (_, row) in enumerate(df.iterrows(), start=1):
         else:
             place_id = "검색 결과 없음"
         
-        print(f"✅ {place_name} - ID: {place_id}")
+        print(f"{place_name} - ID: {place_id}")
     except Exception as e:
-        print(f"❌ `{rest_name}` 크롤링 오류: {e}")
+        print(f"`{rest_name}` 크롤링 오류: {e}")
         place_id = "크롤링 오류"
     finally:
         driver.switch_to.default_content()
@@ -114,4 +114,4 @@ final_json_file = "final_restaurant_data.json"
 with open(final_json_file, "w", encoding="utf-8") as f:
     f.write(json_output)
 
-print(f"✅ 최종 JSON 데이터가 '{final_json_file}' 파일로 저장되었습니다.")
+print(f"최종 JSON 데이터가 '{final_json_file}' 파일로 저장되었습니다.")

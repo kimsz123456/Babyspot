@@ -33,4 +33,4 @@ output_file = "merged_restaurant_data.json"
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(merged_data, f, ensure_ascii=False, indent=4)
 
-print(f"✅ 병합된 데이터가 '{output_file}' 파일에 저장되었습니다.")
+print(f"병합된 데이터가 '{output_file}' 파일에 저장되었습니다.")

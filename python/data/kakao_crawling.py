@@ -50,7 +50,7 @@ try:
     ).tolist()
     print('search_queries 내용:', search_queries)
 except FileNotFoundError:
-    print(f"❌ 파일 `{input_csv}`을 찾을 수 없습니다.")
+    print(f"파일 `{input_csv}`을 찾을 수 없습니다.")
     driver.quit()
     exit()
 
@@ -111,10 +111,10 @@ for original_name, query in search_queries:
             "store_kakao_id": store_kakao_id
         })
         
-        print(f"✅ 완료: {original_name} -> {result_name}, store_kakao_id: {store_kakao_id}")
+        print(f"완료: {original_name} -> {result_name}, store_kakao_id: {store_kakao_id}")
     
     except Exception as e:
-        print(f"❌ 에러 발생 (검색어: {query}): {e}")
+        print(f"에러 발생 (검색어: {query}): {e}")
         results.append({
             "original_name": original_name,
             "query": query,
@@ -122,10 +122,10 @@ for original_name, query in search_queries:
             "store_kakao_id": ""
         })
 
-# ✅ 브라우저 종료
+# 브라우저 종료
 driver.quit()
 
-# ✅ 결과를 CSV 파일로 저장 (UTF-8-sig 인코딩)
+# 결과를 CSV 파일로 저장 (UTF-8-sig 인코딩)
 output_csv = "restaurant_list_kakao.csv"
 pd.DataFrame(results).to_csv(output_csv, index=False, encoding="utf-8-sig")
-print(f"✅ 데이터 저장 완료! 파일: {output_csv}")
+print(f"데이터 저장 완료! 파일: {output_csv}")
