@@ -52,7 +52,7 @@ const MyReviewInformation = ({review}: MyReviewInformationProps) => {
         <S.SecondRowContainer>
           <S.RatingContainer>
             <S.RatingText>내 별점</S.RatingText>
-            <S.Rating>{review.rating}.0</S.Rating>
+            <S.Rating>{review.rating.toFixed(1)}</S.Rating>
             {[...Array(5)].map((_, i) => (
               <S.SmallIcon
                 key={i}

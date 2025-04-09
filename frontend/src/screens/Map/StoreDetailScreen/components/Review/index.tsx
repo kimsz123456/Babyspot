@@ -77,8 +77,9 @@ const Review = (props: ReviewProps) => {
               <S.InformationListContainer>
                 <S.InformationContainer>
                   <S.InformationIconImage source={IC_YELLOW_STAR} />
-                  <S.InformationText
-                    $isStar>{`별점 ${store.rating}`}</S.InformationText>
+                  <S.InformationText $isStar>{`별점 ${store.rating.toFixed(
+                    1,
+                  )}`}</S.InformationText>
                 </S.InformationContainer>
                 <S.InformationContainer>
                   <S.InformationIconImage source={IC_COMMENT} />
