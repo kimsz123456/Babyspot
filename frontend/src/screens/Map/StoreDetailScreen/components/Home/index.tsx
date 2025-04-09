@@ -120,7 +120,7 @@ const Home = () => {
       <S.CategoryContainer>
         <S.LineContainer>
           <S.Icon source={IC_CATEGORY} />
-          <S.BasicText>카테고리</S.BasicText>
+          <S.BasicText>유아용품 및 시설</S.BasicText>
         </S.LineContainer>
         <S.CategoryCardList>
           {filteredAmenities.map(convenience => (
