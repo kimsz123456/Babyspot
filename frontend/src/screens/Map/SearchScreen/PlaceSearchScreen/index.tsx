@@ -33,7 +33,7 @@ const PlaceSearchScreen = () => {
 
       setResults(response);
     } catch (error) {
-      console.error('장소 검색 오류:', error);
+      throw error;
     }
   };
 

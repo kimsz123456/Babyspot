@@ -19,7 +19,6 @@ export const MyReviewList = () => {
     try {
       const response = await getMyReviews();
       const lastThreeReviews = sortReview(response.content).slice(0, 3);
-      console.log(lastThreeReviews);
       setMyReviews(lastThreeReviews);
       setShouldRefreshReviews(false);
     } catch (error) {
