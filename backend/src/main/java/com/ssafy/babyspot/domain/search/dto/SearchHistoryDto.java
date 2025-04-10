@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SearchHistoryDto {
+	private int id;
 	private String searchTerm;
 	private LocalDateTime createAt;
 }

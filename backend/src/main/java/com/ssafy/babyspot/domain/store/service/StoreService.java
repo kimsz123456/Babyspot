@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.babyspot.api.s3.S3Component;
 import com.ssafy.babyspot.domain.convenience.dto.ConveniencePlaceDTO;
@@ -52,7 +53,6 @@ import com.ssafy.babyspot.domain.store.repository.StoreMenuRepository;
 import com.ssafy.babyspot.domain.store.repository.StoreRepository;
 import com.ssafy.babyspot.exception.CustomException;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -98,7 +98,7 @@ public class StoreService {
 				dto.setLatitude(store.getLocation().getY()); // 위도
 				dto.setLongitude(store.getLocation().getX()); // 경도
 				dto.setAddress(store.getAddress());
-				dto.setRating(Float.valueOf(getRating(store.getId())));
+				dto.setRating(getRating(store.getId()));
 				dto.setReviewCount(ratingInfo.getReviewCount());
 				dto.setBusinessHour(store.getBusinessHour());
 				dto.setContactNumber(store.getContactNumber());
@@ -129,6 +129,43 @@ public class StoreService {
 	}
 
 	@Transactional
+	public StoreDefaultInfoDto getStoreInfo(int storeId) {
+		Store store = storeRepository.findById(storeId)
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "해당 매장이 없습니다."));
+
+		RatingInfo ratingInfo = computeRatingInfo(storeId);
+
+		StoreDefaultInfoDto dto = new StoreDefaultInfoDto();
+		dto.setStoreId(store.getId());
+		dto.setLatitude(store.getLocation().getY());
+		dto.setLongitude(store.getLocation().getX());
+		dto.setAddress(store.getAddress());
+		dto.setRating(Float.valueOf(getRating(store.getId())));
+		dto.setReviewCount(ratingInfo.getReviewCount());
+		dto.setBusinessHour(store.getBusinessHour());
+		dto.setContactNumber(store.getContactNumber());
+		dto.setTitle(store.getTitle());
+		dto.setTransportationConvenience(store.getTransportationConvenience());
+		dto.setParking(store.getParking());
+		dto.setOkZone(store.getOkZone());
+		dto.setCategory(store.getCategory());
+		dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : new ArrayList<>());
+
+		ConvenienceDto convenienceDto = new ConvenienceDto();
+		convenienceDto.getConvenienceDetails().put("babyChair", store.getBabyChair());
+		convenienceDto.getConvenienceDetails().put("babyTableware", store.getBabyTableware());
+		convenienceDto.getConvenienceDetails().put("playZone", store.getPlayZone());
+		convenienceDto.getConvenienceDetails().put("nursingRoom", store.getNursingRoom());
+		convenienceDto.getConvenienceDetails().put("groupTable", store.getGroupTable());
+		dto.setConvenience(List.of(convenienceDto));
+
+		List<StoreImageDto> storeImages = getStoreImages(store.getId());
+		dto.setImages(storeImages);
+
+		return dto;
+	}
+
+	@Transactional
 	public List<StoreImageDto> getStoreImages(int storeId) {
 		List<StoreImage> images = storeImageRepository.findAllByStore_Id(storeId);
 
@@ -147,7 +184,7 @@ public class StoreService {
 	}
 
 	@Transactional
-	public Long getRating(int storeId) {
+	public float getRating(int storeId) {
 		Store store = storeRepository.findById(storeId)
 			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "매장이 없습니다."));
 		Page<Review> reviewPage = reviewRepository.findAllByStore_Id(storeId, Pageable.unpaged());
@@ -157,6 +194,7 @@ public class StoreService {
 			store.setRating(0f);
 			store.setReviewCount(0);
 			storeRepository.save(store);
+			return 0f;
 		}
 
 		int reviewCount = reviews.size();
@@ -164,15 +202,15 @@ public class StoreService {
 			.mapToDouble(Review::getRating)
 			.sum();
 
-		double avg = (reviewCount == 0) ? 0 : totalRating / reviewCount;
+		float avg = (float)(totalRating / reviewCount);
 
 		if (store.getRating() != avg || store.getReviewCount() != reviewCount) {
-			store.setRating((float)avg);
+			store.setRating(avg);
 			store.setReviewCount(reviewCount);
 			storeRepository.save(store);
 		}
 
-		return Math.round(avg);
+		return avg;
 	}
 
 	@Transactional
@@ -307,6 +345,8 @@ public class StoreService {
 			return dto;
 		}).collect(Collectors.toList());
 
+		StoreDefaultInfoDto defaultInfo = getStoreInfo(storeId);
+
 		List<Integer> babyAges = store.getBabyAges();
 		if (babyAges == null) {
 			babyAges = new ArrayList<>();
@@ -325,10 +365,11 @@ public class StoreService {
 			.rating(storeRating)
 			.reviewCount(ratingInfo.getReviewCount())
 			.conveniencePlace(conveniencePlace)
+			.defaultInfo(defaultInfo)
 			.build();
 	}
 
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "0 0 * * * *")
 	@Transactional
 	public void updateStoreRecommendedBabyAges() {
 		List<Store> stores = storeRepository.findAll();

@@ -49,7 +49,7 @@ public class SearchService {
 		List<SearchHistory> history = searchHistoryRepository.findByMember_IdOrderByCreatedAtDesc(memberId, pageable);
 
 		return history.stream()
-			.map(h -> new SearchHistoryDto(h.getSearchTerm(), h.getCreatedAt()))
+			.map(h -> new SearchHistoryDto(h.getId(), h.getSearchTerm(), h.getCreatedAt()))
 			.collect(Collectors.toList());
 	}
 
