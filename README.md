@@ -91,33 +91,32 @@
 <table>
   <tr align="center" valign="top">
     <td>
-      <!-- width=80, height=80으로 통일 -->
-      <img src="./images/이상화.png" width="80" height="80" alt="이상화"/><br/>
+      <img src="./image,gif/이상화.png" width="80" height="80" alt="이상화"/><br/>
       <b>이상화</b><br/>
       (Back-end)
     </td>
     <td>
-      <img src="./images/김지승.png" width="80" height="80" alt="김지승"/><br/>
+      <img src="./image,gif/김지승.png" width="80" height="80" alt="김지승"/><br/>
       <b>김지승</b><br/>
       (Infra)
     </td>
     <td>
-      <img src="./images/김현우.png" width="80" height="80" alt="김현우"/><br/>
+      <img src="./image,gif/김현우.png" width="80" height="80" alt="김현우"/><br/>
       <b>김현우</b><br/>
       (Data)
     </td>
     <td>
-      <img src="./images/상한규.png" width="80" height="80" alt="상한규"/><br/>
+      <img src="./image,gif/상한규.png" width="80" height="80" alt="상한규"/><br/>
       <b>상한규</b><br/>
       (Front-end)
     </td>
     <td>
-      <img src="./images/소남주.png" width="80" height="80" alt="소남주"/><br/>
+      <img src="./image,gif/소남주.png" width="80" height="80" alt="소남주"/><br/>
       <b>소남주</b><br/>
       (Front-end)
     </td>
     <td>
-      <img src="./images/한병현.png" width="80" height="80" alt="한병현"/><br/>
+      <img src="./image,gif/한병현.png" width="80" height="80" alt="한병현"/><br/>
       <b>한병현</b><br/>
       (Front-end)
     </td>
