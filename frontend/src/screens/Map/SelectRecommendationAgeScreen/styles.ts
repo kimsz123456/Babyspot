@@ -1,5 +1,5 @@
 import {FlatList, Text, View} from 'react-native';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import scale from '../../../utils/scale';
 import {FontStyles} from '../../../constants/fonts';
 import {GrayColors} from '../../../constants/colors';
@@ -30,4 +30,8 @@ export const SubTitle = styled(Text)<{$isBold: boolean}>`
 export const IconListContainer = styled(FlatList<AgeProps>)`
   margin-top: ${scale(40)}px;
   flex-grow: 0;
+`;
+
+export const ButtonContainer = styled(View)`
+  gap: ${scale(12)}px;
 `;

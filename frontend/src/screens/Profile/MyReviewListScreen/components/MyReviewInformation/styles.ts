@@ -134,26 +134,11 @@ export const OverlayText = styled(Text)`
 export const LastRowContainer = styled(View)`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  padding-top: ${scale(6)}px;
 `;
-export const LikesContainer = styled(View)`
-  flex-direction: row;
-  align-items: center;
-  gap: ${scale(4)}px;
-  padding: ${scale(6)}px ${scale(8)}px;
-  border-radius: 24px;
-  border-width: 1px;
-  border-color: ${GrayColors[200]};
-`;
-export const LikeIcon = styled(Image)`
-  width: ${scale(12)}px;
-  height: ${scale(12)}px;
-`;
-export const Likes = styled(Text)`
-  ${FontStyles.captionSmall}
-  color: ${GrayColors[800]};
-`;
+
 export const Date = styled(Text)`
   ${FontStyles.captionSmall};
   color: ${GrayColors[300]};
+  margin-left: auto;
 `;

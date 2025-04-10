@@ -7,7 +7,9 @@ import StarRating from '../../../../../../components/atoms/StarRating';
 import {ReviewType} from '../../../../../../services/reviewService';
 import {useGlobalStore} from '../../../../../../stores/globalStore';
 import {useMapNavigation} from '../../../../../../hooks/useNavigationHooks';
-import {ToastAndroid, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
+import GalleryViewer from '../../../../../../components/atoms/GalleryViewer';
+import showToastMessage from '../../../../../../utils/showToastMessage';
 
 export interface ReviewCardProps extends ReviewType {}
 
@@ -15,6 +17,15 @@ const ReviewCard = (props: ReviewCardProps) => {
   const {memberProfile} = useGlobalStore();
   const navigation = useMapNavigation();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isGalleryVisible, setIsGalleryVisible] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+
+  const openGallery = (index: number) => {
+    setGalleryIndex(index);
+    setIsGalleryVisible(true);
+  };
+
+  const galleryImages = props.imgUrls.map(imgUrl => ({uri: imgUrl}));
 
   return (
     <S.ReviewCardContainer>
@@ -70,7 +81,9 @@ const ReviewCard = (props: ReviewCardProps) => {
         {props.imgUrls.length > 4 ? (
           <>
             {props.imgUrls?.slice(0, 3).map((imageUrl, idx) => (
-              <S.Images key={idx} source={{uri: imageUrl}} />
+              <TouchableOpacity key={idx} onPress={() => openGallery(idx)}>
+                <S.Images source={{uri: imageUrl}} />
+              </TouchableOpacity>
             ))}
             <S.OverlayWrapper key="overlay">
               <S.Images source={{uri: props.imgUrls?.[3]}} />
@@ -80,7 +93,9 @@ const ReviewCard = (props: ReviewCardProps) => {
         ) : (
           <>
             {props.imgUrls?.map((imageUrl, idx) => (
-              <S.Images key={idx} source={{uri: imageUrl}} />
+              <TouchableOpacity key={idx} onPress={() => openGallery(idx)}>
+                <S.Images source={{uri: imageUrl}} />
+              </TouchableOpacity>
             ))}
             {props.imgUrls?.length != 0 &&
               Array.from({length: 4 - (props.imgUrls?.length || 0)}).map(
@@ -91,15 +106,17 @@ const ReviewCard = (props: ReviewCardProps) => {
       </S.ImageContainer>
 
       <S.LastRowContainer>
-        <S.LikesContainer
-          onPress={() => {
-            ToastAndroid.show('서비스 준비 중입니다.', 500);
-          }}>
-          <S.LikeIcon source={IC_HEART} />
-          <S.Likes>{props.likeCount}</S.Likes>
-        </S.LikesContainer>
-        <S.Date>{props.createdAt}</S.Date>
+        <S.Date>{props.createdAt.slice(0, 10)}</S.Date>
       </S.LastRowContainer>
+
+      <GalleryViewer
+        visible={isGalleryVisible}
+        images={galleryImages}
+        initialIndex={galleryIndex}
+        currentIndex={galleryIndex}
+        onClose={() => setIsGalleryVisible(false)}
+        onIndexChange={setGalleryIndex}
+      />
     </S.ReviewCardContainer>
   );
 };
