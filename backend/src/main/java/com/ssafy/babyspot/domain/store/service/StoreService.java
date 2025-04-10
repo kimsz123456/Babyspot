@@ -98,7 +98,7 @@ public class StoreService {
 				dto.setLatitude(store.getLocation().getY()); // 위도
 				dto.setLongitude(store.getLocation().getX()); // 경도
 				dto.setAddress(store.getAddress());
-				dto.setRating(Float.valueOf(getRating(store.getId())));
+				dto.setRating(getRating(store.getId()));
 				dto.setReviewCount(ratingInfo.getReviewCount());
 				dto.setBusinessHour(store.getBusinessHour());
 				dto.setContactNumber(store.getContactNumber());
@@ -184,7 +184,7 @@ public class StoreService {
 	}
 
 	@Transactional
-	public Long getRating(int storeId) {
+	public float getRating(int storeId) {
 		Store store = storeRepository.findById(storeId)
 			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "매장이 없습니다."));
 		Page<Review> reviewPage = reviewRepository.findAllByStore_Id(storeId, Pageable.unpaged());
@@ -194,6 +194,7 @@ public class StoreService {
 			store.setRating(0f);
 			store.setReviewCount(0);
 			storeRepository.save(store);
+			return 0f;
 		}
 
 		int reviewCount = reviews.size();
@@ -201,15 +202,15 @@ public class StoreService {
 			.mapToDouble(Review::getRating)
 			.sum();
 
-		double avg = (reviewCount == 0) ? 0 : totalRating / reviewCount;
+		float avg = (float)(totalRating / reviewCount);
 
 		if (store.getRating() != avg || store.getReviewCount() != reviewCount) {
-			store.setRating((float)avg);
+			store.setRating(avg);
 			store.setReviewCount(reviewCount);
 			storeRepository.save(store);
 		}
 
-		return Math.round(avg);
+		return avg;
 	}
 
 	@Transactional
