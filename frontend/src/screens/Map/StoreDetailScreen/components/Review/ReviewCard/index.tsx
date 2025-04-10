@@ -106,13 +106,6 @@ const ReviewCard = (props: ReviewCardProps) => {
       </S.ImageContainer>
 
       <S.LastRowContainer>
-        <S.LikesContainer
-          onPress={() => {
-            showToastMessage('서비스 준비 중입니다.');
-          }}>
-          <S.LikeIcon source={IC_HEART} />
-          <S.Likes>{props.likeCount}</S.Likes>
-        </S.LikesContainer>
         <S.Date>{props.createdAt.slice(0, 10)}</S.Date>
       </S.LastRowContainer>
 
