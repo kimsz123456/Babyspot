@@ -7,7 +7,10 @@ import {
   NativeScrollEvent,
   InteractionManager,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
+
+import {MapStackParamList} from '../../../navigation/MapStackNavigator';
+import {useGlobalStore} from '../../../stores/globalStore';
 
 import StoreBasicInformation from '../NearStoreListScreen/components/StoreBasicInformation';
 import Home from './components/Home';
@@ -18,6 +21,7 @@ import KeywordSection from './components/Keyword';
 import FamilyReview from './components/FamilyReview';
 import MyReview from './components/MyReview';
 import Review from './components/Review';
+import NearCultureSpot from './components/NearCultureSpot';
 
 import {
   getStoreDetail,
@@ -26,21 +30,22 @@ import {
 import {getStoreReviews, ReviewType} from '../../../services/reviewService';
 
 import * as S from './styles';
-import {useGlobalStore} from '../../../stores/globalStore';
-import {useMapStore} from '../../../stores/mapStore';
-import NearCultureSpot from './components/NearCultureSpot';
+
+type MapDetailRouteProp = RouteProp<MapStackParamList, 'StoreDetail'>;
 
 const TAB_NAMES = ['홈', '메뉴', '키워드', '리뷰', '주변시설'];
 const TAB_BAR_HEIGHT = 48;
 const EPSILON = 5;
 
 const StoreDetailScreen = () => {
+  const route = useRoute<MapDetailRouteProp>();
+  const storeId = route.params?.storeId;
+
   const [selectedTab, setSelectedTab] = useState(0);
   const [storeDetail, setStoreDetail] = useState<StoreDetailResponse>();
   const [myReview, setMyReview] = useState<ReviewType>();
 
   const {memberProfile} = useGlobalStore();
-  const {filteredStoreBasicInformation, selectedStoreIndex} = useMapStore();
 
   const scrollRef = useRef<any>(null);
   const sectionLayouts = useRef<Record<string, number>>({});
@@ -55,29 +60,19 @@ const StoreDetailScreen = () => {
     주변시설: useRef<View>(null),
   };
 
-  const store = filteredStoreBasicInformation[selectedStoreIndex];
-
   const fetchStoreDetail = async () => {
-    if (!store) {
-      return;
-    }
-
     try {
-      const response = await getStoreDetail(store.storeId);
+      const response = await getStoreDetail(storeId);
 
       setStoreDetail(response);
     } catch (error) {
-      console.error('가게 상세 조회 실패:', error);
+      throw error;
     }
   };
 
   const fetchMyReviewInStore = async () => {
-    if (!store) {
-      return;
-    }
-
     try {
-      const response = await getStoreReviews(store.storeId);
+      const response = await getStoreReviews(storeId);
 
       const myReview = response.content.find(
         review => review.memberId === memberProfile?.id,
@@ -89,7 +84,7 @@ const StoreDetailScreen = () => {
         setMyReview(undefined);
       }
     } catch (error) {
-      console.error('내 리뷰 조회 실패:', error);
+      throw error;
     }
   };
 
@@ -197,7 +192,12 @@ const StoreDetailScreen = () => {
         contentContainerStyle={{paddingTop: TAB_BAR_HEIGHT}}
         showsVerticalScrollIndicator={false}>
         <S.BasicInformationContainer>
-          {store && <StoreBasicInformation store={store} canShowGallery />}
+          {storeDetail?.defaultInfo && (
+            <StoreBasicInformation
+              store={storeDetail.defaultInfo}
+              canShowGallery
+            />
+          )}
         </S.BasicInformationContainer>
 
         {storeDetail && (

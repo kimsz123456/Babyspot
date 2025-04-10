@@ -24,8 +24,8 @@ const Setting = () => {
       );
       setIsGPSEnabled(granted);
     } catch (error) {
-      console.error('GPS 권한 확인 실패:', error);
       setIsGPSEnabled(false);
+      throw error;
     }
   };
 
@@ -80,8 +80,8 @@ const Setting = () => {
 
       setIsGPSEnabled(granted === PermissionsAndroid.RESULTS.GRANTED);
     } catch (error) {
-      console.error('GPS 권한 확인 실패:', error);
       setIsGPSEnabled(false);
+      throw error;
     }
   };
 

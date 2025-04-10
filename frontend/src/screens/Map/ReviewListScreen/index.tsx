@@ -18,8 +18,7 @@ import {
   getStoreReviews,
   ReviewResponseType,
 } from '../../../services/reviewService';
-import {sortReviewsByDate} from '../StoreDetailScreen/components/Review';
-
+import {sortReview} from '../../../utils/sortReview';
 type StoreDetailRouteProp = RouteProp<MapStackParamList, 'ReviewListScreen'>;
 
 const ReviewListScreen = () => {
@@ -89,7 +88,7 @@ const ReviewListScreen = () => {
       setHasMore(!response.last);
       setPage(pageNumber);
     } catch (error) {
-      console.error('리뷰 조회 에러:', error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -124,7 +123,7 @@ const ReviewListScreen = () => {
   }, [selectedAges, allReviews]);
 
   useEffect(() => {
-    const sortedReviews = sortReviewsByDate(filteredReviews);
+    const sortedReviews = sortReview(filteredReviews);
 
     setSortedReviews(sortedReviews);
   }, [filteredReviews]);

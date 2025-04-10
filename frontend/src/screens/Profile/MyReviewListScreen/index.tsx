@@ -6,8 +6,7 @@ import MyReviewInformation from './components/MyReviewInformation';
 import {ThinDivider} from '../../../components/atoms/Divider';
 import {getMyReviews, ReviewType} from '../../../services/reviewService';
 import NoDataContainer from '../../../components/atoms/NoDataContainer';
-import {sortReviewsByDate} from '../../../screens/Map/StoreDetailScreen/components/Review';
-
+import {sortReview} from '../../../utils/sortReview';
 const MyReviewListScreen = () => {
   const [reviews, setReviews] = useState<ReviewType[]>([]);
   const [page, setPage] = useState(0);
@@ -60,7 +59,7 @@ const MyReviewListScreen = () => {
   );
 
   useEffect(() => {
-    const sorted = sortReviewsByDate(reviews);
+    const sorted = sortReview(reviews);
     setSortedReviews(sorted);
   }, [reviews]);
 
