@@ -98,6 +98,11 @@ public class ReviewService {
 				imageInfos.add(new ImageInfo(preSignedUrl, s3Key, contentType, imageName, reviewImage.getOrderIndex()));
 			}
 		}
+
+		// int updatedReviewCount = reviewRepository.countByStore_Id(store.getId());
+		// store.setReviewCount(updatedReviewCount);
+		// storeRepository.save(store);
+
 		return new ReviewImagePreSignedUrlDto(imageInfos);
 	}
 
@@ -109,7 +114,7 @@ public class ReviewService {
 			Sort.by("createdAt").descending()
 		);
 
-		Page<Review> reviews = reviewRepository.findAllByStore_Id(storeId, sortedPageable);
+		Page<Review> reviews = reviewRepository.findAllByStore_Store(storeId, sortedPageable);
 
 		Set<Integer> memberIds = reviews.stream()
 			.map(review -> review.getMember().getId())
@@ -124,6 +129,8 @@ public class ReviewService {
 
 		return reviews.map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
+			Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
+			String profile = profileOpt.orElse(null);
 			dto.setReviewId(review.getId());
 			dto.setMemberId(review.getMember().getId());
 			dto.setMemberNickname(review.getMember().getNickname());
@@ -133,10 +140,10 @@ public class ReviewService {
 			dto.setContent(review.getContent());
 			dto.setStoreName(review.getStore().getTitle());
 			dto.setBabyAges(review.getBabyAges());
-			dto.setProfile(String.valueOf(memberRepository.findByProfileImg(review.getMember().getId())));
+			dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 
 			List<String> imgUrls = review.getImages().stream()
-				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl() + "?v=" + System.currentTimeMillis())
 				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
@@ -152,6 +159,8 @@ public class ReviewService {
 			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "해당 매장에 나의 리뷰가 없습니다."));
 
 		ReviewResponseDto dto = new ReviewResponseDto();
+		Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
+		String profile = profileOpt.orElse(null);
 		dto.setReviewId(review.getId());
 		dto.setMemberId(review.getMember().getId());
 		dto.setMemberNickname(review.getMember().getNickname());
@@ -161,11 +170,9 @@ public class ReviewService {
 		dto.setContent(review.getContent());
 		dto.setStoreName(review.getStore().getTitle());
 		dto.setBabyAges(review.getBabyAges());
-		dto.setProfile(String.valueOf(
-			Optional.of(CLOUDFRONT_URL + "/" + memberRepository.findByProfileImg(review.getMember().getId()))));
-
+		dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 		List<String> imgUrls = review.getImages().stream()
-			.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+			.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl() + "?v=" + System.currentTimeMillis())
 			.collect(Collectors.toList());
 		dto.setImgUrls(imgUrls);
 		dto.setLikeCount(review.getReviewLikes().size());
@@ -190,6 +197,8 @@ public class ReviewService {
 
 		return reviews.map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
+			Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
+			String profile = profileOpt.orElse(null);
 			dto.setReviewId(review.getId());
 			dto.setMemberId(review.getMember().getId());
 			dto.setMemberNickname(review.getMember().getNickname());
@@ -201,11 +210,10 @@ public class ReviewService {
 			dto.setBabyAges(review.getBabyAges());
 			dto.setOkZone(review.getStore().getOkZone());
 			dto.setCategory(review.getStore().getCategory());
-			dto.setProfile(String.valueOf(
-				Optional.of(CLOUDFRONT_URL + "/" + memberRepository.findByProfileImg(review.getMember().getId()))));
+			dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
 
 			List<String> imgUrls = review.getImages().stream()
-				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl() + "?v=" + System.currentTimeMillis())
 				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
@@ -230,33 +238,36 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public UpdateReviewResponseDto updateReview(Authentication authentication, UpdateRequestDto dto,
-		int reviewId) {
+	public UpdateReviewResponseDto updateReview(Authentication authentication, UpdateRequestDto dto, int reviewId) {
 		Review review = reviewRepository.findById(reviewId)
 			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "리뷰가 없습니다."));
 
 		int reviewMemberId = review.getMember().getId();
 		int authenticatedMemberId = Integer.parseInt(authentication.getName());
-
 		if (reviewMemberId != authenticatedMemberId) {
 			throw new CustomException(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.");
 		}
-
-		if (dto.getRating() != null && dto.getRating() != review.getRating()) {
+		if (dto.getRating() != null && !dto.getRating().equals(review.getRating())) {
 			review.setRating(dto.getRating());
 		}
 		if (dto.getContent() != null) {
 			review.setContent(dto.getContent());
 		}
-		List<ReviewImage> existingImages = new ArrayList<>(review.getImages());
-		for (ReviewImage image : existingImages) {
-			s3Component.deleteObject(image.getImageUrl());
-			reviewRepository.delete(review);
-		}
-		review.getImages().clear();
+
+		List<String> keepImageKeys = dto.getExistingImageKeys();
+
+		review.getImages().removeIf(image -> {
+			if (keepImageKeys == null || !keepImageKeys.contains(image.getImageUrl())) {
+				s3Component.deleteObject(image.getImageUrl());
+				reviewImageRepository.delete(image);
+				return true;
+			}
+			return false;
+		});
+
 		List<Map<String, String>> preSignedUrlList = new ArrayList<>();
-		if (dto.getImages() != null) {
-			for (ImageUpdateDto imgUpdate : dto.getImages()) {
+		if (dto.getNewImages() != null) {
+			for (ImageUpdateDto imgUpdate : dto.getNewImages()) {
 				Map<String, String> urlMap = s3Component.generateReviewImagePreSignedUrl(
 					String.valueOf(review.getStore().getId()),
 					String.valueOf(review.getMember().getId()),
@@ -272,6 +283,7 @@ public class ReviewService {
 				reviewImage.setContentType(imgUpdate.getContentType());
 				reviewImage.setImgName(imgUpdate.getImageName());
 				reviewImageRepository.save(reviewImage);
+				review.getImages().add(reviewImage);
 
 				preSignedUrlList.add(urlMap);
 			}
@@ -283,4 +295,5 @@ public class ReviewService {
 
 		return responseDto;
 	}
+
 }

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -18,8 +19,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.babyspot.api.s3.S3Component;
+import com.ssafy.babyspot.domain.convenience.dto.ConveniencePlaceDTO;
+import com.ssafy.babyspot.domain.convenience.service.ConvenienceService;
+import com.ssafy.babyspot.domain.member.repository.MemberRepository;
 import com.ssafy.babyspot.domain.reveiw.Review;
 import com.ssafy.babyspot.domain.reveiw.dto.ReviewResponseDto;
 import com.ssafy.babyspot.domain.reveiw.repository.ReviewRepository;
@@ -34,6 +39,7 @@ import com.ssafy.babyspot.domain.store.dto.KeywordDto;
 import com.ssafy.babyspot.domain.store.dto.KeywordReviewDto;
 import com.ssafy.babyspot.domain.store.dto.KeywordSectionDto;
 import com.ssafy.babyspot.domain.store.dto.KidsMenuDto;
+import com.ssafy.babyspot.domain.store.dto.RatingInfo;
 import com.ssafy.babyspot.domain.store.dto.SentimentAnalysisDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDefaultInfoDto;
 import com.ssafy.babyspot.domain.store.dto.StoreDetailDto;
@@ -47,7 +53,6 @@ import com.ssafy.babyspot.domain.store.repository.StoreMenuRepository;
 import com.ssafy.babyspot.domain.store.repository.StoreRepository;
 import com.ssafy.babyspot.exception.CustomException;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -55,6 +60,7 @@ import lombok.RequiredArgsConstructor;
 public class StoreService {
 
 	private final S3Component s3Component;
+	private final MemberRepository memberRepository;
 	@Value("${CLOUDFRONT_URL}")
 	private String CLOUDFRONT_URL;
 
@@ -65,6 +71,7 @@ public class StoreService {
 	private final KeywordReviewRepository keywordReviewRepository;
 	private final SentimentAnalysisRepository sentimentAnalysisRepository;
 	private final ReviewRepository reviewRepository;
+	private final ConvenienceService convenienceService;
 	// private final StoreImageService storeImageService;
 	private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
 
@@ -72,23 +79,27 @@ public class StoreService {
 	public List<StoreDefaultInfoDto> getStoresInRange(Double topLeftLat, Double topLeftLong,
 		Double bottomRightLat, Double bottomRightLong) {
 
-		// topLeft와 bottomRight 좌표를 받아 최소/최대 위도와 경도
 		double minLat = Math.min(topLeftLat, bottomRightLat);
 		double maxLat = Math.max(topLeftLat, bottomRightLat);
 		double minLong = Math.min(topLeftLong, bottomRightLong);
 		double maxLong = Math.max(topLeftLong, bottomRightLong);
 
-		List<Store> stores = storeRepository.findStoresInRange(minLong, minLat, maxLong, maxLat);
+		double centerLong = (minLong + maxLong) / 2;
+		double centerLat = (minLat + maxLat) / 2;
+
+		List<Store> stores = storeRepository.findStoresInRange(minLong, minLat, maxLong, maxLat, centerLong, centerLat);
 		logger.info("Number of stores found: " + stores.size());
 
 		return stores.stream()
 			.map(store -> {
+				RatingInfo ratingInfo = computeRatingInfo(store.getId());
 				StoreDefaultInfoDto dto = new StoreDefaultInfoDto();
 				dto.setStoreId(store.getId());
 				dto.setLatitude(store.getLocation().getY()); // 위도
 				dto.setLongitude(store.getLocation().getX()); // 경도
 				dto.setAddress(store.getAddress());
-				dto.setRating(store.getRating());
+				dto.setRating(Float.valueOf(getRating(store.getId())));
+				dto.setReviewCount(ratingInfo.getReviewCount());
 				dto.setBusinessHour(store.getBusinessHour());
 				dto.setContactNumber(store.getContactNumber());
 				dto.setTitle(store.getTitle());
@@ -115,6 +126,43 @@ public class StoreService {
 				return dto;
 			})
 			.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public StoreDefaultInfoDto getStoreInfo(int storeId) {
+		Store store = storeRepository.findById(storeId)
+			.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "해당 매장이 없습니다."));
+
+		RatingInfo ratingInfo = computeRatingInfo(storeId);
+
+		StoreDefaultInfoDto dto = new StoreDefaultInfoDto();
+		dto.setStoreId(store.getId());
+		dto.setLatitude(store.getLocation().getY());
+		dto.setLongitude(store.getLocation().getX());
+		dto.setAddress(store.getAddress());
+		dto.setRating(Float.valueOf(getRating(store.getId())));
+		dto.setReviewCount(ratingInfo.getReviewCount());
+		dto.setBusinessHour(store.getBusinessHour());
+		dto.setContactNumber(store.getContactNumber());
+		dto.setTitle(store.getTitle());
+		dto.setTransportationConvenience(store.getTransportationConvenience());
+		dto.setParking(store.getParking());
+		dto.setOkZone(store.getOkZone());
+		dto.setCategory(store.getCategory());
+		dto.setBabyAges(store.getBabyAges() != null ? store.getBabyAges() : new ArrayList<>());
+
+		ConvenienceDto convenienceDto = new ConvenienceDto();
+		convenienceDto.getConvenienceDetails().put("babyChair", store.getBabyChair());
+		convenienceDto.getConvenienceDetails().put("babyTableware", store.getBabyTableware());
+		convenienceDto.getConvenienceDetails().put("playZone", store.getPlayZone());
+		convenienceDto.getConvenienceDetails().put("nursingRoom", store.getNursingRoom());
+		convenienceDto.getConvenienceDetails().put("groupTable", store.getGroupTable());
+		dto.setConvenience(List.of(convenienceDto));
+
+		List<StoreImageDto> storeImages = getStoreImages(store.getId());
+		dto.setImages(storeImages);
+
+		return dto;
 	}
 
 	@Transactional
@@ -263,11 +311,17 @@ public class StoreService {
 		List<KidsMenuDto> kidsMenus = getKidsMenu(storeId);
 		float storeRating = getRating(storeId);
 
+		RatingInfo ratingInfo = computeRatingInfo(storeId);
+
 		Pageable pageable = PageRequest.of(0, 3, Sort.by("createdAt").descending());
 		Page<Review> reviewPage = reviewRepository.findAllByStore_IdOrderByCreatedAtDesc(storeId, pageable);
+		List<ConveniencePlaceDTO> conveniencePlace = convenienceService.findNearestConveniences(storeId);
 		List<ReviewResponseDto> latestReviews = reviewPage.stream().map(review -> {
 			ReviewResponseDto dto = new ReviewResponseDto();
 			int memberId = review.getMember().getId();
+			Optional<String> profileOpt = memberRepository.findByProfileImg(review.getMember().getId());
+			String profile = profileOpt.orElse(null);
+
 			dto.setReviewId(review.getId());
 			dto.setMemberId(review.getMember().getId());
 			dto.setMemberNickname(review.getMember().getNickname());
@@ -276,15 +330,21 @@ public class StoreService {
 			dto.setCreatedAt(review.getCreatedAt());
 			dto.setContent(review.getContent());
 			dto.setBabyAges(review.getBabyAges());
+			dto.setStoreName(review.getStore().getTitle());
+			dto.setProfile(profile == null ? null : CLOUDFRONT_URL + "/" + profile);
+			dto.setOkZone(store.getOkZone());
+			dto.setCategory(store.getCategory());
 			dto.setReviewCount(reviewRepository.countByMember_Id(memberId));
 
 			List<String> imgUrls = review.getImages().stream()
-				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl())
+				.map(img -> CLOUDFRONT_URL + "/" + img.getImageUrl() + "?v=" + System.currentTimeMillis())
 				.collect(Collectors.toList());
 			dto.setImgUrls(imgUrls);
 			dto.setLikeCount(review.getReviewLikes().size());
 			return dto;
 		}).collect(Collectors.toList());
+
+		StoreDefaultInfoDto defaultInfo = getStoreInfo(storeId);
 
 		List<Integer> babyAges = store.getBabyAges();
 		if (babyAges == null) {
@@ -302,10 +362,13 @@ public class StoreService {
 			.latestReviews(latestReviews)
 			.babyAges(babyAges)
 			.rating(storeRating)
+			.reviewCount(ratingInfo.getReviewCount())
+			.conveniencePlace(conveniencePlace)
+			.defaultInfo(defaultInfo)
 			.build();
 	}
 
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "0 0 * * * *")
 	@Transactional
 	public void updateStoreRecommendedBabyAges() {
 		List<Store> stores = storeRepository.findAll();
@@ -361,6 +424,19 @@ public class StoreService {
 			}
 			storeRepository.save(store);
 		}
+	}
+
+	@Transactional
+	public RatingInfo computeRatingInfo(int storeId) {
+		List<Review> reviews = reviewRepository.findAllByStore_Id(storeId, Pageable.unpaged()).getContent();
+
+		int reviewCount = reviews.size();
+		double totalRating = reviews.stream()
+			.mapToDouble(Review::getRating)
+			.sum();
+		float avgRating = reviewCount > 0 ? (float)(totalRating / reviewCount) : 0f;
+
+		return new RatingInfo(avgRating, reviewCount);
 	}
 
 }
