@@ -1,10 +1,10 @@
-import {Image, Pressable, Text, View} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components/native';
 import {GrayColors, SecondaryColors} from '../../../../../../constants/colors';
 import {FontStyles} from '../../../../../../constants/fonts';
 import scale from '../../../../../../utils/scale';
 
-export const ReviewCardContainer = styled(Pressable)`
+export const ReviewCardContainer = styled(View)`
   gap: ${scale(8)}px;
 `;
 
@@ -118,7 +118,7 @@ export const Date = styled(Text)`
   margin-left: auto;
 `;
 
-export const EditContainer = styled(Pressable)`
+export const EditContainer = styled(TouchableOpacity)`
   width: ${scale(24)}px;
   height: ${scale(24)}px;
   align-items: center;

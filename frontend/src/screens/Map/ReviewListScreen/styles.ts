@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import {View, Image, Text} from 'react-native';
-import {GrayColors} from '../../../constants/colors';
+import {GrayColors, PrimaryColors} from '../../../constants/colors';
 import {FontStyles} from '../../../constants/fonts';
 import scale from '../../../utils/scale';
 
@@ -54,7 +54,7 @@ export const InformationIconImage = styled(Image)`
 
 export const InformationText = styled(Text)<{$isStar?: boolean}>`
   ${FontStyles.captionMedium}
-  color: ${props => (props.$isStar ? GrayColors[900] : GrayColors[600])};
+  color: ${props => (props.$isStar ? PrimaryColors[500] : GrayColors[800])};
 `;
 
 export const FilterIconImage = styled(Image)`
