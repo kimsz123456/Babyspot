@@ -33,6 +33,8 @@ const KeywordReviewScreen = () => {
           <S.CountText>{keywordInformation.count}</S.CountText>
         </S.TextContainer>
 
+        <S.DescriptionText>상위 약 20개의 리뷰를 보여드려요.</S.DescriptionText>
+
         <S.ReviewListContainer>
           {keywordInformation.keywordReviews.length === 0 ? (
             <NoDataContainer text="키워드에 대한 리뷰를 수집 중입니다." />
