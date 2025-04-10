@@ -52,7 +52,7 @@
 ![image](./image,gif/api 후기.png){width=771 height=159}
 
 # 아키텍쳐
-![아키텍쳐](./image,gif/시스템템아키텍쳐.png)
+![아키텍쳐](./image,gif/시스템아키텍쳐.png)
 
 # ERD
 
