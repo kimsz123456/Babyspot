@@ -32,6 +32,12 @@ export const CountText = styled(Text)`
   color: ${GrayColors[300]};
 `;
 
+export const DescriptionText = styled(Text)`
+  ${FontStyles.captionMedium};
+  color: ${GrayColors[400]};
+  padding-bottom: ${scale(8)}px;
+`;
+
 export const ReviewListContainer = styled(View)`
   gap: ${scale(8)}px;
   flex: 1;
