@@ -10,7 +10,7 @@ export const StoreDetailScreenContainer = styled(ScrollView)`
 `;
 
 export const BasicInformationContainer = styled(View)`
-  padding: ${scale(16)}px ${scale(24)}px ${scale(8)}px;
+  padding: ${scale(16)}px ${scale(24)}px 0px ${scale(24)}px;
 `;
 
 export const TabBarWrapper = styled(View)`

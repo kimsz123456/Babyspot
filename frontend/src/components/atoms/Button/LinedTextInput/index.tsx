@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {TextInput, ToastAndroid} from 'react-native';
+import {TextInput} from 'react-native';
 import {PrimaryColors, GrayColors} from '../../../../constants/colors';
 import scale from '../../../../utils/scale';
+import showToastMessage from '../../../../utils/showToastMessage';
 
 interface LinedTextInputProps {
   text: string;
@@ -34,10 +35,7 @@ const LinedTextInput = (props: LinedTextInputProps) => {
         if (props.maxLength && text.length > props.maxLength) {
           text = text.slice(0, props.maxLength);
 
-          ToastAndroid.show(
-            `최대 ${props.maxLength}자까지 입력 가능합니다.`,
-            500,
-          );
+          showToastMessage(`최대 ${props.maxLength}자까지 입력 가능합니다.`);
         }
         props.setText(text);
       }}

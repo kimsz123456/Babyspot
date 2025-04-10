@@ -26,8 +26,8 @@ const MAX_CONTENT_LENGTH = 2;
 
 export const sortReviewsByDate = (reviews: ReviewCardProps[]) => {
   return [...reviews].sort((a, b) => {
-    const dateA = new Date(a.reviewId).getTime();
-    const dateB = new Date(b.reviewId).getTime();
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
     return dateB - dateA;
   });
 };
@@ -77,8 +77,9 @@ const Review = (props: ReviewProps) => {
               <S.InformationListContainer>
                 <S.InformationContainer>
                   <S.InformationIconImage source={IC_YELLOW_STAR} />
-                  <S.InformationText
-                    $isStar>{`별점 ${store.rating}`}</S.InformationText>
+                  <S.InformationText $isStar>{`별점 ${store.rating.toFixed(
+                    1,
+                  )}`}</S.InformationText>
                 </S.InformationContainer>
                 <S.InformationContainer>
                   <S.InformationIconImage source={IC_COMMENT} />

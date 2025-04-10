@@ -1,4 +1,4 @@
-import {Image, Text, View} from 'react-native';
+import {Image, Pressable, Text} from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -6,7 +6,7 @@ import scale from '../../../../../utils/scale';
 import {FontStyles} from '../../../../../constants/fonts';
 import {GrayColors} from '../../../../../constants/colors';
 
-export const SearchHistoryContainer = styled(View)`
+export const SearchHistoryContainer = styled(Pressable)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -19,6 +19,8 @@ export const Icon = styled(Image)`
   width: ${scale(24)}px;
   height: ${scale(24)}px;
 `;
+
+export const IconContainer = styled(Pressable)``;
 
 export const Address = styled(Text).attrs({
   numberOfLines: 1,

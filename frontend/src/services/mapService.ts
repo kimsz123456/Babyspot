@@ -41,6 +41,7 @@ export interface StoreDetailResponse {
   latestReviews: ReviewType[];
   babyAges: number[];
   conveniencePlace: ConveniencePlace[];
+  defaultInfo: StoreBasicInformationType;
 }
 
 export interface Image {
@@ -121,6 +122,12 @@ interface PreSignedUrlsType {
 export interface PatchReviewsResponse {
   reviewId: number;
   preSignedUrls: PreSignedUrlsType[];
+}
+
+export interface GetRecentSearchPlacesResponse {
+  id: number;
+  searchTerm: string;
+  createAt: string;
 }
 
 export const getRangeInfo = async (
@@ -248,6 +255,44 @@ export const deleteReviews = async (reviewId: number) => {
     } else {
       throw new Error('삭제 중 문제가 생겼습니다.');
     }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postRecentSearchPlace = async ({term}: {term: string}) => {
+  try {
+    const response = await api.post(`/search/record?term=${term}`);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getRecentSearchPlaces = async () => {
+  try {
+    const limit = 20;
+
+    const response = await api.get<GetRecentSearchPlacesResponse[]>(
+      `/search/recent?limit=${limit}`,
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteRecentSearchPlace = async ({
+  searchId,
+}: {
+  searchId: number;
+}) => {
+  try {
+    const response = await api.delete(`/search/recent/${searchId}`);
+
+    return response.data;
   } catch (error) {
     throw error;
   }

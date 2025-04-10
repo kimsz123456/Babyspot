@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ToastAndroid, View} from 'react-native';
+import {View} from 'react-native';
 
 import {useMapStore} from '../../../stores/mapStore';
 import {useMapNavigation} from '../../../hooks/useNavigationHooks';
@@ -7,10 +7,12 @@ import {useMapNavigation} from '../../../hooks/useNavigationHooks';
 import AgeButton from '../../../components/atoms/AgeButton';
 import MainButton from '../../../components/atoms/Button/MainButton';
 import {AgeProps} from '../ReviewListScreen/ReviewFilterModal';
+import SubButton from '../../../components/atoms/Button/SubButton';
 
 import scale from '../../../utils/scale';
 
 import * as S from './styles';
+import showToastMessage from '../../../utils/showToastMessage';
 
 const MAX_SELECT_COUNT = 3;
 
@@ -32,7 +34,7 @@ const SelectRecommendationAgeScreen = () => {
 
   const handleAgeButtonPress = (item: AgeProps) => {
     if (selectedCount >= MAX_SELECT_COUNT && !item.isSelected) {
-      ToastAndroid.show('최대 3개만 선택 가능합니다.', ToastAndroid.SHORT);
+      showToastMessage('최대 3개만 선택 가능합니다.');
 
       return;
     }
@@ -50,6 +52,12 @@ const SelectRecommendationAgeScreen = () => {
     const selectedAges = ages.filter(age => age.isSelected).map(age => age.age);
 
     setSelectedAges(selectedAges);
+
+    navigation.pop();
+  };
+
+  const handleSubButtonPress = () => {
+    setSelectedAges([]);
 
     navigation.pop();
   };
@@ -85,11 +93,14 @@ const SelectRecommendationAgeScreen = () => {
           )}
         />
       </View>
-      <MainButton
-        disabled={selectedCount === 0}
-        text={'추천 받기'}
-        onPress={handleMainButtonPress}
-      />
+      <S.ButtonContainer>
+        <MainButton
+          disabled={selectedCount === 0}
+          text={'추천 받기'}
+          onPress={handleMainButtonPress}
+        />
+        <SubButton text={'초기화'} onPress={handleSubButtonPress} />
+      </S.ButtonContainer>
     </S.SelectRecommendationAgeScreenContainer>
   );
 };

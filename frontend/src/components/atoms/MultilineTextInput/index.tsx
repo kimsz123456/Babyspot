@@ -1,8 +1,9 @@
 import React, {useRef, useState} from 'react';
-import {TextInput, ToastAndroid} from 'react-native';
+import {TextInput} from 'react-native';
 import {PrimaryColors, GrayColors} from '../../../constants/colors';
 import scale from '../../../utils/scale';
 import * as S from './styles';
+import showToastMessage from '../../../utils/showToastMessage';
 
 interface MultilineTextInputProps {
   text: string;
@@ -46,7 +47,7 @@ const MultilineTextInput = ({
           if (MAX_LENGTH && text.length > MAX_LENGTH) {
             text = text.slice(0, MAX_LENGTH);
 
-            ToastAndroid.show(`최대 ${MAX_LENGTH}자까지 입력 가능합니다.`, 500);
+            showToastMessage(`최대 ${MAX_LENGTH}자까지 입력 가능합니다.`);
           }
           setText(text);
         }}

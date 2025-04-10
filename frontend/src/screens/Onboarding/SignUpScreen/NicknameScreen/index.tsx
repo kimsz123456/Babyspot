@@ -3,11 +3,11 @@ import * as S from './styles';
 import MainButton from '../../../../components/atoms/Button/MainButton';
 import {useOnboardingNavigation} from '../../../../hooks/useNavigationHooks';
 import {useOnboardingStore} from '../../../../stores/onboardingStore';
-import {Keyboard, ToastAndroid, TouchableNativeFeedback} from 'react-native';
+import {Keyboard, TouchableNativeFeedback} from 'react-native';
 import LinedTextInput from '../../../../components/atoms/Button/LinedTextInput';
 import {NICKNAME_LENGTH} from '../../../../constants/constants';
-import SubButton from '../../../../components/atoms/Button/SubButton';
 import {getCheckNickname} from '../../../../services/onboardingService';
+import showToastMessage from '../../../../utils/showToastMessage';
 
 const NicknameScreen = () => {
   const navigation = useOnboardingNavigation();
@@ -24,9 +24,10 @@ const NicknameScreen = () => {
 
     if (response) {
       setIsValid(true);
-      ToastAndroid.show('사용 가능한 닉네임입니다.', 500);
+
+      showToastMessage('사용 가능한 닉네임입니다.');
     } else {
-      ToastAndroid.show('중복된 닉네임입니다.', 500);
+      showToastMessage('중복된 닉네임입니다.');
     }
   };
 
@@ -41,24 +42,32 @@ const NicknameScreen = () => {
 
             <S.NicknameInputContainer>
               <S.TextInputTitle>닉네임</S.TextInputTitle>
-              <LinedTextInput
-                text={text}
-                maxLength={NICKNAME_LENGTH}
-                placeholder="감귤농장 주인"
-                setText={(text: string) => {
-                  setText(text.trim());
-                  if (isValid) {
-                    setIsValid(false);
-                  }
-                }}
-              />
-              <S.SubButtonContainer>
-                <SubButton
+
+              <S.TextInputContainer>
+                <S.NicknameInput>
+                  <LinedTextInput
+                    text={text}
+                    maxLength={NICKNAME_LENGTH}
+                    placeholder="감귤농장 주인"
+                    setText={(text: string) => {
+                      setText(text.trim());
+                      if (isValid) {
+                        setIsValid(false);
+                      }
+                    }}
+                  />
+                </S.NicknameInput>
+
+                <S.CheckNicknameButton
                   disabled={text.trim().length == 0}
-                  text={'중복확인'}
-                  onPress={handleCheckNickname}
-                />
-              </S.SubButtonContainer>
+                  $disabled={text.trim().length == 0}
+                  onPress={handleCheckNickname}>
+                  <S.CheckNicknameText
+                    $disabled={
+                      text.trim().length == 0
+                    }>{`중복확인`}</S.CheckNicknameText>
+                </S.CheckNicknameButton>
+              </S.TextInputContainer>
             </S.NicknameInputContainer>
           </S.SingUpInputSection>
           <MainButton
