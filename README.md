@@ -101,7 +101,7 @@
       (Infra)
     </td>
     <td>
-      <img src="./image,gif/김현우.png" width="80" height="80" alt="김현우"/><br/>
+      <img src="./image,gif/김천우.png" width="80" height="80" alt="김천천우"/><br/>
       <b>김현우</b><br/>
       (Data)
     </td>
