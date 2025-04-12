@@ -1,24 +1,24 @@
 ![썸네일](./image,gif/썸네일.png)
 
-## 서비스명 및 개요
+# Baby Spot: 서울시 영유아 친화 가게 추천 서비스
 
-# Baby Spot
+## 📋 프로젝트 개요
+- **기간**: 2025.02.24 ~ 2025.04.11 (7주)
+- **성과**: 🏆 SSAFY 특화 프로젝트 우수상 수상 🏆
+- **APK 링크**: [다운로드](https://drive.google.com/file/d/12V7LpCPfnN6cWbKcag5mk01ABoLvn7PO/view?usp=drive_link)
 
-**서울시 영유아 친화 가게 추천 서비스**
 
-## 주요 문제 해결
+## 🔍 서비스 소개
+### 주요 문제 해결
+1. **아이 동반 고객을 위한 편의 용품/서비스 정보 부족**
+   - 현재 음식점 정보에는 **유아용 의자, 놀이 공간, 키즈 메뉴 여부 등 필수 정보 부족**
+   - 부모들이 원하는 **유아 친화적인 음식점을 찾는 것이 어려움**
 
-### **1)** 아이 동반 고객을 위한 **편의 용품/서비스 정보 부족**
+2. **아이와 함께 외식 시, 적절한 장소 정보를 찾기 어려움**
+   - 일반적인 지도 앱(네이버, 구글)에서는 **가족 친화적인 장소를 필터링하기 어려움**
+   - **실제 방문자 리뷰 기반의 신뢰도 높은 데이터 부족**
 
-- 현재 음식점 정보에는 **유아용 의자, 놀이 공간, 키즈 메뉴 여부 등 필수 정보 부족**
-- 부모들이 원하는 **유아 친화적인 음식점을 찾는 것이 어려움**
-
-### **2)** 아이와 함께 외식 시, **적절한 장소 정보를 찾기 어려움**
-
-- 일반적인 지도 앱(네이버, 구글)에서는 **가족 친화적인 장소를 필터링하기 어려움**
-- **실제 방문자 리뷰 기반의 신뢰도 높은 데이터 부족**
-
-#💡주요 기능
+## 💡주요 기능
 
 ### **1. 사용자 위치 기반 매장조회**
 ![기능1](./image,gif/내 위치기반 조회.gif)
@@ -27,14 +27,14 @@
 
 ### **2. 위치 검색 조회**
 ![기능2](./image,gif/위치 검색 조회.gif)
-- **원하는 위치에서 유하 친화 가게 조회 가능능**
+- **원하는 위치에서 유아 친화 가게 조회 가능**
 
 ### **3. 사용자 기반 추천**
 ![기능3](./image,gif/추천기능.gif)
-- **사용자가 입력한 아이의 정보에 따라 매장을 추천천**
+- **사용자가 입력한 아이의 정보에 따라 매장을 추천**
 
 
-# 🔗 API 명세
+## 🔗 API 명세
 
 ### 로그인 /api/auth
 ![image](./image,gif/api 로그인.png){width=768 height=82}
@@ -51,17 +51,45 @@
 ### 후기 /api/store/{storeId}/reviews
 ![image](./image,gif/api 후기.png){width=771 height=159}
 
-# 아키텍쳐
+# 🖥️ 시스템 아키텍쳐
 ![아키텍쳐](./image,gif/시스템아키텍쳐.png)
 
-# ERD
+# 🗂️ ERD
 
 ![erd](./image,gif/erd.png)
 
-# 🛠️ 기술스택
-![stack](/uploads/cfb734188e757cb4d4062feb8bcc40e3/stack.png)
+## 🛠️ 기술스택
 
-## 일정 계획 (7주: 2.24 ~ 4.11)
+### 🎨 Front-end  
+<img src="https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
+<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white">
+<img src="https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white">
+<img src="https://img.shields.io/badge/axios-671ddf?&style=for-the-badge&logo=axios&logoColor=white">
+<img src="https://img.shields.io/badge/zustand-orange?style=for-the-badge&logo=zustand&logoColor=white">
+
+### 🏗 Back-end  
+<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
+<img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white">
+<img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=for-the-badge&logoColor=white"/>
+
+### 💾 Database
+<img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white">
+
+### 📊 Data
+<img src="https://img.shields.io/badge/Selenium-43B02A?style=for-the-badge&logo=Selenium&logoColor=white">
+<img src="https://img.shields.io/badge/Apache_Spark-FFFFFF?style=for-the-badge&logo=apachespark&logoColor=#E35A16">
+<img src="https://img.shields.io/badge/Apache%20Hadoop-66CCFF?style=for-the-badge&logo=apachehadoop&logoColor=black">
+<img src="https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=ollama&logoColor=Black">
+
+### 📡 Infra  
+<img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white">
+<img src="https://img.shields.io/badge/Amazon S3-FF9900?style=for-the-badge&logo=amazons3&logoColor=white">
+<img src="https://img.shields.io/badge/Jenkins-49728B?style=for-the-badge&logo=jenkins&logoColor=white">
+<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
+<img src="https://img.shields.io/badge/Nginx-%23009639.svg?style=for-the-badge&logo=Nginx&logoColor=white">
+
+
+## 📅 일정 계획 (7주: 2.24 ~ 4.11)
 
 - **1주~2주**: 아이디어 선정 및 기획
 - **3주**: 요구 사항 정의 및 기획 완료
@@ -76,7 +104,7 @@
 | --- | --- | --- |
 | 2025.03.10. | 협업 규칙 및 툴 정리 | 그라운드 룰, 컨벤션 등의 팀 내 규칙 및 사용 툴 정리. |
 | 2025.03.11. | 프로젝트 기획 수립 | 기획 아이디어 도출 및 최종 기획 확정. 팀 내 기획 구상 확립. |
-| 2025..03.14. | 와이어프레임 및 유스케이스 구축 | 사용자 입장에서의 서비스 로직 구상 및 팀 내 의견 통일. 데이터 의사 결정. |
+| 2025.03.14. | 와이어프레임 및 유스케이스 구축 | 사용자 입장에서의 서비스 로직 구상 및 팀 내 의견 통일. 데이터 의사 결정. |
 | 2025.03.17. | 화면 디자인 | 와이어프레임을 통한 디자인 도출. |
 | 2025.03.18. | ERD 및 CI/CD, 폴더 구축 등 프로젝트 세팅 | 서비스 개발을 위한 프로젝트 초기 세팅. |
 | 2025.03.21. | 중간 발표 준비 및 자료 정리 | 중간 발표를 위한 팀 내 의사 결정, 발표 준비 및 자료 정리. |
@@ -86,7 +114,7 @@
 | 2025.04.11. | 프로젝트 최종 기능 개발 마감 및 배포 | 추가 기능 및 2차에서 피드백한 기능 개발, 배포. |
 | 2025.04.11. | 최종 발표 준비 및 자료 정리 | 최종 발표를 위한 팀 내 의사 결정, 발표 준비 및 자료 정리. |
 
-## 개발 팀 소개
+## 👨‍👩‍👧‍👦 개발 팀 소개
 
 <table>
   <tr align="center" valign="top">
@@ -101,8 +129,8 @@
       (Infra)
     </td>
     <td>
-      <img src="./image,gif/김천우.png" width="80" height="80" alt="김천천우"/><br/>
-      <b>김현우</b><br/>
+      <img src="./image,gif/김천우.png" width="80" height="80" alt="김천우"/><br/>
+      <b>김천우</b><br/>
       (Data)
     </td>
     <td>
@@ -122,7 +150,4 @@
     </td>
   </tr>
 </table>
-
-## APK 링크
-https://drive.google.com/file/d/12V7LpCPfnN6cWbKcag5mk01ABoLvn7PO/view?usp=drive_link
 
