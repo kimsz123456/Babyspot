@@ -21,12 +21,12 @@
 ## 💡주요 기능
 
 ### **1. 사용자 위치 기반 매장조회**
-![기능1](./image,gif/내 위치기반 조회.gif)
+![기능1](./image,gif/내%20위치기반%20조회.gif)
 - **GPS 기반 현재 위치 주변 추천**
 - **서울시 오케이존 데이터 활용하여 유아 친화 가게 필터링**
 
 ### **2. 위치 검색 조회**
-![기능2](./image,gif/위치 검색 조회.gif)
+![기능2](./image,gif/위치%20검색%20조회.gif)
 - **원하는 위치에서 유아 친화 가게 조회 가능**
 
 ### **3. 사용자 기반 추천**
@@ -37,19 +37,19 @@
 ## 🔗 API 명세
 
 ### 로그인 /api/auth
-![image](./image,gif/api 로그인.png){width=768 height=82}
+![image](./image,gif/api%20로그인.png)
 
 ### 매장 /api/store
-![image](./image,gif/api 매장.png){width=768 height=69}
+![image](./image,gif/api%20매장.png)
 
 ### 사용자(member) /api/members
-![image](./image,gif/api 사용자.png){width=768 height=134}
+![image](./image,gif/api%20사용자.png)
 
 ### 추천 /api/recommend
-![image](./image,gif/api 최근검색어.png){width=770 height=27}
+![image](./image,gif/api%20최근검색어.png)
 
 ### 후기 /api/store/{storeId}/reviews
-![image](./image,gif/api 후기.png){width=771 height=159}
+![image](./image,gif/api%20후기.png)
 
 # 🖥️ 시스템 아키텍쳐
 ![아키텍쳐](./image,gif/시스템아키텍쳐.png)
